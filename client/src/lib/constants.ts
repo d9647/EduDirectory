@@ -7,7 +7,7 @@ export const TUTORING_CATEGORIES = [
   { value: "Science", label: "Science" },
   { value: "Humanities", label: "Humanities" },
   { value: "Standardized Tests", label: "Standardized Tests" },
-  { value: "Languages", label: "Languages" },
+  { value: "Other Languages", label: "Other Languages" },
   { value: "Music & Arts", label: "Music & Arts" },
   { value: "Counseling", label: "Counseling" },
 ];
@@ -61,15 +61,15 @@ export const TUTORING_SUBJECTS = [
   { value: "MCAT", label: "MCAT", category: "Standardized Tests" },
   
   // Languages
-  { value: "Chinese", label: "Chinese", category: "Languages" },
-  { value: "Japanese", label: "Japanese", category: "Languages" },
-  { value: "Korean", label: "Korean", category: "Languages" },
-  { value: "Spanish", label: "Spanish", category: "Languages" },
-  { value: "French", label: "French", category: "Languages" },
-  { value: "American Sign Language", label: "American Sign Language", category: "Languages" },
-  { value: "German", label: "German", category: "Languages" },
-  { value: "Latin", label: "Latin", category: "Languages" },
-  { value: "Greek", label: "Greek", category: "Languages" },
+  { value: "Chinese", label: "Chinese", category: "Other Languages" },
+  { value: "Japanese", label: "Japanese", category: "Other Languages" },
+  { value: "Korean", label: "Korean", category: "Other Languages" },
+  { value: "Spanish", label: "Spanish", category: "Other Languages" },
+  { value: "French", label: "French", category: "Other Languages" },
+  { value: "American Sign Language", label: "American Sign Language", category: "Other Languages" },
+  { value: "German", label: "German", category: "Other Languages" },
+  { value: "Latin", label: "Latin", category: "Other Languages" },
+  { value: "Greek", label: "Greek", category: "Other Languages" },
   
   // Music & Arts
   { value: "Piano", label: "Piano", category: "Music & Arts" },

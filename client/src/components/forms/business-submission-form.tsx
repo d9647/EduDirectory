@@ -131,7 +131,7 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
         job: "/api/jobs",
       }[type];
 
-      // Prepare data with array fields
+      // Prepare data with array fields and clean up empty date fields
       const submitData = {
         ...data,
         categories: selectedCategories,
@@ -142,6 +142,14 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
         jobType: selectedJobTypes,
         schedule: selectedSchedule,
       };
+
+      // Clean up empty date fields by converting empty strings to null
+      const dateFields = ['openingDate', 'closingDate', 'applicationOpen', 'applicationDeadline', 'applicationDueDate'];
+      dateFields.forEach(field => {
+        if (submitData[field] === '') {
+          delete submitData[field];
+        }
+      });
 
       await apiRequest("POST", endpoint, submitData);
     },
@@ -416,13 +424,13 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
             <div className="space-y-4">
               <h3 className="text-lg font-medium text-gray-900">Location</h3>
               
-              {(type === "camp" || type === "internship" || type === "job") && (
+              {(type === "tutoring" || type === "camp" || type === "internship" || type === "job") && (
                 <FormField
                   control={form.control}
                   name="address" as any
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Street Address (Optional)</FormLabel>
+                      <FormLabel>Street Address</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="123 Main Street" />
                       </FormControl>
