@@ -1,0 +1,135 @@
+I like to create a website for yellow pages for education. And I have the requirements below, please suggest overall architecture and show steps by steps to set up such website.
+
+The website has simplicity and minimalist design. We have four main pages:
+Tutoring Providers / Business Services Provider 
+Summer Camps Opportunities
+Internship Opportunities
+Jobs Opportunities
+All pages have the same design / UI / styles, which list the items with paging options: 5, 10, 25, or 50 items on a page.
+We’ll have Filter / Search on the left panel, it is like the Amazon website, for users to filter output to certain tags.
+We’ll have a global text search feature enabled as well on the left panel
+Output / results will be displayed in table format on the right panel, which is much wider than the left panel, and the sorting is enabled for certain columns.
+Every listing displayed will have: Name, Numbers of Thumbs Up, Number of Reviews & ratings (Link to display the reviews provided by users), Website, Categories / Tags, Location, and very short description are shown (will not be full description). Hide the Contact information. User can click on it to see the full information on that listing. 
+
+For Tutoring Providers / Business Services Provider:
+The page lists the business or providers by categories. 
+Uses can sort the output by:
+Numbers of Thumbs-up
+Names of Business
+Users can filter the output by:
+Business Category
+Locations (City, or State)
+Tags (tags on business, e.g. if users only want to see Algebra’s tutors, she should be able to search that).
+Private Tutors or Business
+Users can search business by categories such as:
+Tutoring Providers / Business Services Providers, where when we add new provider we can tag them as below: -
+Mathematics: Algebra, Calculus, Geometry, Statistics, Multivariate Calculus, Linear Algebra, Competition Math
+English: Reading, Writing, Grammar, Literature
+Social Science : History, Economics, Psychology, Sociology
+Computer Science & Coding : Java, C++, Competitive Coding, Python, Scratch 
+Science: Physics, Biology, Chemistry
+Humanities: Drama, Philosophy, Ethics, Religious Studies
+Standardized Tests: SAT, ACT, GRE, GMAT, LSAT, MCAT
+Other Languages: Chinese, Japanese, Korean, Spanish, French, American Sign Language, German, Latin, Greek
+Music & Arts: Piano, Strings, Brass, Percussion, Woodwinds, Painting, Drawing, Sculpture
+Counselors (Academic Counseling, College Counseling, Mental Health Counseling, Career Counseling, Family Counseling)
+
+For Summer Camps:
+This page lists the summer camp opportunities.
+Summer Camps are categorized into the following:
+Competitive Level (5 levels of competitiveness, from 1:easy to 5: Most difficult to get in)
+Categories:
+STEM
+Leadership
+Arts & Performance
+Mathematics
+Language & Cultural Immersion
+Pre-Professional 
+Outdoor & Adventure
+Wellness & Personal Development
+Refer to this chart:
+
+We use the same paging and item listing styles as above., though the category and tags tagged will be different.
+For each listing, it contains the following information, 
+Name
+Location 
+City, State (Can be sorted)
+Category / Tags
+Difficulty Level (Can be sorted)
+Dates (This should be text, coz some camps have multiple sessions)
+Cost (This should be text, coz some camps have different fees for different programs)
+Application Due Date (can be sorted)
+Scholarship / Financial Aids Available or not
+Eligibility
+
+For Internship Opportunities:
+Company or Organization Name
+Title
+Location (City, State or Remote)
+Types: (Academic, STEM, Healthcare, Business & Marketing, Research, Nonprofit & Social Impact, Government, Arts & Media, Law & Policy, multiple selection is possible)
+Compensation: Paid, or Unpaid, or Stipend, or Academic Credit
+Description (Brief role summary, responsibilities, skills required)
+Duration (Multiple selection is possible: Summer, Academic Year, Semester, Part-time, Full-time,  Remote, In-Office, Hybrid)
+Application Deadline
+Eligibility
+Website / Application Link
+Mentorship Available: Yes or No
+
+
+For Jobs Opportunities:
+Company / Organization Name
+Job Title
+LocationL City, State or REmote
+Job Category / Type, multiple selection is possible:
+Retail & Customer Service
+- Food & Hospitality
+- Office / Administrative Support
+- Education & Tutoring
+- Tech & IT Support
+- STEM-related Jobs
+- Childcare / Camp Jobs
+- Healthcare Assistant Roles
+- Creative & Design
+- Freelance / Gig Work (e.g., content writing, graphic design)
+- Government / Civic Jobs
+- Nonprofit & Community Service
+Compensation: 
+Select one:
+- Hourly Wage (optional: specify range)
+- Stipend
+- Commission-based
+- Volunteer / Unpaid (if relevant)
+Description
+Work Schedule
+Minimum Age Requirements
+Application Deadline
+Eligibility
+Application Link / Contact Info
+Training Provided:  Yes or No
+Opportunities for Advancement
+Transportation Required: Yes/ No
+Resume or Cover Letter Needed:  Yes / No
+
+
+More requirements for the website:
+
+Users can create a user account with email, and login with password. 
+When user create account, we need the following information:
+Name
+Location (City, State)
+Email
+Phone
+Display terms of use, privacy policy, and consent agreements for users to review and accept before account creation.
+Password must meet basic security standards (e.g., min. 8 characters, one number, one uppercase).
+Users can log in/out securely.
+Users can:
+Thumb up each provider/business (only one thumb up allowed per user per listing, no downvote).
+Write reviews or feedback for each provider listed in the yellow pages.
+Reviews must include: title, rating (1–5 stars), and optional text.
+Reviews are time-stamped and tied to the user’s account.
+Users can edit/delete their own reviews.
+A public link on the website allows business owners to request listing via a form, information needed - refer to the above requirements for each types: tutors / business listing, summer camps, internships, Jobs. One more information, Allow a photo or logo submission for each listing.
+Confirmation email is sent to the business upon submission.
+Admin receives a moderation dashboard to review, approve, or reject requests.
+Allow each users bookmark / or save favorite listings.
+Allow users to report problem for a listing or review.
