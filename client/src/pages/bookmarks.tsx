@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ExternalLink, MapPin, Calendar, Star, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import Header from "@/components/layout/header";
 
 export default function Bookmarks() {
   const { toast } = useToast();
@@ -142,11 +143,14 @@ export default function Bookmarks() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Saved Items</h1>
-        <p className="mt-2 text-gray-600">Your bookmarked listings and services</p>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <Header />
+      
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Saved Items</h1>
+          <p className="mt-2 text-gray-600">Your bookmarked listings and services</p>
+        </div>
 
       {!bookmarks || bookmarks.length === 0 ? (
         <div className="text-center py-12">
@@ -187,10 +191,10 @@ export default function Bookmarks() {
 
           <div className="space-y-6">
             {bookmarks.map((bookmark: any) => {
-            const listing = bookmark.listing;
-            const listingType = bookmark.listingType;
+              const listing = bookmark.listing;
+              const listingType = bookmark.listingType;
             
-            return (
+              return (
               <Card key={`${listingType}-${listing.id}`} className="hover:shadow-md transition-shadow">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
@@ -375,6 +379,7 @@ export default function Bookmarks() {
           )}
         </>
       )}
+      </main>
     </div>
   );
 }
