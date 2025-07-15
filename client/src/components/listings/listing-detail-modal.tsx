@@ -385,12 +385,14 @@ export default function ListingDetailModal({
                       <span className="text-gray-700">Delivery: {listing.deliveryMode}</span>
                     </div>
                   )}
-                  {(listing.cost || listing.compensation || listing.salaryRange || listing.tuition) && (
+                  {(listing.cost || listing.compensation || listing.salaryRange || listing.tuition || (listing.salaryMin && listing.salaryMax)) && (
                     <div className="flex items-center">
                       <DollarSign className="h-4 w-4 text-gray-400 mr-3" />
                       <span className="text-gray-700">
                         {listing.cost || listing.tuition || 
-                         formatSalary(listing.salaryRange, listing.salaryType) || 
+                         (listing.salaryMin && listing.salaryMax ? 
+                           `$${listing.salaryMin} - $${listing.salaryMax} ${listing.salaryType || ''}`.trim() :
+                           formatSalary(listing.salaryRange, listing.salaryType)) || 
                          listing.compensation}
                       </span>
                     </div>
@@ -467,6 +469,51 @@ export default function ListingDetailModal({
                     <div className="flex items-center">
                       <Clock className="h-4 w-4 text-gray-400 mr-3" />
                       <span className="text-gray-700">Duration: {listing.length}</span>
+                    </div>
+                  )}
+                  {listing.applicationLink && (
+                    <div className="flex items-center">
+                      <Globe className="h-4 w-4 text-gray-400 mr-3" />
+                      <a 
+                        href={listing.applicationLink} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-primary hover:text-primary/80"
+                      >
+                        Apply Here
+                      </a>
+                    </div>
+                  )}
+                  {listing.hasAdvancement && (
+                    <div className="flex items-center">
+                      <Award className="h-4 w-4 text-gray-400 mr-3" />
+                      <span className="text-gray-700">Advancement Opportunities</span>
+                    </div>
+                  )}
+                  {listing.requiresTransportation && (
+                    <div className="flex items-center">
+                      <MapPin className="h-4 w-4 text-gray-400 mr-3" />
+                      <span className="text-gray-700">Transportation Required</span>
+                    </div>
+                  )}
+                  {listing.requiresResume && (
+                    <div className="flex items-center">
+                      <Mail className="h-4 w-4 text-gray-400 mr-3" />
+                      <span className="text-gray-700">Resume Required</span>
+                    </div>
+                  )}
+                  {listing.isOngoing && (
+                    <div className="flex items-center">
+                      <Clock className="h-4 w-4 text-gray-400 mr-3" />
+                      <span className="text-gray-700">Ongoing Position</span>
+                    </div>
+                  )}
+                  {listing.eligibility && (
+                    <div className="mt-4">
+                      <h5 className="font-medium text-gray-900 mb-2">Eligibility</h5>
+                      <div className="text-sm text-gray-700">
+                        {formatDescription(listing.eligibility)}
+                      </div>
                     </div>
                   )}
                 </div>
