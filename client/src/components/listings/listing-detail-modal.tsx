@@ -296,7 +296,7 @@ export default function ListingDetailModal({
                 disabled={thumbsUpMutation.isPending}
                 variant={userInteractions?.hasThumbedUp ? "default" : "outline"}
               >
-                <ThumbsUp className="h-4 w-4 mr-2" />
+                <ThumbsUp className={`h-4 w-4 mr-2 ${userInteractions?.hasThumbedUp ? "fill-current" : ""}`} />
                 Thumbs Up ({listing.thumbsUpCount || 0})
               </Button>
               <Button
@@ -310,7 +310,7 @@ export default function ListingDetailModal({
                 disabled={bookmarkMutation.isPending}
                 variant={userBookmark?.isBookmarked ? "default" : "outline"}
               >
-                <Bookmark className="h-4 w-4 mr-2" />
+                <Bookmark className={`h-4 w-4 mr-2 ${userBookmark?.isBookmarked ? "fill-current" : ""}`} />
                 {userBookmark?.isBookmarked ? "Saved" : "Save"}
               </Button>
               <Button variant="outline" onClick={handleShare}>
