@@ -84,6 +84,7 @@ export default function ListingTable({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/${listingType === "tutoring" ? "tutoring-providers" : listingType === "camps" ? "summer-camps" : listingType}`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/thumbs-up/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType}`] });
       toast({
         title: "Success",
         description: "Thumbs up toggled successfully",
@@ -124,6 +125,8 @@ export default function ListingTable({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/${listingType === "tutoring" ? "tutoring-providers" : listingType === "camps" ? "summer-camps" : listingType}`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/bookmarks/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/bookmarks"] });
       toast({
         title: "Success",
         description: "Bookmark toggled successfully",
@@ -155,6 +158,69 @@ export default function ListingTable({
     enabled: isAuthenticated && !!selectedListing,
     retry: false,
   });
+
+  // Row Actions Component with individual state tracking
+  const RowActions = ({ listing }: { listing: any }) => {
+    const { data: bookmarkData } = useQuery({
+      queryKey: [`/api/bookmarks/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType}`, listing.id, "user"],
+      enabled: isAuthenticated,
+      retry: false,
+    });
+
+    const { data: thumbsUpData } = useQuery({
+      queryKey: [`/api/thumbs-up/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType}`, listing.id, "user"],
+      enabled: isAuthenticated,
+      retry: false,
+    });
+
+    return (
+      <div className="flex items-center space-x-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!isAuthenticated) {
+              window.location.href = "/api/login";
+              return;
+            }
+            thumbsUpMutation.mutate({ listingId: listing.id });
+          }}
+          disabled={thumbsUpMutation.isPending}
+          className={`text-gray-400 ${thumbsUpData?.hasThumbedUp ? "text-red-500" : "hover:text-red-500"}`}
+        >
+          <ThumbsUp className={`h-4 w-4 ${thumbsUpData?.hasThumbedUp ? "fill-current" : ""}`} />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!isAuthenticated) {
+              window.location.href = "/api/login";
+              return;
+            }
+            bookmarkMutation.mutate({ listingId: listing.id });
+          }}
+          disabled={bookmarkMutation.isPending}
+          className={`text-gray-400 ${bookmarkData?.isBookmarked ? "text-yellow-500" : "hover:text-yellow-500"}`}
+        >
+          <Bookmark className={`h-4 w-4 ${bookmarkData?.isBookmarked ? "fill-current" : ""}`} />
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleShare(listing);
+          }}
+          className="text-gray-400 hover:text-gray-600"
+        >
+          <Share2 className="h-4 w-4" />
+        </Button>
+      </div>
+    );
+  };
 
   const handleSort = (column: string) => {
     const newOrder = filters.sortBy === column && filters.sortOrder === "asc" ? "desc" : "asc";
@@ -384,53 +450,7 @@ export default function ListingTable({
         );
 
       case "actions":
-        return (
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!isAuthenticated) {
-                  window.location.href = "/api/login";
-                  return;
-                }
-                thumbsUpMutation.mutate({ listingId: listing.id });
-              }}
-              disabled={thumbsUpMutation.isPending}
-              className="text-gray-400 hover:text-red-500"
-            >
-              <ThumbsUp className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!isAuthenticated) {
-                  window.location.href = "/api/login";
-                  return;
-                }
-                bookmarkMutation.mutate({ listingId: listing.id });
-              }}
-              disabled={bookmarkMutation.isPending}
-              className="text-gray-400 hover:text-yellow-500"
-            >
-              <Bookmark className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleShare(listing);
-              }}
-              className="text-gray-400 hover:text-gray-600"
-            >
-              <Share2 className="h-4 w-4" />
-            </Button>
-          </div>
-        );
+        return <RowActions listing={listing} />;
 
       default:
         return listing[column] || "-";
