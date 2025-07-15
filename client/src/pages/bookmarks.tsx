@@ -2,11 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, MapPin, Calendar, Star, X } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ExternalLink, MapPin, Calendar, Star, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -14,6 +15,8 @@ export default function Bookmarks() {
   const { toast } = useToast();
   const { isAuthenticated, isLoading } = useAuth();
   const queryClient = useQueryClient();
+  const [limit, setLimit] = useState(10);
+  const [offset, setOffset] = useState(0);
 
   // Redirect to home if not authenticated
   useEffect(() => {
@@ -30,11 +33,33 @@ export default function Bookmarks() {
     }
   }, [isAuthenticated, isLoading, toast]);
 
-  const { data: bookmarks, isLoading: bookmarksLoading } = useQuery({
-    queryKey: ["/api/bookmarks"],
+  const { data: bookmarkData, isLoading: bookmarksLoading } = useQuery({
+    queryKey: ["/api/bookmarks", limit, offset],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        limit: limit.toString(),
+        offset: offset.toString(),
+      });
+      const response = await fetch(`/api/bookmarks?${params}`);
+      if (!response.ok) throw new Error('Failed to fetch bookmarks');
+      return response.json();
+    },
     enabled: isAuthenticated,
     retry: false,
   });
+
+  const bookmarks = bookmarkData?.bookmarks || [];
+  const total = bookmarkData?.total || 0;
+
+  // Pagination handlers
+  const handlePageChange = (newOffset: number) => {
+    setOffset(newOffset);
+  };
+
+  const handleLimitChange = (newLimit: string) => {
+    setLimit(parseInt(newLimit));
+    setOffset(0); // Reset to first page when changing limit
+  };
 
   const removeBookmarkMutation = useMutation({
     mutationFn: async ({ listingType, listingId }: { listingType: string; listingId: number }) => {
@@ -137,8 +162,31 @@ export default function Bookmarks() {
           </div>
         </div>
       ) : (
-        <div className="space-y-6">
-          {bookmarks.map((bookmark: any) => {
+        <>
+          {/* Pagination controls at the top */}
+          <div className="flex justify-between items-center mb-6">
+            <div className="text-sm text-gray-700">
+              Showing {Math.min(offset + 1, total)} - {Math.min(offset + limit, total)} of {total} saved items
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-700">Show:</span>
+                <Select value={limit.toString()} onValueChange={handleLimitChange}>
+                  <SelectTrigger className="w-16">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="5">5</SelectItem>
+                    <SelectItem value="10">10</SelectItem>
+                    <SelectItem value="25">25</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            {bookmarks.map((bookmark: any) => {
             const listing = bookmark.listing;
             const listingType = bookmark.listingType;
             
@@ -262,7 +310,70 @@ export default function Bookmarks() {
               </Card>
             );
           })}
-        </div>
+          </div>
+
+          {/* Pagination controls at the bottom */}
+          {total > limit && (
+            <div className="flex justify-center items-center gap-2 mt-8">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(Math.max(0, offset - limit))}
+                disabled={offset === 0}
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                Previous
+              </Button>
+              
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.ceil(total / limit) }, (_, i) => {
+                  const pageNumber = i + 1;
+                  const pageOffset = i * limit;
+                  const isCurrentPage = offset === pageOffset;
+                  
+                  // Show first page, last page, current page, and pages around current
+                  const shouldShow = 
+                    pageNumber === 1 || 
+                    pageNumber === Math.ceil(total / limit) ||
+                    Math.abs(Math.floor(offset / limit) + 1 - pageNumber) <= 1;
+                  
+                  if (!shouldShow) {
+                    // Show ellipsis for gaps
+                    if (pageNumber === 2 && Math.floor(offset / limit) > 2) {
+                      return <span key={i} className="px-2 text-gray-400">...</span>;
+                    }
+                    if (pageNumber === Math.ceil(total / limit) - 1 && Math.floor(offset / limit) < Math.ceil(total / limit) - 3) {
+                      return <span key={i} className="px-2 text-gray-400">...</span>;
+                    }
+                    return null;
+                  }
+                  
+                  return (
+                    <Button
+                      key={i}
+                      variant={isCurrentPage ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handlePageChange(pageOffset)}
+                      className="w-8 h-8 p-0"
+                    >
+                      {pageNumber}
+                    </Button>
+                  );
+                })}
+              </div>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handlePageChange(Math.min(Math.floor(total / limit) * limit, offset + limit))}
+                disabled={offset + limit >= total}
+              >
+                Next
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -349,8 +349,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/bookmarks', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const bookmarks = await storage.getUserBookmarks(userId);
-      res.json(bookmarks);
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+      const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
+      
+      const result = await storage.getUserBookmarks(userId, { limit, offset });
+      res.json(result);
     } catch (error) {
       console.error("Error fetching bookmarks:", error);
       res.status(500).json({ message: "Failed to fetch bookmarks" });

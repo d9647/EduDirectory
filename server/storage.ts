@@ -125,7 +125,7 @@ export interface IStorage {
 
   // Bookmarks
   toggleBookmark(userId: string, listingType: string, listingId: number): Promise<boolean>;
-  getUserBookmarks(userId: string): Promise<Bookmark[]>;
+  getUserBookmarks(userId: string, options?: { limit?: number; offset?: number }): Promise<{ bookmarks: any[]; total: number }>;
   hasUserBookmarked(userId: string, listingType: string, listingId: number): Promise<boolean>;
 
   // Reports
@@ -967,12 +967,29 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async getUserBookmarks(userId: string): Promise<any[]> {
+  async getUserBookmarks(userId: string, options: {
+    limit?: number;
+    offset?: number;
+  } = {}): Promise<{ bookmarks: any[]; total: number }> {
+    const limit = options.limit || 10;
+    const offset = options.offset || 0;
+
+    // Get total count first
+    const totalResult = await db
+      .select({ count: count() })
+      .from(bookmarks)
+      .where(eq(bookmarks.userId, userId));
+    
+    const total = totalResult[0]?.count || 0;
+
+    // Get paginated bookmarks
     const userBookmarks = await db
       .select()
       .from(bookmarks)
       .where(eq(bookmarks.userId, userId))
-      .orderBy(desc(bookmarks.createdAt));
+      .orderBy(desc(bookmarks.createdAt))
+      .limit(limit)
+      .offset(offset);
 
     // Fetch the actual listing data for each bookmark
     const bookmarksWithListings = await Promise.all(
@@ -984,13 +1001,13 @@ export class DatabaseStorage implements IStorage {
             case "tutoring":
               listing = await this.getTutoringProvider(bookmark.listingId);
               break;
-            case "camps":
+            case "camp":
               listing = await this.getSummerCamp(bookmark.listingId);
               break;
-            case "internships":
+            case "internship":
               listing = await this.getInternship(bookmark.listingId);
               break;
-            case "jobs":
+            case "job":
               listing = await this.getJob(bookmark.listingId);
               break;
           }
@@ -1006,7 +1023,12 @@ export class DatabaseStorage implements IStorage {
     );
 
     // Filter out bookmarks where the listing was not found (deleted listings)
-    return bookmarksWithListings.filter(b => b.listing !== null);
+    const validBookmarks = bookmarksWithListings.filter(b => b.listing !== null);
+    
+    return {
+      bookmarks: validBookmarks,
+      total
+    };
   }
 
   async hasUserBookmarked(userId: string, listingType: string, listingId: number): Promise<boolean> {
