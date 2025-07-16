@@ -62,6 +62,9 @@ export default function FilterSidebar({
       minimumAge: undefined,
       hasTraining: undefined,
       compensation: [],
+      tags: [],
+      selectivityLevel: [],
+      cost: [],
       sortBy: "createdAt",
       sortOrder: "desc",
       limit: 10,
@@ -85,6 +88,9 @@ export default function FilterSidebar({
     if (filters.minimumAge !== undefined) count++;
     if (filters.hasTraining !== undefined) count++;
     if (filters.compensation?.length) count++;
+    if ((filters as any).tags?.length) count++;
+    if ((filters as any).selectivityLevel?.length) count++;
+    if ((filters as any).cost?.length) count++;
     return count;
   };
 
