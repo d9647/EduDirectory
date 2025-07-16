@@ -12,6 +12,8 @@ import {
   insertReportSchema,
 } from "@shared/schema";
 import { z } from "zod";
+import multer from "multer";
+import { importService } from "./import";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -612,6 +614,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Google Sheets Template
   app.get('/api/template', (req, res) => {
     res.sendFile(path.join(process.cwd(), 'google-sheets-template.html'));
+  });
+
+  // Google Sheets Import Guide
+  app.get('/api/import-guide', (req, res) => {
+    res.sendFile(path.join(process.cwd(), 'google-sheets-import-guide.html'));
+  });
+
+  // Setup multer for file uploads
+  const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
+  });
+
+  // Import routes (Admin only)
+  app.post('/api/admin/import/tutoring-providers', isAuthenticated, upload.single('csvFile'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const csvData = req.file.buffer.toString('utf-8');
+      const result = await importService.importTutoringProviders(csvData);
+      
+      res.json({
+        message: `Import completed: ${result.success} successful, ${result.errors.length} errors`,
+        success: result.success,
+        errors: result.errors
+      });
+    } catch (error) {
+      console.error("Error importing tutoring providers:", error);
+      res.status(500).json({ message: "Failed to import tutoring providers" });
+    }
+  });
+
+  app.post('/api/admin/import/summer-camps', isAuthenticated, upload.single('csvFile'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const csvData = req.file.buffer.toString('utf-8');
+      const result = await importService.importSummerCamps(csvData);
+      
+      res.json({
+        message: `Import completed: ${result.success} successful, ${result.errors.length} errors`,
+        success: result.success,
+        errors: result.errors
+      });
+    } catch (error) {
+      console.error("Error importing summer camps:", error);
+      res.status(500).json({ message: "Failed to import summer camps" });
+    }
+  });
+
+  app.post('/api/admin/import/internships', isAuthenticated, upload.single('csvFile'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const csvData = req.file.buffer.toString('utf-8');
+      const result = await importService.importInternships(csvData);
+      
+      res.json({
+        message: `Import completed: ${result.success} successful, ${result.errors.length} errors`,
+        success: result.success,
+        errors: result.errors
+      });
+    } catch (error) {
+      console.error("Error importing internships:", error);
+      res.status(500).json({ message: "Failed to import internships" });
+    }
+  });
+
+  app.post('/api/admin/import/jobs', isAuthenticated, upload.single('csvFile'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: "No file uploaded" });
+      }
+
+      const csvData = req.file.buffer.toString('utf-8');
+      const result = await importService.importJobs(csvData);
+      
+      res.json({
+        message: `Import completed: ${result.success} successful, ${result.errors.length} errors`,
+        success: result.success,
+        errors: result.errors
+      });
+    } catch (error) {
+      console.error("Error importing jobs:", error);
+      res.status(500).json({ message: "Failed to import jobs" });
+    }
   });
 
   const httpServer = createServer(app);

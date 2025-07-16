@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Import Guide - Educational Yellow Pages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 20px;
+        }
+        .step {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        .step h2 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        .important {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .warning {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        code {
+            background-color: #e9ecef;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        .screenshot-placeholder {
+            background-color: #e9ecef;
+            border: 2px dashed #adb5bd;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        ul li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Google Sheets to CSV Import Guide</h1>
+        <p>Educational Yellow Pages Platform</p>
+        <p>Step-by-step guide for importing data from Google Sheets</p>
+    </div>
+
+    <div class="step">
+        <h2>Step 1: Prepare Your Google Sheet</h2>
+        <p>Create a new Google Sheet or open an existing one with your data.</p>
+        
+        <div class="important">
+            <strong>Important:</strong> Make sure your first row contains the exact column headers as shown in the CSV template. Column order doesn't matter, but the names must match exactly.
+        </div>
+
+        <h3>Required Column Headers (copy and paste these exactly):</h3>
+        
+        <h4>For Tutoring Providers:</h4>
+        <code>name,type,description,categories,subjects,city,state,deliveryMode,website,phone,email,address,photoUrl</code>
+        
+        <h4>For Summer Camps:</h4>
+        <code>name,description,categories,city,state,cost,selectivityLevel,minimumAge,hasScholarship,tags,dates,length,applicationOpen,applicationDeadline,deliveryMode,website,phone,email,address,photoUrl</code>
+        
+        <h4>For Internships:</h4>
+        <code>companyName,title,description,types,city,state,compensation,duration,minimumAge,hasMentorship,deliveryMode,applicationOpen,applicationDeadline,internshipDates,prerequisites,tuition,website,phone,email,address,photoUrl</code>
+        
+        <h4>For Jobs:</h4>
+        <code>companyName,title,description,categories,city,state,jobType,schedule,minimumAge,hasTraining,salaryRange,salaryType,deliveryMode,openingDate,closingDate,isOngoing,website,phone,email,address,photoUrl</code>
+    </div>
+
+    <div class="step">
+        <h2>Step 2: Format Your Data</h2>
+        
+        <h3>Array Fields (Multiple Values):</h3>
+        <p>For fields that accept multiple values, separate them with semicolons (;):</p>
+        <ul>
+            <li><strong>Categories:</strong> <code>STEM;Technology;Science</code></li>
+            <li><strong>Subjects:</strong> <code>Mathematics;Physics;Chemistry</code></li>
+            <li><strong>Tags:</strong> <code>Advanced;Competitive;Summer</code></li>
+            <li><strong>Types:</strong> <code>Technology;Software;Engineering</code></li>
+            <li><strong>Duration:</strong> <code>Summer;Full-time;Academic Year</code></li>
+            <li><strong>Job Type:</strong> <code>Part-time;Full-time</code></li>
+            <li><strong>Schedule:</strong> <code>Day shift;Monday to Friday;Weekends</code></li>
+        </ul>
+
+        <h3>Date Fields:</h3>
+        <p>Use the format YYYY-MM-DD for all dates:</p>
+        <ul>
+            <li><strong>Good:</strong> <code>2024-06-15</code></li>
+            <li><strong>Bad:</strong> <code>6/15/2024</code> or <code>June 15, 2024</code></li>
+        </ul>
+
+        <h3>Boolean Fields:</h3>
+        <p>Use any of these values for true/false fields:</p>
+        <ul>
+            <li><strong>True:</strong> <code>true</code>, <code>TRUE</code>, <code>1</code>, <code>yes</code>, <code>YES</code></li>
+            <li><strong>False:</strong> <code>false</code>, <code>FALSE</code>, <code>0</code>, <code>no</code>, <code>NO</code></li>
+            <li><strong>Empty:</strong> Leave blank for undefined/optional boolean fields</li>
+        </ul>
+
+        <h3>Cost Field (Summer Camps Only):</h3>
+        <p>Use these exact values for summer camp costs:</p>
+        <ul>
+            <li><code>< $1000</code></li>
+            <li><code>$1000-$3000</code></li>
+            <li><code>$3000-$5000</code></li>
+            <li><code>$5000-$6500</code></li>
+            <li><code>> $6500</code></li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <h2>Step 3: Download as CSV</h2>
+        
+        <ol>
+            <li>In your Google Sheet, click <strong>File</strong> in the top menu</li>
+            <li>Select <strong>Download</strong></li>
+            <li>Choose <strong>Comma Separated Values (.csv)</strong></li>
+            <li>Save the file to your computer</li>
+        </ol>
+
+        <div class="screenshot-placeholder">
+            [Screenshot would show: File → Download → Comma Separated Values (.csv)]
+        </div>
+
+        <div class="warning">
+            <strong>Warning:</strong> Make sure to download as CSV, not Excel or other formats. The import system only accepts CSV files.
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Step 4: Upload to Admin Panel</h2>
+        
+        <ol>
+            <li>Log in to the admin panel</li>
+            <li>Navigate to the <strong>Import Data</strong> tab</li>
+            <li>Select the appropriate import section (Tutoring Providers, Summer Camps, Internships, or Jobs)</li>
+            <li>Click <strong>Choose File</strong> and select your CSV file</li>
+            <li>Click the <strong>Import</strong> button</li>
+        </ol>
+
+        <div class="important">
+            <strong>Note:</strong> The import process will show you how many records were successfully imported and any errors that occurred.
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Step 5: Review Import Results</h2>
+        
+        <p>After importing, you'll see a summary showing:</p>
+        <ul>
+            <li><strong>Success Count:</strong> Number of records successfully imported</li>
+            <li><strong>Error List:</strong> Detailed errors for any failed imports</li>
+        </ul>
+
+        <div class="success">
+            <strong>Success!</strong> All imported items will appear in the "Pending Approvals" tab and need to be reviewed and approved before they become live on the platform.
+        </div>
+    </div>
+
+    <div class="step">
+        <h2>Common Issues and Solutions</h2>
+        
+        <h3>❌ "Missing required fields" error</h3>
+        <p><strong>Solution:</strong> Ensure all required fields (name, description, city, state, categories) have values in every row.</p>
+
+        <h3>❌ "CSV parsing error"</h3>
+        <p><strong>Solution:</strong> Make sure your file is saved as CSV format and contains valid data without special characters in the wrong places.</p>
+
+        <h3>❌ "Invalid date format"</h3>
+        <p><strong>Solution:</strong> Use YYYY-MM-DD format for all date fields.</p>
+
+        <h3>❌ Rows being skipped</h3>
+        <p><strong>Solution:</strong> Check that all required fields are filled and that column headers match exactly.</p>
+
+        <h3>❌ Array fields not working</h3>
+        <p><strong>Solution:</strong> Use semicolons (;) to separate multiple values, not commas or other separators.</p>
+    </div>
+
+    <div class="step">
+        <h2>Tips for Large Imports</h2>
+        
+        <ul>
+            <li><strong>Test Small Batches:</strong> Start with 5-10 records to test your format before importing hundreds</li>
+            <li><strong>File Size Limit:</strong> Keep CSV files under 10MB for optimal performance</li>
+            <li><strong>Prepare Data Offline:</strong> Clean and format your data completely before uploading</li>
+            <li><strong>Backup Your Data:</strong> Keep a copy of your Google Sheet as backup</li>
+            <li><strong>Review Templates:</strong> Always reference the CSV templates for the exact format required</li>
+        </ul>
+    </div>
+
+    <div class="important">
+        <h3>Need Help?</h3>
+        <p>If you're still having trouble with imports:</p>
+        <ol>
+            <li>Download and review the CSV templates</li>
+            <li>Check that your column headers match exactly</li>
+            <li>Verify your data formatting (especially dates and boolean values)</li>
+            <li>Try importing a small test batch first</li>
+            <li>Contact the platform administrator if issues persist</li>
+        </ol>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; color: #6c757d;">
+        <p>Educational Yellow Pages Platform - Import Guide</p>
+        <p>Last updated: <span id="currentDate"></span></p>
+    </div>
+
+    <script>
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+    </script>
+</body>
+</html>

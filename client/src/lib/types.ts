@@ -9,6 +9,7 @@ export interface FilterState {
   state: string;
   tags?: string[];
   selectivityLevel?: number[];
+  cost?: string[];
   hasScholarship?: boolean;
   isRemote?: boolean;
   hasMentorship?: boolean;
@@ -27,6 +28,7 @@ export interface FilterOptions {
   types?: { value: string; label: string }[];
   tags?: { value: string; label: string }[];
   selectivityLevels?: { value: number; label: string; color?: string; description?: string }[];
+  cost?: { value: string; label: string }[];
   scholarshipOptions?: { value: boolean | undefined; label: string }[];
   remoteOptions?: { value: boolean | undefined; label: string }[];
   mentorshipOptions?: { value: boolean | undefined; label: string }[];

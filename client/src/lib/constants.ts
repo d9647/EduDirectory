@@ -115,6 +115,15 @@ export const CAMP_TAGS = [
   { value: "Industry-Hosted", label: "Industry-Hosted" },
 ];
 
+// Summer Camp Cost Options
+export const CAMP_COST_OPTIONS = [
+  { value: "< $1000", label: "< $1000" },
+  { value: "$1000 - $3000", label: "$1000 - $3000" },
+  { value: "$3000 - $5000", label: "$3000 - $5000" },
+  { value: "$5000 - $6500", label: "$5000 - $6500" },
+  { value: "> $6500", label: "> $6500" },
+];
+
 // Summer Camp Selectivity Levels
 export const SELECTIVITY_LEVELS = [
   { value: 1, label: "Open Enrollment", color: "bg-green-500", description: "Anyone can enroll" },
