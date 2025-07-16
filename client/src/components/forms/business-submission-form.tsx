@@ -135,7 +135,7 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
       }[type];
 
       // Prepare data with array fields and clean up empty date fields
-      const submitData = {
+      let submitData = {
         ...data,
         categories: selectedCategories,
         subjects: selectedSubjects,
@@ -154,6 +154,23 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
         }
       });
 
+      // Handle photo upload if there's a photo file
+      if (photoFile) {
+        const formData = new FormData();
+        formData.append('photo', photoFile);
+        
+        // Upload photo first
+        const photoResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (photoResponse.ok) {
+          const photoData = await photoResponse.json();
+          submitData.photoUrl = photoData.url;
+        }
+      }
+
       await apiRequest("POST", endpoint, submitData);
     },
     onSuccess: () => {
@@ -170,6 +187,8 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
       setSelectedDuration([]);
       setSelectedJobTypes([]);
       setSelectedSchedule([]);
+      setPhotoFile(null);
+      setPhotoPreview(null);
     },
     onError: (error) => {
       if (isUnauthorizedError(error as Error)) {

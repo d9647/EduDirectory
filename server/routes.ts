@@ -1,4 +1,5 @@
 import type { Express } from "express";
+import express from "express";
 import { createServer, type Server } from "http";
 import path from "path";
 import { storage } from "./storage";
@@ -622,13 +623,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Setup multer for file uploads
-  const upload = multer({ 
+  const upload = multer({
+    dest: 'uploads/',
+    limits: {
+      fileSize: 5 * 1024 * 1024, // 5MB limit
+    },
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype.startsWith('image/')) {
+        cb(null, true);
+      } else {
+        cb(new Error('Only image files are allowed'));
+      }
+    }
+  });
+
+  // Photo upload endpoint
+  app.post('/api/upload', upload.single('photo'), (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+
+      // For now, return a static URL. In a real app, you'd upload to a cloud service
+      const photoUrl = `/uploads/${req.file.filename}`;
+      
+      res.json({ url: photoUrl });
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      res.status(500).json({ message: 'Failed to upload photo' });
+    }
+  });
+
+  // Serve uploaded files
+  app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
+  // CSV import setup
+  const csvUpload = multer({ 
     storage: multer.memoryStorage(),
     limits: { fileSize: 10 * 1024 * 1024 } // 10MB limit
   });
 
   // Import routes (Admin only)
-  app.post('/api/admin/import/tutoring-providers', isAuthenticated, upload.single('csvFile'), async (req, res) => {
+  app.post('/api/admin/import/tutoring-providers', isAuthenticated, csvUpload.single('csvFile'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "No file uploaded" });
@@ -648,7 +684,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/admin/import/summer-camps', isAuthenticated, upload.single('csvFile'), async (req, res) => {
+  app.post('/api/admin/import/summer-camps', isAuthenticated, csvUpload.single('csvFile'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "No file uploaded" });
@@ -668,7 +704,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/admin/import/internships', isAuthenticated, upload.single('csvFile'), async (req, res) => {
+  app.post('/api/admin/import/internships', isAuthenticated, csvUpload.single('csvFile'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "No file uploaded" });
@@ -688,7 +724,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/admin/import/jobs', isAuthenticated, upload.single('csvFile'), async (req, res) => {
+  app.post('/api/admin/import/jobs', isAuthenticated, csvUpload.single('csvFile'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: "No file uploaded" });
