@@ -48,6 +48,7 @@ export default function ListingTable({
     { value: "name", label: "Name (A-Z)" },
     { value: "rating", label: "Rating" },
     { value: "thumbsUp", label: "Most Thumbs Up" },
+    ...(listingType === "camps" ? [{ value: "costRange", label: "Cost Range" }] : []),
   ];
 
   // Get the listings array based on type
@@ -390,6 +391,13 @@ export default function ListingTable({
           <Badge variant="outline">
             Level {listing.difficultyLevel}
           </Badge>
+        );
+
+      case "costRange":
+        return (
+          <div className="text-sm text-gray-900">
+            {listing.costRange || "Not specified"}
+          </div>
         );
 
       case "selectivityLevel":

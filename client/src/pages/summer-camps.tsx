@@ -79,6 +79,7 @@ export default function SummerCamps() {
             columns={[
               { key: "name", label: "Camp Name", sortable: true },
               { key: "selectivityLevel", label: "Selectivity", sortable: true },
+              { key: "costRange", label: "Cost Range", sortable: true },
               { key: "rating", label: "Rating", sortable: true },
               { key: "thumbsUpCount", label: "👍", sortable: true },
               { key: "categories", label: "Categories", sortable: false },

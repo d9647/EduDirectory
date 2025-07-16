@@ -385,11 +385,11 @@ export default function ListingDetailModal({
                       <span className="text-gray-700">Delivery: {listing.deliveryMode}</span>
                     </div>
                   )}
-                  {(listing.cost || listing.compensation || listing.salaryRange || listing.tuition || (listing.salaryMin && listing.salaryMax)) && (
+                  {(listing.costRange || listing.compensation || listing.salaryRange || listing.tuition || (listing.salaryMin && listing.salaryMax)) && (
                     <div className="flex items-center">
                       <DollarSign className="h-4 w-4 text-gray-400 mr-3" />
                       <span className="text-gray-700">
-                        {listing.cost || listing.tuition || 
+                        {listing.costRange || listing.tuition || 
                          (listing.salaryMin && listing.salaryMax ? 
                            `$${listing.salaryMin} - $${listing.salaryMax} ${listing.salaryType || ''}`.trim() :
                            formatSalary(listing.salaryRange, listing.salaryType)) || 

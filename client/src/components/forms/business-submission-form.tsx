@@ -97,7 +97,7 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
       categories: [],
       subjects: [],
       eligibility: "",
-      cost: "",
+      costRange: "",
       dates: "",
       difficultyLevel: 1,
       minimumAge: 14,
@@ -970,7 +970,7 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
-                    name="cost" as any
+                    name="costRange" as any
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Cost Range</FormLabel>
