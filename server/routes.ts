@@ -90,7 +90,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const filters = {
         search: req.query.search as string,
         categories: req.query.categories ? (req.query.categories as string).split(',') : undefined,
-        difficultyLevel: req.query.difficultyLevel ? (req.query.difficultyLevel as string).split(',').map(Number) : undefined,
+        tags: req.query.tags ? (req.query.tags as string).split(',') : undefined,
+        selectivityLevel: req.query.selectivityLevel ? (req.query.selectivityLevel as string).split(',').map(Number) : undefined,
+        cost: req.query.cost ? (req.query.cost as string).split(',') : undefined,
         city: req.query.city as string,
         state: req.query.state as string,
         hasScholarship: req.query.hasScholarship === 'true' ? true : req.query.hasScholarship === 'false' ? false : undefined,
