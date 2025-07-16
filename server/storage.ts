@@ -362,7 +362,20 @@ export class DatabaseStorage implements IStorage {
     }
 
     if (filters.cost?.length) {
-      conditions.push(sql`${summerCamps.costRange} = ANY(ARRAY[${sql.join(filters.cost.map(cost => sql`${cost}`), sql`, `)}]::text[])`);
+      // Handle "Not specified" filter separately
+      const hasNotSpecified = filters.cost.includes("Not specified");
+      const otherCosts = filters.cost.filter(cost => cost !== "Not specified");
+      
+      if (hasNotSpecified && otherCosts.length > 0) {
+        // Both "Not specified" and other cost ranges selected
+        conditions.push(sql`(${summerCamps.costRange} IS NULL OR ${summerCamps.costRange} = '' OR ${summerCamps.costRange} = ANY(ARRAY[${sql.join(otherCosts.map(cost => sql`${cost}`), sql`, `)}]::text[]))`);
+      } else if (hasNotSpecified) {
+        // Only "Not specified" selected
+        conditions.push(sql`(${summerCamps.costRange} IS NULL OR ${summerCamps.costRange} = '')`);
+      } else if (otherCosts.length > 0) {
+        // Only other cost ranges selected
+        conditions.push(sql`${summerCamps.costRange} = ANY(ARRAY[${sql.join(otherCosts.map(cost => sql`${cost}`), sql`, `)}]::text[])`);
+      }
     }
 
     if (filters.city) {

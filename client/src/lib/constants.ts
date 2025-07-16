@@ -122,6 +122,7 @@ export const CAMP_COST_OPTIONS = [
   { value: "$3000 - $5000", label: "$3000 - $5000" },
   { value: "$5000 - $6500", label: "$5000 - $6500" },
   { value: "> $6500", label: "> $6500" },
+  { value: "Not specified", label: "Not specified" },
 ];
 
 // Summer Camp Selectivity Levels
