@@ -58,6 +58,7 @@ export interface IStorage {
     categories?: string[];
     tags?: string[];
     selectivityLevel?: number[];
+    cost?: string[];
     city?: string;
     state?: string;
     hasScholarship?: boolean;
@@ -328,6 +329,7 @@ export class DatabaseStorage implements IStorage {
     categories?: string[];
     tags?: string[];
     selectivityLevel?: number[];
+    cost?: string[];
     city?: string;
     state?: string;
     hasScholarship?: boolean;
@@ -357,6 +359,10 @@ export class DatabaseStorage implements IStorage {
 
     if (filters.selectivityLevel?.length) {
       conditions.push(sql`${summerCamps.selectivityLevel} = ANY(ARRAY[${sql.join(filters.selectivityLevel.map(level => sql`${level}`), sql`, `)}]::integer[])`);
+    }
+
+    if (filters.cost?.length) {
+      conditions.push(sql`${summerCamps.cost} = ANY(ARRAY[${sql.join(filters.cost.map(cost => sql`${cost}`), sql`, `)}]::text[])`);
     }
 
     if (filters.city) {

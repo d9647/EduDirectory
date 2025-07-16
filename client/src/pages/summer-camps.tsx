@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/layout/header";
 import FilterSidebar from "@/components/layout/filter-sidebar";
 import ListingTable from "@/components/listings/listing-table";
-import { CAMP_CATEGORIES, CAMP_TAGS, SELECTIVITY_LEVELS } from "@/lib/constants";
+import { CAMP_CATEGORIES, CAMP_TAGS, CAMP_COST_OPTIONS, SELECTIVITY_LEVELS } from "@/lib/constants";
 
 export default function SummerCamps() {
   const [filters, setFilters] = useState({
@@ -11,6 +11,7 @@ export default function SummerCamps() {
     categories: [] as string[],
     tags: [] as string[],
     selectivityLevel: [] as number[],
+    cost: [] as string[],
     city: "",
     state: "",
     hasScholarship: undefined as boolean | undefined,
@@ -48,6 +49,7 @@ export default function SummerCamps() {
     categories: CAMP_CATEGORIES,
     tags: CAMP_TAGS,
     selectivityLevels: SELECTIVITY_LEVELS,
+    cost: CAMP_COST_OPTIONS,
     scholarshipOptions: [
       { value: undefined, label: "All" },
       { value: true, label: "Scholarship Available" },

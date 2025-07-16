@@ -25,6 +25,7 @@ import {
   TUTORING_SUBJECTS,
   CAMP_CATEGORIES,
   CAMP_TAGS,
+  CAMP_COST_OPTIONS,
   SELECTIVITY_LEVELS,
   INTERNSHIP_TYPES,
   INTERNSHIP_DURATION_OPTIONS,
@@ -54,6 +55,8 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
   const [selectedJobTypes, setSelectedJobTypes] = useState<string[]>([]);
   const [selectedSchedule, setSelectedSchedule] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
   // Get the appropriate schema based on type
   const getSchema = () => {
@@ -260,6 +263,45 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
 
   const removeSchedule = (schedule: string) => {
     setSelectedSchedule(prev => prev.filter(s => s !== schedule));
+  };
+
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Check file size (limit to 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "Please select an image under 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: "Invalid file type",
+          description: "Please select an image file.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setPhotoFile(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPhotoPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removePhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview(null);
   };
 
   const onSubmit = (data: FormData) => {
@@ -556,6 +598,50 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
                     </FormItem>
                   )}
                 />
+              </div>
+
+              {/* Photo Upload */}
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                  Logo/Photo Upload (Optional)
+                </Label>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-4">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      className="hidden"
+                      id="photo-upload"
+                    />
+                    <Label
+                      htmlFor="photo-upload"
+                      className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                    >
+                      Choose Photo
+                    </Label>
+                    <span className="text-sm text-gray-500">
+                      Max size: 5MB. Supported: JPG, PNG, GIF
+                    </span>
+                  </div>
+
+                  {photoPreview && (
+                    <div className="relative inline-block">
+                      <img
+                        src={photoPreview}
+                        alt="Preview"
+                        className="w-32 h-32 object-cover rounded-lg border"
+                      />
+                      <button
+                        type="button"
+                        onClick={removePhoto}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -868,10 +954,21 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
                     name="cost" as any
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Cost</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="e.g., $1500 per session" />
-                        </FormControl>
+                        <FormLabel>Cost Range</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select cost range" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {CAMP_COST_OPTIONS.map((cost) => (
+                              <SelectItem key={cost.value} value={cost.value}>
+                                {cost.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}

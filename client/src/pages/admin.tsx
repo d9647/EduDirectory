@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { CheckCircle, XCircle, AlertTriangle, Search, Eye, EyeOff } from "lucide-react";
+import { CheckCircle, XCircle, AlertTriangle, Search, Eye, EyeOff, Upload } from "lucide-react";
 import AdminEditModal from "@/components/admin/admin-edit-modal";
 
 export default function Admin() {
@@ -50,6 +50,21 @@ export default function Admin() {
     'summer-camps': false,
     'internships': false,
     'jobs': false
+  });
+
+  // Import states
+  const [importLoading, setImportLoading] = useState({
+    'tutoring-providers': false,
+    'summer-camps': false,
+    'internships': false,
+    'jobs': false
+  });
+
+  const [selectedFiles, setSelectedFiles] = useState({
+    'tutoring-providers': null as File | null,
+    'summer-camps': null as File | null,
+    'internships': null as File | null,
+    'jobs': null as File | null
   });
 
   // Search function
@@ -166,6 +181,61 @@ export default function Admin() {
     },
   });
 
+  // Import function
+  const handleImport = async (type: string) => {
+    const file = selectedFiles[type as keyof typeof selectedFiles];
+    if (!file) {
+      toast({
+        title: "Error",
+        description: "Please select a CSV file to import",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setImportLoading(prev => ({ ...prev, [type]: true }));
+
+    try {
+      const formData = new FormData();
+      formData.append('csvFile', file);
+
+      const response = await fetch(`/api/admin/import/${type}`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Import Completed",
+          description: result.message,
+        });
+        
+        // Clear selected file
+        setSelectedFiles(prev => ({ ...prev, [type]: null }));
+        
+        // Reset file input
+        const fileInput = document.getElementById(`${type}-file`) as HTMLInputElement;
+        if (fileInput) fileInput.value = '';
+        
+        // Refresh pending approvals
+        queryClient.invalidateQueries({ queryKey: ["/api/admin/pending-approvals"] });
+      } else {
+        throw new Error(result.message || 'Import failed');
+      }
+    } catch (error) {
+      console.error('Import error:', error);
+      toast({
+        title: "Import Failed",
+        description: error instanceof Error ? error.message : "Unknown error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setImportLoading(prev => ({ ...prev, [type]: false }));
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -212,6 +282,9 @@ export default function Admin() {
             </TabsTrigger>
             <TabsTrigger value="edit-listings">
               Edit Live Listings
+            </TabsTrigger>
+            <TabsTrigger value="import">
+              Import Data
             </TabsTrigger>
           </TabsList>
 
@@ -697,6 +770,163 @@ export default function Admin() {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="import" className="mt-6">
+            <div className="space-y-6">
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold mb-2">Bulk Data Import</h2>
+                <p className="text-gray-600 mb-4">
+                  Import data from CSV files. Make sure your CSV files follow the correct format.
+                </p>
+                <div className="flex gap-4">
+                  <Button
+                    onClick={() => window.open('/api/template', '_blank')}
+                    variant="outline"
+                  >
+                    Download CSV Template
+                  </Button>
+                  <Button
+                    onClick={() => window.open('/api/import-guide', '_blank')}
+                    variant="outline"
+                  >
+                    View Import Guide
+                  </Button>
+                </div>
+              </div>
+
+              {/* Tutoring Providers Import */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Import Tutoring Providers</CardTitle>
+                  <CardDescription>
+                    Upload a CSV file containing tutoring provider data
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <input
+                        id="tutoring-providers-file"
+                        type="file"
+                        accept=".csv"
+                        onChange={(e) => setSelectedFiles(prev => ({ 
+                          ...prev, 
+                          'tutoring-providers': e.target.files?.[0] || null 
+                        }))}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                      />
+                    </div>
+                    <Button
+                      onClick={() => handleImport('tutoring-providers')}
+                      disabled={!selectedFiles['tutoring-providers'] || importLoading['tutoring-providers']}
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      {importLoading['tutoring-providers'] ? 'Importing...' : 'Import Tutoring Providers'}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Summer Camps Import */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Import Summer Camps</CardTitle>
+                  <CardDescription>
+                    Upload a CSV file containing summer camp data
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <input
+                        id="summer-camps-file"
+                        type="file"
+                        accept=".csv"
+                        onChange={(e) => setSelectedFiles(prev => ({ 
+                          ...prev, 
+                          'summer-camps': e.target.files?.[0] || null 
+                        }))}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                      />
+                    </div>
+                    <Button
+                      onClick={() => handleImport('summer-camps')}
+                      disabled={!selectedFiles['summer-camps'] || importLoading['summer-camps']}
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      {importLoading['summer-camps'] ? 'Importing...' : 'Import Summer Camps'}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Internships Import */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Import Internships</CardTitle>
+                  <CardDescription>
+                    Upload a CSV file containing internship data
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <input
+                        id="internships-file"
+                        type="file"
+                        accept=".csv"
+                        onChange={(e) => setSelectedFiles(prev => ({ 
+                          ...prev, 
+                          'internships': e.target.files?.[0] || null 
+                        }))}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                      />
+                    </div>
+                    <Button
+                      onClick={() => handleImport('internships')}
+                      disabled={!selectedFiles['internships'] || importLoading['internships']}
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      {importLoading['internships'] ? 'Importing...' : 'Import Internships'}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Jobs Import */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Import Job Opportunities</CardTitle>
+                  <CardDescription>
+                    Upload a CSV file containing job opportunity data
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <input
+                        id="jobs-file"
+                        type="file"
+                        accept=".csv"
+                        onChange={(e) => setSelectedFiles(prev => ({ 
+                          ...prev, 
+                          'jobs': e.target.files?.[0] || null 
+                        }))}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                      />
+                    </div>
+                    <Button
+                      onClick={() => handleImport('jobs')}
+                      disabled={!selectedFiles['jobs'] || importLoading['jobs']}
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      {importLoading['jobs'] ? 'Importing...' : 'Import Job Opportunities'}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

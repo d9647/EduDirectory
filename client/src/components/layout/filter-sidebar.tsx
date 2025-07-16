@@ -311,6 +311,45 @@ export default function FilterSidebar({
                 </div>
               )}
 
+              {/* Cost Filter (Summer Camps) */}
+              {listingType === "camps" && filterOptions.cost && (
+                <div>
+                  <Label className="text-sm font-medium text-gray-900 mb-3 block">
+                    Cost Range
+                  </Label>
+                  <div className="space-y-2">
+                    {filterOptions.cost.map((costOption) => (
+                      <div key={costOption.value} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`cost-${costOption.value}`}
+                          checked={(filters.cost || []).includes(costOption.value)}
+                          onCheckedChange={() => toggleArrayFilter("cost", costOption.value)}
+                        />
+                        <Label htmlFor={`cost-${costOption.value}`} className="text-sm text-gray-700">
+                          {costOption.label}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                  {filters.cost && filters.cost.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {filters.cost.map((cost) => (
+                        <Badge key={cost} variant="secondary" className="text-xs">
+                          {cost}
+                          <button
+                            type="button"
+                            onClick={() => removeArrayFilterItem("cost", cost)}
+                            className="ml-1 hover:text-red-600"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Types Filter (Internships) */}
               {listingType === "internships" && filterOptions.types && (
                 <div>

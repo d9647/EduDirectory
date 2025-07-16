@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Educational Yellow Pages - Google Sheets Import Template</title>
+    <title>CSV Template - Educational Yellow Pages</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,274 +13,262 @@
             line-height: 1.6;
         }
         .header {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 20px;
         }
         .section {
             margin-bottom: 40px;
+            padding: 20px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            padding: 20px;
         }
         .section h2 {
-            color: #2563eb;
+            color: #007bff;
             margin-top: 0;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 10px;
         }
-        .column-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 12px;
         }
-        .column-item {
-            background-color: #f3f4f6;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-family: monospace;
-            font-size: 0.9em;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: bold;
         }
         .required {
-            background-color: #fef2f2;
-            border-left: 4px solid #dc2626;
+            color: #dc3545;
+            font-weight: bold;
         }
-        .array-field {
-            background-color: #f0f9ff;
-            border-left: 4px solid #0ea5e9;
+        .optional {
+            color: #6c757d;
         }
         .notes {
-            background-color: #fffbeb;
-            border: 1px solid #f59e0b;
-            border-radius: 4px;
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
             padding: 15px;
-            margin-top: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
         }
-        .instructions {
-            background-color: #ecfdf5;
-            border: 1px solid #10b981;
-            border-radius: 4px;
-            padding: 15px;
-            margin-bottom: 20px;
+        .download-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #e7f3ff;
+            border-radius: 8px;
         }
-        code {
-            background-color: #f3f4f6;
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-family: monospace;
+        .download-btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px;
+            font-weight: bold;
+        }
+        .download-btn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Educational Yellow Pages - Google Sheets Import Template</h1>
-        <p>This template provides the exact column headers needed for bulk importing data into the Educational Yellow Pages platform. Copy the column headers for your specific business type and create your Google Sheet accordingly.</p>
+        <h1>CSV Import Template</h1>
+        <p>Educational Yellow Pages Platform</p>
+        <p>Use these templates to bulk import data into the system</p>
     </div>
 
-    <div class="instructions">
-        <h3>How to Use This Template:</h3>
-        <ol>
-            <li>Choose your business type from the sections below</li>
-            <li>Copy the column headers for that type</li>
-            <li>Create a new Google Sheet with these exact column names as the first row</li>
-            <li>Fill in your data below the headers</li>
-            <li>Export as CSV or share with the platform administrators</li>
-        </ol>
-        <p><strong>Important:</strong> Column names must match exactly (case-sensitive). Required fields are highlighted in red.</p>
-    </div>
-
-    <div class="section">
-        <h2>1. Tutoring Providers</h2>
-        <div class="column-list">
-            <div class="column-item required">name *</div>
-            <div class="column-item required">type *</div>
-            <div class="column-item">description</div>
-            <div class="column-item">website</div>
-            <div class="column-item">phone</div>
-            <div class="column-item">email</div>
-            <div class="column-item">address</div>
-            <div class="column-item">city</div>
-            <div class="column-item">state</div>
-            <div class="column-item array-field">categories</div>
-            <div class="column-item array-field">subjects</div>
-            <div class="column-item">delivery_mode</div>
-            <div class="column-item">photo_url</div>
-        </div>
-        <div class="notes">
-            <h4>Notes for Tutoring Providers:</h4>
-            <ul>
-                <li><strong>type:</strong> "private_tutor" or "business"</li>
-                <li><strong>categories:</strong> Mathematics, English, Science, Test Prep, Languages, Music & Arts, Counseling (separate multiple with commas)</li>
-                <li><strong>subjects:</strong> Specific subjects like "Algebra, SAT Prep, Piano" (separate multiple with commas)</li>
-                <li><strong>delivery_mode:</strong> "In-person", "Remote", or "Hybrid"</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="section">
-        <h2>2. Summer Camps</h2>
-        <div class="column-list">
-            <div class="column-item required">name *</div>
-            <div class="column-item">location</div>
-            <div class="column-item">address</div>
-            <div class="column-item">city</div>
-            <div class="column-item">state</div>
-            <div class="column-item array-field">categories</div>
-            <div class="column-item array-field">tags</div>
-            <div class="column-item">selectivity_level</div>
-            <div class="column-item">dates</div>
-            <div class="column-item">length</div>
-            <div class="column-item">cost</div>
-            <div class="column-item">application_open</div>
-            <div class="column-item">application_due_date</div>
-            <div class="column-item">application_deadline</div>
-            <div class="column-item">application_available</div>
-            <div class="column-item">minimum_age</div>
-            <div class="column-item">has_scholarship</div>
-            <div class="column-item">eligibility</div>
-            <div class="column-item">description</div>
-            <div class="column-item">delivery_mode</div>
-            <div class="column-item">website</div>
-            <div class="column-item">photo_url</div>
-        </div>
-        <div class="notes">
-            <h4>Notes for Summer Camps:</h4>
-            <ul>
-                <li><strong>categories:</strong> STEM, Leadership, Arts, Sports, Academic, Technology (separate multiple with commas)</li>
-                <li><strong>tags:</strong> Women Only, Boys Only, Day Camp, Overnight, Financial Aid Available (separate multiple with commas)</li>
-                <li><strong>selectivity_level:</strong> 1 (Open Enrollment), 2 (Somewhat Competitive), 3 (Competitive), 4 (Very Competitive)</li>
-                <li><strong>dates:</strong> Use format YYYY-MM-DD or descriptive text like "June 15 - July 20, 2025"</li>
-                <li><strong>application_available, has_scholarship:</strong> TRUE or FALSE</li>
-                <li><strong>delivery_mode:</strong> "In-person", "Remote", or "Hybrid"</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="section">
-        <h2>3. Internships</h2>
-        <div class="column-list">
-            <div class="column-item required">company_name *</div>
-            <div class="column-item required">title *</div>
-            <div class="column-item">location</div>
-            <div class="column-item">address</div>
-            <div class="column-item">city</div>
-            <div class="column-item">state</div>
-            <div class="column-item">is_remote</div>
-            <div class="column-item array-field">types</div>
-            <div class="column-item">compensation</div>
-            <div class="column-item">description</div>
-            <div class="column-item array-field">duration</div>
-            <div class="column-item">internship_dates</div>
-            <div class="column-item">length</div>
-            <div class="column-item">delivery_mode</div>
-            <div class="column-item">minimum_age</div>
-            <div class="column-item">application_open</div>
-            <div class="column-item">application_deadline</div>
-            <div class="column-item">prerequisites</div>
-            <div class="column-item">tuition</div>
-            <div class="column-item">eligibility</div>
-            <div class="column-item">website</div>
-            <div class="column-item">has_mentorship</div>
-        </div>
-        <div class="notes">
-            <h4>Notes for Internships:</h4>
-            <ul>
-                <li><strong>types:</strong> Academic, STEM, Healthcare, Business, Government, Non-profit (separate multiple with commas)</li>
-                <li><strong>compensation:</strong> "Paid", "Unpaid", "Stipend", or "Academic Credit"</li>
-                <li><strong>duration:</strong> Summer, Academic Year, Semester, Part-time, Full-time (separate multiple with commas)</li>
-                <li><strong>dates:</strong> Use format YYYY-MM-DD for specific dates</li>
-                <li><strong>is_remote, has_mentorship:</strong> TRUE or FALSE</li>
-                <li><strong>delivery_mode:</strong> "In-person", "Remote", or "Hybrid"</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="section">
-        <h2>4. Jobs</h2>
-        <div class="column-list">
-            <div class="column-item required">company_name *</div>
-            <div class="column-item required">title *</div>
-            <div class="column-item">location</div>
-            <div class="column-item">address</div>
-            <div class="column-item">city</div>
-            <div class="column-item">state</div>
-            <div class="column-item">is_remote</div>
-            <div class="column-item array-field">categories</div>
-            <div class="column-item">compensation</div>
-            <div class="column-item">compensation_range</div>
-            <div class="column-item">salary_min</div>
-            <div class="column-item">salary_max</div>
-            <div class="column-item">salary_type</div>
-            <div class="column-item array-field">job_type</div>
-            <div class="column-item">description</div>
-            <div class="column-item">work_schedule</div>
-            <div class="column-item array-field">schedule</div>
-            <div class="column-item">minimum_age</div>
-            <div class="column-item">opening_date</div>
-            <div class="column-item">closing_date</div>
-            <div class="column-item">is_ongoing</div>
-            <div class="column-item">application_deadline</div>
-            <div class="column-item">eligibility</div>
-            <div class="column-item">application_link</div>
-            <div class="column-item">has_training</div>
-            <div class="column-item">has_advancement</div>
-            <div class="column-item">requires_transportation</div>
-            <div class="column-item">requires_resume</div>
-        </div>
-        <div class="notes">
-            <h4>Notes for Jobs:</h4>
-            <ul>
-                <li><strong>categories:</strong> Retail & Customer Service, Food Service, Technology, Healthcare, Education (separate multiple with commas)</li>
-                <li><strong>job_type:</strong> Full-time, Part-time, Temporary, Contract, Seasonal (separate multiple with commas)</li>
-                <li><strong>schedule:</strong> Night shift, Day shift, Monday to Friday, Weekends (separate multiple with commas)</li>
-                <li><strong>salary_type:</strong> "hourly", "monthly", or "yearly"</li>
-                <li><strong>salary_min/salary_max:</strong> Numeric values (e.g., 15.50 for $15.50/hour)</li>
-                <li><strong>Boolean fields:</strong> is_remote, is_ongoing, has_training, has_advancement, requires_transportation, requires_resume (TRUE or FALSE)</li>
-                <li><strong>dates:</strong> Use format YYYY-MM-DD</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="section">
-        <h2>General Import Guidelines</h2>
-        <div class="notes">
-            <h4>Data Format Requirements:</h4>
-            <ul>
-                <li><strong>Required fields (*)</strong> must have values for each row</li>
-                <li><strong>Array fields (blue)</strong> can contain multiple values separated by commas</li>
-                <li><strong>Boolean fields:</strong> Use TRUE or FALSE (case-insensitive)</li>
-                <li><strong>Date fields:</strong> Use YYYY-MM-DD format (e.g., 2025-06-15)</li>
-                <li><strong>Numeric fields:</strong> Use decimal notation (e.g., 15.50, not $15.50)</li>
-                <li><strong>URLs:</strong> Include full URL with https:// or http://</li>
-                <li><strong>Empty cells:</strong> Leave blank for optional fields</li>
-                <li><strong>Special characters:</strong> Avoid using commas in single-value fields (use semicolons instead)</li>
-            </ul>
-        </div>
-    </div>
-
-    <div class="section">
-        <h2>Example Data Rows</h2>
-        <h3>Tutoring Provider Example:</h3>
-        <code>
-        Math Tutoring Pro, business, Expert math tutoring for all levels, https://mathtutoringpro.com, (555) 123-4567, info@mathtutoringpro.com, 123 Main St, San Francisco, CA, Mathematics;Test Prep, Algebra;Geometry;SAT Math;ACT Math, Hybrid, https://example.com/photo.jpg
-        </code>
+    <div class="download-section">
+        <h3>Quick Download Links</h3>
+        <a href="data:text/csv;charset=utf-8,name,type,description,categories,subjects,city,state,deliveryMode,website,phone,email,address,photoUrl%0AExample Tutoring Center,business,Professional tutoring services with certified teachers,Academic;Test Prep,Mathematics;Science;English,San Francisco,CA,In-person,https://example.com,555-0123,info@example.com,123 Main St,https://example.com/photo.jpg" 
+           download="tutoring_providers_template.csv" class="download-btn">Download Tutoring Providers Template</a>
         
-        <h3>Summer Camp Example:</h3>
-        <code>
-        STEM Adventure Camp, Bay Area California, 456 Science Way, Palo Alto, CA, STEM;Technology, Day Camp;Financial Aid Available, 2, June 15 - August 15 2025, 8 weeks, $2500-3000, 2025-02-01, 2025-04-15, 2025-04-15, TRUE, 12, TRUE, Ages 12-16 interested in STEM, Hands-on STEM learning experience, In-person, https://stemcamp.org, https://example.com/camp.jpg
-        </code>
+        <a href="data:text/csv;charset=utf-8,name,description,categories,city,state,cost,selectivityLevel,minimumAge,hasScholarship,tags,dates,length,applicationOpen,applicationDeadline,deliveryMode,website,phone,email,address,photoUrl%0AExample Summer Camp,Educational summer camp program,STEM;Arts,San Francisco,CA,$1000-$3000,3,12,true,Technology;Science,June 15 - July 30 2024,6 weeks,2024-02-01,2024-04-15,In-person,https://example.com,555-0123,info@example.com,123 Camp Road,https://example.com/photo.jpg" 
+           download="summer_camps_template.csv" class="download-btn">Download Summer Camps Template</a>
         
-        <h3>Internship Example:</h3>
-        <code>
-        Tech Innovations Inc, Software Development Intern, San Francisco CA, 789 Tech Blvd, San Francisco, CA, FALSE, STEM;Technology, Paid, Learn software development skills, Summer;Full-time, June 1 - August 31 2025, 12 weeks, In-person, 16, 2025-01-15, 2025-03-15, Basic programming knowledge, N/A, High school students with coding interest, https://techinnovations.com/internships, TRUE
-        </code>
+        <a href="data:text/csv;charset=utf-8,companyName,title,description,types,city,state,compensation,duration,minimumAge,hasMentorship,deliveryMode,applicationOpen,applicationDeadline,internshipDates,prerequisites,tuition,website,phone,email,address,photoUrl%0AExample Company,Software Engineering Intern,Learn software development skills,Technology;Software,San Francisco,CA,Paid,Summer;Full-time,16,true,In-person,2024-02-01,2024-04-15,June 1 - August 31 2024,Basic programming knowledge,,https://example.com,555-0123,hr@example.com,123 Tech St,https://example.com/photo.jpg" 
+           download="internships_template.csv" class="download-btn">Download Internships Template</a>
         
-        <h3>Job Example:</h3>
-        <code>
-        Local Retail Store, Sales Associate, Downtown Area, 321 Shopping St, San Jose, CA, FALSE, Retail & Customer Service, Hourly Wage, $15-18/hour, 15.00, 18.00, hourly, Part-time, Customer service and sales, Flexible scheduling available, Day shift;Weekends, 16, 2025-01-01, 2025-12-31, TRUE, 2025-12-31, High school diploma preferred, https://retailstore.com/careers, TRUE, TRUE, FALSE, FALSE
-        </code>
+        <a href="data:text/csv;charset=utf-8,companyName,title,description,categories,city,state,jobType,schedule,minimumAge,hasTraining,salaryRange,salaryType,deliveryMode,openingDate,closingDate,isOngoing,website,phone,email,address,photoUrl%0AExample Restaurant,Food Service Associate,Entry-level food service position,Food Service;Retail,San Francisco,CA,Part-time,Day shift;Weekends,16,true,$15-20,Hourly,In-person,2024-01-15,,true,https://example.com,555-0123,jobs@example.com,123 Restaurant Ave,https://example.com/photo.jpg" 
+           download="jobs_template.csv" class="download-btn">Download Jobs Template</a>
     </div>
+
+    <div class="section">
+        <h2>1. Tutoring Providers Template</h2>
+        <p>Import tutoring providers and educational services</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column Name</th>
+                    <th>Required</th>
+                    <th>Data Type</th>
+                    <th>Description</th>
+                    <th>Example Values</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>name</td><td class="required">Required</td><td>Text</td><td>Name of the tutoring provider</td><td>ABC Tutoring Center</td></tr>
+                <tr><td>type</td><td class="optional">Optional</td><td>Text</td><td>business OR private_tutor</td><td>business</td></tr>
+                <tr><td>description</td><td class="required">Required</td><td>Text</td><td>Detailed description of services</td><td>Professional tutoring services...</td></tr>
+                <tr><td>categories</td><td class="required">Required</td><td>Array</td><td>Semicolon-separated categories</td><td>Academic;Test Prep;Language Learning</td></tr>
+                <tr><td>subjects</td><td class="optional">Optional</td><td>Array</td><td>Semicolon-separated subjects</td><td>Mathematics;Science;English</td></tr>
+                <tr><td>city</td><td class="required">Required</td><td>Text</td><td>City location</td><td>San Francisco</td></tr>
+                <tr><td>state</td><td class="required">Required</td><td>Text</td><td>State abbreviation</td><td>CA</td></tr>
+                <tr><td>deliveryMode</td><td class="optional">Optional</td><td>Text</td><td>In-person, Remote, or Hybrid</td><td>In-person</td></tr>
+                <tr><td>website</td><td class="optional">Optional</td><td>URL</td><td>Website URL</td><td>https://example.com</td></tr>
+                <tr><td>phone</td><td class="optional">Optional</td><td>Text</td><td>Phone number</td><td>555-0123</td></tr>
+                <tr><td>email</td><td class="optional">Optional</td><td>Email</td><td>Contact email</td><td>info@example.com</td></tr>
+                <tr><td>address</td><td class="optional">Optional</td><td>Text</td><td>Street address</td><td>123 Main St</td></tr>
+                <tr><td>photoUrl</td><td class="optional">Optional</td><td>URL</td><td>Photo/logo URL</td><td>https://example.com/photo.jpg</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>2. Summer Camps Template</h2>
+        <p>Import summer camp programs</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column Name</th>
+                    <th>Required</th>
+                    <th>Data Type</th>
+                    <th>Description</th>
+                    <th>Example Values</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>name</td><td class="required">Required</td><td>Text</td><td>Name of the summer camp</td><td>Tech Explorer Camp</td></tr>
+                <tr><td>description</td><td class="required">Required</td><td>Text</td><td>Detailed camp description</td><td>STEM-focused summer program...</td></tr>
+                <tr><td>categories</td><td class="required">Required</td><td>Array</td><td>Semicolon-separated categories</td><td>STEM;Technology;Arts</td></tr>
+                <tr><td>city</td><td class="required">Required</td><td>Text</td><td>City location</td><td>San Francisco</td></tr>
+                <tr><td>state</td><td class="required">Required</td><td>Text</td><td>State abbreviation</td><td>CA</td></tr>
+                <tr><td>cost</td><td class="optional">Optional</td><td>Text</td><td>Cost range</td><td>< $1000, $1000-$3000, $3000-$5000, $5000-$6500, > $6500</td></tr>
+                <tr><td>selectivityLevel</td><td class="optional">Optional</td><td>Number</td><td>Difficulty level (1-5)</td><td>3</td></tr>
+                <tr><td>minimumAge</td><td class="optional">Optional</td><td>Number</td><td>Minimum age requirement</td><td>12</td></tr>
+                <tr><td>hasScholarship</td><td class="optional">Optional</td><td>Boolean</td><td>true, false, or empty</td><td>true</td></tr>
+                <tr><td>tags</td><td class="optional">Optional</td><td>Array</td><td>Semicolon-separated tags</td><td>Technology;Science;Engineering</td></tr>
+                <tr><td>dates</td><td class="optional">Optional</td><td>Text</td><td>Camp dates</td><td>June 15 - July 30, 2024</td></tr>
+                <tr><td>length</td><td class="optional">Optional</td><td>Text</td><td>Duration</td><td>6 weeks</td></tr>
+                <tr><td>applicationOpen</td><td class="optional">Optional</td><td>Date</td><td>Application opening date</td><td>2024-02-01</td></tr>
+                <tr><td>applicationDeadline</td><td class="optional">Optional</td><td>Date</td><td>Application deadline</td><td>2024-04-15</td></tr>
+                <tr><td>deliveryMode</td><td class="optional">Optional</td><td>Text</td><td>In-person, Remote, or Hybrid</td><td>In-person</td></tr>
+                <tr><td>website</td><td class="optional">Optional</td><td>URL</td><td>Website URL</td><td>https://example.com</td></tr>
+                <tr><td>phone</td><td class="optional">Optional</td><td>Text</td><td>Phone number</td><td>555-0123</td></tr>
+                <tr><td>email</td><td class="optional">Optional</td><td>Email</td><td>Contact email</td><td>info@example.com</td></tr>
+                <tr><td>address</td><td class="optional">Optional</td><td>Text</td><td>Street address</td><td>123 Camp Road</td></tr>
+                <tr><td>photoUrl</td><td class="optional">Optional</td><td>URL</td><td>Photo URL</td><td>https://example.com/photo.jpg</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>3. Internships Template</h2>
+        <p>Import internship opportunities</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column Name</th>
+                    <th>Required</th>
+                    <th>Data Type</th>
+                    <th>Description</th>
+                    <th>Example Values</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>companyName</td><td class="required">Required</td><td>Text</td><td>Company/organization name</td><td>Tech Innovations Inc</td></tr>
+                <tr><td>title</td><td class="required">Required</td><td>Text</td><td>Internship position title</td><td>Software Engineering Intern</td></tr>
+                <tr><td>description</td><td class="required">Required</td><td>Text</td><td>Detailed internship description</td><td>Learn software development...</td></tr>
+                <tr><td>types</td><td class="required">Required</td><td>Array</td><td>Semicolon-separated types</td><td>Technology;Software;Engineering</td></tr>
+                <tr><td>city</td><td class="required">Required</td><td>Text</td><td>City location</td><td>San Francisco</td></tr>
+                <tr><td>state</td><td class="required">Required</td><td>Text</td><td>State abbreviation</td><td>CA</td></tr>
+                <tr><td>compensation</td><td class="optional">Optional</td><td>Text</td><td>Paid, Unpaid, Stipend, Academic Credit</td><td>Paid</td></tr>
+                <tr><td>duration</td><td class="optional">Optional</td><td>Array</td><td>Semicolon-separated durations</td><td>Summer;Full-time</td></tr>
+                <tr><td>minimumAge</td><td class="optional">Optional</td><td>Number</td><td>Minimum age (14-25)</td><td>16</td></tr>
+                <tr><td>hasMentorship</td><td class="optional">Optional</td><td>Boolean</td><td>true, false, or empty</td><td>true</td></tr>
+                <tr><td>deliveryMode</td><td class="optional">Optional</td><td>Text</td><td>In-person, Remote, or Hybrid</td><td>In-person</td></tr>
+                <tr><td>applicationOpen</td><td class="optional">Optional</td><td>Date</td><td>Application opening date</td><td>2024-02-01</td></tr>
+                <tr><td>applicationDeadline</td><td class="optional">Optional</td><td>Date</td><td>Application deadline</td><td>2024-04-15</td></tr>
+                <tr><td>internshipDates</td><td class="optional">Optional</td><td>Text</td><td>Internship period</td><td>June 1 - August 31, 2024</td></tr>
+                <tr><td>prerequisites</td><td class="optional">Optional</td><td>Text</td><td>Requirements/qualifications</td><td>Basic programming knowledge</td></tr>
+                <tr><td>tuition</td><td class="optional">Optional</td><td>Text</td><td>Cost information</td><td>Free</td></tr>
+                <tr><td>website</td><td class="optional">Optional</td><td>URL</td><td>Website URL</td><td>https://example.com</td></tr>
+                <tr><td>phone</td><td class="optional">Optional</td><td>Text</td><td>Phone number</td><td>555-0123</td></tr>
+                <tr><td>email</td><td class="optional">Optional</td><td>Email</td><td>Contact email</td><td>hr@example.com</td></tr>
+                <tr><td>address</td><td class="optional">Optional</td><td>Text</td><td>Street address</td><td>123 Tech Street</td></tr>
+                <tr><td>photoUrl</td><td class="optional">Optional</td><td>URL</td><td>Photo URL</td><td>https://example.com/photo.jpg</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>4. Jobs Template</h2>
+        <p>Import job opportunities</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column Name</th>
+                    <th>Required</th>
+                    <th>Data Type</th>
+                    <th>Description</th>
+                    <th>Example Values</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>companyName</td><td class="required">Required</td><td>Text</td><td>Company name</td><td>Local Restaurant</td></tr>
+                <tr><td>title</td><td class="required">Required</td><td>Text</td><td>Job position title</td><td>Food Service Associate</td></tr>
+                <tr><td>description</td><td class="required">Required</td><td>Text</td><td>Detailed job description</td><td>Entry-level food service...</td></tr>
+                <tr><td>categories</td><td class="required">Required</td><td>Array</td><td>Semicolon-separated categories</td><td>Food Service;Retail;Customer Service</td></tr>
+                <tr><td>city</td><td class="required">Required</td><td>Text</td><td>City location</td><td>San Francisco</td></tr>
+                <tr><td>state</td><td class="required">Required</td><td>Text</td><td>State abbreviation</td><td>CA</td></tr>
+                <tr><td>jobType</td><td class="optional">Optional</td><td>Array</td><td>Semicolon-separated types</td><td>Part-time;Full-time</td></tr>
+                <tr><td>schedule</td><td class="optional">Optional</td><td>Array</td><td>Semicolon-separated schedules</td><td>Day shift;Weekends;Monday to Friday</td></tr>
+                <tr><td>minimumAge</td><td class="optional">Optional</td><td>Number</td><td>Minimum age requirement</td><td>16</td></tr>
+                <tr><td>hasTraining</td><td class="optional">Optional</td><td>Boolean</td><td>true, false, or empty</td><td>true</td></tr>
+                <tr><td>salaryRange</td><td class="optional">Optional</td><td>Text</td><td>Salary or wage range</td><td>$15-20</td></tr>
+                <tr><td>salaryType</td><td class="optional">Optional</td><td>Text</td><td>Hourly, Monthly, or Yearly</td><td>Hourly</td></tr>
+                <tr><td>deliveryMode</td><td class="optional">Optional</td><td>Text</td><td>In-person, Remote, or Hybrid</td><td>In-person</td></tr>
+                <tr><td>openingDate</td><td class="optional">Optional</td><td>Date</td><td>Job opening date</td><td>2024-01-15</td></tr>
+                <tr><td>closingDate</td><td class="optional">Optional</td><td>Date</td><td>Application deadline</td><td>2024-03-15</td></tr>
+                <tr><td>isOngoing</td><td class="optional">Optional</td><td>Boolean</td><td>true, false, or empty</td><td>true</td></tr>
+                <tr><td>website</td><td class="optional">Optional</td><td>URL</td><td>Website URL</td><td>https://example.com</td></tr>
+                <tr><td>phone</td><td class="optional">Optional</td><td>Text</td><td>Phone number</td><td>555-0123</td></tr>
+                <tr><td>email</td><td class="optional">Optional</td><td>Email</td><td>Contact email</td><td>jobs@example.com</td></tr>
+                <tr><td>address</td><td class="optional">Optional</td><td>Text</td><td>Street address</td><td>123 Restaurant Ave</td></tr>
+                <tr><td>photoUrl</td><td class="optional">Optional</td><td>URL</td><td>Photo URL</td><td>https://example.com/photo.jpg</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="notes">
+        <h3>Important Notes:</h3>
+        <ul>
+            <li><strong>Array Fields:</strong> Use semicolons (;) to separate multiple values in array fields</li>
+            <li><strong>Date Format:</strong> Use YYYY-MM-DD format for all date fields</li>
+            <li><strong>Boolean Fields:</strong> Use "true", "false", "1", "0", "yes", or "no" for boolean fields</li>
+            <li><strong>Required Fields:</strong> All required fields must have values, or the row will be skipped</li>
+            <li><strong>URLs:</strong> Include the full URL including http:// or https://</li>
+            <li><strong>File Format:</strong> Save as CSV (UTF-8) format</li>
+            <li><strong>No Headers:</strong> Make sure the first row contains the exact column names as shown above</li>
+            <li><strong>Approval Process:</strong> All imported items will be pending approval and need to be approved by an admin</li>
+        </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px; color: #6c757d;">
+        <p>Educational Yellow Pages Platform - CSV Import Templates</p>
+        <p>Generated on: <span id="currentDate"></span></p>
+    </div>
+
+    <script>
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString();
+    </script>
 </body>
 </html>
