@@ -244,7 +244,7 @@ export default function ListingDetailModal({
               <div className="flex items-center">
                 <Avatar className="h-16 w-16 mr-4">
                   <AvatarImage 
-                    src={listing.photoUrl || ""} 
+                    src={listing.photoUrl || listing.photo_url || ""} 
                     alt={listing.name || listing.title}
                     className="object-cover"
                   />

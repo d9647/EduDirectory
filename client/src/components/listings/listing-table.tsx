@@ -276,7 +276,7 @@ export default function ListingTable({
           <div className="flex items-center">
             <Avatar className="h-12 w-12 mr-4">
               <AvatarImage 
-                src={listing.photoUrl || ""} 
+                src={listing.photoUrl || listing.photo_url || ""} 
                 alt={listing.name || listing.companyName} 
                 className="object-cover"
               />
