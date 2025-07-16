@@ -362,7 +362,7 @@ export class DatabaseStorage implements IStorage {
     }
 
     if (filters.cost?.length) {
-      conditions.push(sql`${summerCamps.cost} = ANY(ARRAY[${sql.join(filters.cost.map(cost => sql`${cost}`), sql`, `)}]::text[])`);
+      conditions.push(sql`${summerCamps.costRange} = ANY(ARRAY[${sql.join(filters.cost.map(cost => sql`${cost}`), sql`, `)}]::text[])`);
     }
 
     if (filters.city) {
@@ -423,6 +423,9 @@ export class DatabaseStorage implements IStorage {
               AND ${reviews.listingId} = ${summerCamps.id}
           )`);
           break;
+        case "costRange":
+          orderBy = order(summerCamps.costRange);
+          break;
         default:
           orderBy = desc(summerCamps.createdAt);
       }
@@ -441,7 +444,7 @@ export class DatabaseStorage implements IStorage {
       selectivityLevel: summerCamps.selectivityLevel,
       dates: summerCamps.dates,
       length: summerCamps.length,
-      cost: summerCamps.cost,
+      costRange: summerCamps.costRange,
       applicationOpen: summerCamps.applicationOpen,
       applicationDueDate: summerCamps.applicationDueDate,
       applicationDeadline: summerCamps.applicationDeadline,
@@ -450,6 +453,7 @@ export class DatabaseStorage implements IStorage {
       hasScholarship: summerCamps.hasScholarship,
       eligibility: summerCamps.eligibility,
       description: summerCamps.description,
+      deliveryMode: summerCamps.deliveryMode,
       website: summerCamps.website,
       photoUrl: summerCamps.photoUrl,
       isApproved: summerCamps.isApproved,

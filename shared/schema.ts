@@ -76,7 +76,7 @@ export const summerCamps = pgTable("summer_camps", {
   selectivityLevel: integer("selectivity_level"), // 1-4 (Open Enrollment to Very Competitive)
   dates: text("dates"), // Text field for multiple sessions
   length: varchar("length", { length: 100 }),
-  cost: text("cost"), // Text field for different fees
+  costRange: varchar("cost_range", { length: 50 }), // Cost range dropdown values
   applicationOpen: date("application_open"),
   applicationDueDate: date("application_due_date"),
   applicationDeadline: date("application_deadline"),
