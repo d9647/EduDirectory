@@ -10,6 +10,7 @@ export const TUTORING_CATEGORIES = [
   { value: "Other Languages", label: "Other Languages" },
   { value: "Music & Arts", label: "Music & Arts" },
   { value: "Counseling", label: "Counseling" },
+  { value: "Life Skills & Vocational Training", label: "Life Skills & Vocational Training" },
 ];
 
 export const TUTORING_SUBJECTS = [
@@ -87,6 +88,17 @@ export const TUTORING_SUBJECTS = [
   { value: "Mental Health Counseling", label: "Mental Health Counseling", category: "Counseling" },
   { value: "Career Counseling", label: "Career Counseling", category: "Counseling" },
   { value: "Family Counseling", label: "Family Counseling", category: "Counseling" },
+
+  // Life Skills & Vocational Training
+  { value: "Driving Lessons", label: "Driving Lessons", category: "Life Skills & Vocational Training" },
+  { value: "Culinary Skills", label: "Culinary Skills", category: "Life Skills & Vocational Training" },
+  { value: "Sewing & Tailoring", label: "Sewing & Tailoring", category: "Life Skills & Vocational Training" },
+  { value: "Home Maintenance", label: "Home Maintenance", category: "Life Skills & Vocational Training" },
+  { value: "Financial Literacy", label: "Financial Literacy", category: "Life Skills & Vocational Training" },
+  { value: "Personal Safety & First Aid", label: "Personal Safety & First Aid", category: "Life Skills & Vocational Training" },
+  { value: "Gardening & Sustainability", label: "Gardening & Sustainability", category: "Life Skills & Vocational Training" },
+  { value: "Fashion & Beauty", label: "Fashion & Beauty", category: "Life Skills & Vocational Training" },
+
 ];
 
 // Summer Camp Categories
