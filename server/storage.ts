@@ -1014,9 +1014,20 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteReview(id: number, userId: string): Promise<void> {
-    await db
-      .delete(reviews)
-      .where(and(eq(reviews.id, id), eq(reviews.userId, userId)));
+    // Check if user is admin
+    const userRole = await this.getUserRole(userId);
+    
+    if (userRole === 'admin') {
+      // Admin can delete any review
+      await db
+        .delete(reviews)
+        .where(eq(reviews.id, id));
+    } else {
+      // Regular users can only delete their own reviews
+      await db
+        .delete(reviews)
+        .where(and(eq(reviews.id, id), eq(reviews.userId, userId)));
+    }
   }
 
   // Thumbs Up

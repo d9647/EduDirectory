@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -50,11 +50,30 @@ export default function ReviewModal({
   const form = useForm<ReviewFormData>({
     resolver: zodResolver(reviewFormSchema),
     defaultValues: {
-      title: review?.title || "",
-      rating: review?.rating || 0,
-      content: review?.content || "",
+      title: "",
+      rating: 0,
+      content: "",
     },
   });
+
+  // Reset form when review changes (for editing)
+  useEffect(() => {
+    if (review) {
+      form.reset({
+        title: review.title || "",
+        rating: review.rating || 0,
+        content: review.content || "",
+      });
+      setCurrentRating(review.rating || 0);
+    } else {
+      form.reset({
+        title: "",
+        rating: 0,
+        content: "",
+      });
+      setCurrentRating(0);
+    }
+  }, [review, form]);
 
   const reviewMutation = useMutation({
     mutationFn: async (data: ReviewFormData) => {
