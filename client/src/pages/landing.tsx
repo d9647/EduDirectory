@@ -11,10 +11,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16">
             <div className="flex-shrink-0">
-              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-primary">
-                <span className="sm:hidden">EduPages</span>
-                <span className="hidden sm:inline">Education Yellow Pages</span>
-              </h1>
+              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-primary">Education Yellow Pages</h1>
             </div>
             <Button onClick={() => window.location.href = "/api/login"} size="sm" className="bg-primary hover:bg-primary/90 text-xs sm:text-sm">
               Sign In
