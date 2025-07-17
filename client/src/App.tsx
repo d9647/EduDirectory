@@ -15,28 +15,47 @@ import BusinessSubmission from "@/pages/business-submission";
 import Admin from "@/pages/admin";
 import Settings from "@/pages/settings";
 import Bookmarks from "@/pages/bookmarks";
+import Footer from "@/components/layout/footer";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
 
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-2 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Switch>
-      {isLoading || !isAuthenticated ? (
+      {!isAuthenticated ? (
         <Route path="/" component={Landing} />
       ) : (
-        <>
-          <Route path="/" component={Home} />
-          <Route path="/tutoring-providers" component={TutoringProviders} />
-          <Route path="/summer-camps" component={SummerCamps} />
-          <Route path="/internships" component={Internships} />
-          <Route path="/jobs" component={Jobs} />
-          <Route path="/submit-listing" component={BusinessSubmission} />
-          <Route path="/bookmarks" component={Bookmarks} />
-          <Route path="/settings" component={Settings} />
-          <Route path="/admin" component={Admin} />
-        </>
+        <div className="min-h-screen flex flex-col">
+          <div className="flex-1">
+            <Switch>
+              <Route path="/" component={Home} />
+              <Route path="/tutoring-providers" component={TutoringProviders} />
+              <Route path="/summer-camps" component={SummerCamps} />
+              <Route path="/internships" component={Internships} />
+              <Route path="/jobs" component={Jobs} />
+              <Route path="/submit-listing" component={BusinessSubmission} />
+              <Route path="/bookmarks" component={Bookmarks} />
+              <Route path="/settings" component={Settings} />
+              <Route path="/admin" component={Admin} />
+              <Route component={NotFound} />
+            </Switch>
+          </div>
+          <Footer />
+        </div>
       )}
-      <Route component={NotFound} />
+      {!isAuthenticated && <Route component={NotFound} />}
     </Switch>
   );
 }
