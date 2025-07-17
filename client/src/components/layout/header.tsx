@@ -11,8 +11,8 @@ export default function Header() {
   const [location] = useLocation();
 
   const navItems = [
-    { href: "/tutoring-providers", label: "Tutoring Providers" },
-    { href: "/summer-camps", label: "Summer Camps" },
+    { href: "/tutoring-providers", label: "Tutors" },
+    { href: "/summer-camps", label: "Camps" },
     { href: "/internships", label: "Internships" },
     { href: "/jobs", label: "Jobs" },
   ];
@@ -27,7 +27,7 @@ export default function Header() {
           <div className="flex items-center space-x-8">
             <div className="flex-shrink-0">
               <Link href="/">
-                <h1 className="text-2xl font-bold text-primary cursor-pointer">EduPages</h1>
+                <h1 className="text-2xl font-bold text-primary cursor-pointer">Education Yellow Pages</h1>
               </Link>
             </div>
             

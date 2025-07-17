@@ -9,8 +9,13 @@ import memoize from "memoizee";
 import connectPg from "connect-pg-simple";
 import { storage } from "./storage";
 
-if (!process.env.REPLIT_DOMAINS) {
-  throw new Error("Environment variable REPLIT_DOMAINS not provided");
+// Combine default Replit domain with custom domains
+const defaultDomains = process.env.REPLIT_DOMAINS || process.env.REPLIT_DEV_DOMAIN || "";
+const customDomains = process.env.CUSTOM_DOMAINS || "";
+const allDomains = [defaultDomains, customDomains].filter(Boolean).join(",");
+
+if (!allDomains) {
+  throw new Error("No domains configured for authentication");
 }
 
 const getOidcConfig = memoize(
@@ -63,14 +68,36 @@ function updateUserSession(
 async function upsertUser(
   claims: any,
 ) {
-  await storage.upsertUser({
-    id: claims["sub"],
-    email: claims["email"],
-    firstName: claims["first_name"],
-    lastName: claims["last_name"],
-    profileImageUrl: claims["profile_image_url"],
-    role: "user", // Default role for new users
-  });
+  // Check if user already exists
+  const existingUser = await storage.getUser(claims["sub"]).catch(() => null);
+  
+  if (existingUser) {
+    // User exists, only update authentication-related fields
+    await storage.upsertUser({
+      id: claims["sub"],
+      email: claims["email"],
+      profileImageUrl: claims["profile_image_url"],
+      // Preserve existing profile data
+      firstName: existingUser.firstName,
+      lastName: existingUser.lastName,
+      phone: existingUser.phone,
+      location: existingUser.location,
+      schoolName: existingUser.schoolName,
+      grade: existingUser.grade,
+      address: existingUser.address,
+      role: existingUser.role,
+    });
+  } else {
+    // New user, use Replit claims as defaults
+    await storage.upsertUser({
+      id: claims["sub"],
+      email: claims["email"],
+      firstName: claims["first_name"] || "",
+      lastName: claims["last_name"] || "",
+      profileImageUrl: claims["profile_image_url"],
+      role: "user", // Default role for new users
+    });
+  }
 }
 
 export async function setupAuth(app: Express) {
@@ -91,8 +118,7 @@ export async function setupAuth(app: Express) {
     verified(null, user);
   };
 
-  for (const domain of process.env
-    .REPLIT_DOMAINS!.split(",")) {
+  for (const domain of allDomains.split(",").filter(Boolean)) {
     const strategy = new Strategy(
       {
         name: `replitauth:${domain}`,
