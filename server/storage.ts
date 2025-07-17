@@ -33,6 +33,11 @@ export interface IStorage {
   // User operations (mandatory for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  
+  // User role management
+  updateUserRole(id: string, role: "admin" | "user"): Promise<User>;
+  getUserRole(id: string): Promise<string | undefined>;
+  getAllUsers(): Promise<User[]>;
 
   // Tutoring Providers
   getTutoringProviders(filters?: {
@@ -162,16 +167,62 @@ export class DatabaseStorage implements IStorage {
   async upsertUser(userData: UpsertUser): Promise<User> {
     const [user] = await db
       .insert(users)
-      .values(userData)
+      .values({
+        ...userData,
+        role: userData.role || "user", // Default to "user" role
+      })
       .onConflictDoUpdate({
         target: users.id,
         set: {
-          ...userData,
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          profileImageUrl: userData.profileImageUrl,
+          location: userData.location,
+          phone: userData.phone,
+          // Don't update role on existing users to prevent overriding admin status
           updatedAt: new Date(),
         },
       })
       .returning();
     return user;
+  }
+
+  // User role management methods
+  async updateUserRole(id: string, role: "admin" | "user"): Promise<User> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({ 
+        role,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    if (!updatedUser) {
+      throw new Error("User not found");
+    }
+    
+    return updatedUser;
+  }
+
+  async getUserRole(id: string): Promise<string | undefined> {
+    const user = await db
+      .select({ role: users.role })
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
+    
+    return user[0]?.role;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    const allUsers = await db
+      .select()
+      .from(users)
+      .orderBy(desc(users.createdAt));
+    
+    return allUsers;
   }
 
   // Tutoring Providers
