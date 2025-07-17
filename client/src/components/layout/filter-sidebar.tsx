@@ -224,7 +224,8 @@ export default function FilterSidebar({
                   </Label>
                   <Input
                     type="text"
-                    placeholder="e.g., Algebra, SAT Prep..."
+                    placeholder="e.g., Algebra, SAT..."
+                    className="max-w-xs px-2 py-1 text-sm"
                     onKeyPress={(e) => {
                       if (e.key === "Enter") {
                         const value = e.currentTarget.value.trim();
@@ -234,6 +235,7 @@ export default function FilterSidebar({
                         }
                       }
                     }}
+                    key={filters.subjects?.length || 0}
                   />
                   {filters.subjects && filters.subjects.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">

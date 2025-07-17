@@ -27,12 +27,12 @@ export default function Header() {
           <div className="flex items-center space-x-2 sm:space-x-4 lg:space-x-8">
             <div className="flex-shrink-0">
               <Link href="/">
-                <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-primary cursor-pointer">
+                <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold bg-yellow-400 text-black px-3 py-1 rounded cursor-pointer">
                   Education Yellow Pages
                 </h1>
               </Link>
             </div>
-            
+
             <nav className="hidden xl:flex space-x-2 lg:space-x-6">
               {navItems.map((item) => (
                 <Link key={item.href} href={item.href}>
@@ -80,7 +80,7 @@ export default function Header() {
                 <span className="hidden md:inline">Saved</span>
               </Link>
             </Button>
-            
+
             <Button size="sm" className="bg-primary hover:bg-primary/90 text-xs sm:text-sm px-2 sm:px-3" asChild>
               <Link href="/submit-listing">
                 <Plus className="h-4 w-4 sm:mr-1" />
@@ -102,7 +102,7 @@ export default function Header() {
                   </span>
                   <ChevronDown className="h-4 w-4 text-gray-400" />
                 </DropdownMenuTrigger>
-                
+
                 <DropdownMenuContent align="end" className="w-48">
                   <DropdownMenuItem asChild>
                     <Link href="/settings">
@@ -128,7 +128,7 @@ export default function Header() {
           </div>
         </div>
 
-        
+
       </div>
     </header>
   );

@@ -286,7 +286,12 @@ export class DatabaseStorage implements IStorage {
     }
 
     if (filters.subjects?.length) {
-      conditions.push(sql`${tutoringProviders.subjects} && ARRAY[${sql.join(filters.subjects.map(subj => sql`${subj}`), sql`, `)}]::text[]`);
+      for (const subj of filters.subjects) {
+        conditions.push(sql`EXISTS (
+          SELECT 1 FROM unnest(${tutoringProviders.subjects}) AS s
+          WHERE LOWER(s) LIKE '%' || LOWER(${subj}) || '%'
+        )`);
+      }
     }
 
     if (filters.type) {
@@ -349,6 +354,7 @@ export class DatabaseStorage implements IStorage {
       state: tutoringProviders.state,
       categories: tutoringProviders.categories,
       subjects: tutoringProviders.subjects,
+      deliveryMode: tutoringProviders.deliveryMode,
       photoUrl: tutoringProviders.photoUrl,
       isApproved: tutoringProviders.isApproved,
       submittedAt: tutoringProviders.submittedAt,
