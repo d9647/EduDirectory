@@ -999,7 +999,27 @@ export class DatabaseStorage implements IStorage {
     return result[0];
   }
 
+  async hasUserReviewed(userId: string, listingType: string, listingId: number): Promise<boolean> {
+    const result = await db
+      .select()
+      .from(reviews)
+      .where(
+        and(
+          eq(reviews.userId, userId),
+          eq(reviews.listingType, listingType),
+          eq(reviews.listingId, listingId)
+        )
+      );
+    return result.length > 0;
+  }
+
   async createReview(review: InsertReview): Promise<Review> {
+    // Check if user has already reviewed this listing
+    const hasReviewed = await this.hasUserReviewed(review.userId, review.listingType, review.listingId);
+    if (hasReviewed) {
+      throw new Error('User has already reviewed this listing');
+    }
+    
     const [newReview] = await db.insert(reviews).values(review).returning();
     return newReview;
   }

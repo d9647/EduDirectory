@@ -336,6 +336,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get('/api/reviews/:listingType/:listingId/user-reviewed', isAuthenticated, async (req: any, res) => {
+    try {
+      const { listingType, listingId } = req.params;
+      const userId = req.user.claims.sub;
+      const hasReviewed = await storage.hasUserReviewed(userId, listingType, parseInt(listingId));
+      res.json({ hasReviewed });
+    } catch (error) {
+      console.error("Error checking user review status:", error);
+      res.status(500).json({ message: "Failed to check review status" });
+    }
+  });
+
   app.post('/api/reviews', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
@@ -346,6 +358,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error creating review:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid data", errors: error.errors });
+      }
+      if (error.message === 'User has already reviewed this listing') {
+        return res.status(409).json({ message: "You have already reviewed this listing. You can only submit one review per listing." });
       }
       res.status(500).json({ message: "Failed to create review" });
     }

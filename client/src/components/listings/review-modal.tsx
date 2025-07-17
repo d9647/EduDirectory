@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,8 +11,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
+import { useAuth } from "@/hooks/useAuth";
 import { insertReviewSchema } from "@shared/schema";
-import { Star, X } from "lucide-react";
+import { Star, X, AlertCircle } from "lucide-react";
 import { z } from "zod";
 import type { ReviewData } from "@/lib/types";
 
@@ -44,8 +45,16 @@ export default function ReviewModal({
   onSuccess,
 }: ReviewModalProps) {
   const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
   const [currentRating, setCurrentRating] = useState(review?.rating || 0);
   const [hoveredRating, setHoveredRating] = useState(0);
+
+  // Check if user has already reviewed this listing (only when creating new review)
+  const { data: userReviewStatus } = useQuery({
+    queryKey: [`/api/reviews/${listingType}/${listing.id}/user-reviewed`],
+    enabled: isAuthenticated && isOpen && !review, // Only check when creating new review
+    retry: false,
+  });
 
   const form = useForm<ReviewFormData>({
     resolver: zodResolver(reviewFormSchema),
@@ -101,7 +110,7 @@ export default function ReviewModal({
       form.reset();
       setCurrentRating(0);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       if (isUnauthorizedError(error as Error)) {
         toast({
           title: "Unauthorized",
@@ -113,6 +122,18 @@ export default function ReviewModal({
         }, 500);
         return;
       }
+      
+      // Handle duplicate review error
+      if (error.status === 409 || (error.message && error.message.includes('already reviewed'))) {
+        toast({
+          title: "Review Already Exists",
+          description: "You have already reviewed this listing. You can only submit one review per listing.",
+          variant: "destructive",
+        });
+        onClose();
+        return;
+      }
+      
       toast({
         title: "Error",
         description: review ? "Failed to update review" : "Failed to submit review",
@@ -211,6 +232,16 @@ export default function ReviewModal({
           <div className="text-sm text-gray-600">
             Reviewing: <span className="font-medium">{listing.name || listing.title}</span>
           </div>
+
+          {/* Show warning if user has already reviewed (only for new reviews) */}
+          {!review && userReviewStatus?.hasReviewed && (
+            <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+              <AlertCircle className="h-4 w-4 text-yellow-600 flex-shrink-0" />
+              <p className="text-sm text-yellow-800">
+                You have already reviewed this listing. Each user can only submit one review per listing.
+              </p>
+            </div>
+          )}
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -312,7 +343,7 @@ export default function ReviewModal({
                   </Button>
                   <Button
                     type="submit"
-                    disabled={reviewMutation.isPending || currentRating === 0}
+                    disabled={reviewMutation.isPending || currentRating === 0 || (!review && userReviewStatus?.hasReviewed)}
                   >
                     {reviewMutation.isPending 
                       ? "Submitting..." 
