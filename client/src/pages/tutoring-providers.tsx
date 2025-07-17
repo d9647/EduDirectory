@@ -57,8 +57,8 @@ export default function TutoringProviders() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col lg:flex-row gap-6">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-6">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
           <FilterSidebar
             filters={filters}
             setFilters={setFilters}
