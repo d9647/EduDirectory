@@ -33,17 +33,17 @@ export default function Header() {
             
             <nav className="hidden md:flex space-x-6">
               {navItems.map((item) => (
-                <Link key={item.href} href={item.href}>
-                  <span
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                      isActiveRoute(item.href)
-                        ? "bg-primary-50 text-primary-700 border border-primary-200"
-                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                    }`}
-                  >
-                    {item.label}
-                  </span>
-                </Link>
+                <span
+                  key={item.href}
+                  onClick={() => window.location.href = item.href}
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                    isActiveRoute(item.href)
+                      ? "bg-primary-50 text-primary-700 border border-primary-200"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  }`}
+                >
+                  {item.label}
+                </span>
               ))}
             </nav>
           </div>
@@ -108,17 +108,17 @@ export default function Header() {
         <div className="md:hidden border-t border-gray-200 bg-white">
           <div className="px-4 py-2 space-y-1">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href}>
-                <span
-                  className={`block px-3 py-2 rounded-md text-sm font-medium cursor-pointer ${
-                    isActiveRoute(item.href)
-                      ? "bg-primary-50 text-primary-700 border border-primary-200"
-                      : "text-gray-600"
-                  }`}
-                >
-                  {item.label}
-                </span>
-              </Link>
+              <span
+                key={item.href}
+                onClick={() => window.location.href = item.href}
+                className={`block px-3 py-2 rounded-md text-sm font-medium cursor-pointer ${
+                  isActiveRoute(item.href)
+                    ? "bg-primary-50 text-primary-700 border border-primary-200"
+                    : "text-gray-600"
+                }`}
+              >
+                {item.label}
+              </span>
             ))}
           </div>
         </div>
