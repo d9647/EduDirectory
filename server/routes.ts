@@ -32,6 +32,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin middleware
+  const requireAdmin = async (req: any, res: any, next: any) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Authentication required" });
+      }
+      
+      const userId = req.user.claims.sub;
+      const userRole = await storage.getUserRole(userId);
+      
+      if (userRole !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+      
+      next();
+    } catch (error) {
+      console.error("Error checking admin status:", error);
+      res.status(500).json({ message: "Failed to verify admin status" });
+    }
+  };
+
+  // User role management routes (admin only)
+  app.put('/api/admin/users/:userId/role', isAuthenticated, requireAdmin, async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const { role } = req.body;
+      
+      if (!["admin", "user"].includes(role)) {
+        return res.status(400).json({ message: "Invalid role. Must be 'admin' or 'user'" });
+      }
+      
+      const updatedUser = await storage.updateUserRole(userId, role);
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user role:", error);
+      if (error.message === "User not found") {
+        return res.status(404).json({ message: "User not found" });
+      }
+      res.status(500).json({ message: "Failed to update user role" });
+    }
+  });
+
+  app.get('/api/admin/users', isAuthenticated, requireAdmin, async (req, res) => {
+    try {
+      // For now, we'll create a simple method to get all users
+      // In a real application, you'd want pagination and filtering
+      const users = await storage.getAllUsers();
+      res.json(users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+
   // Tutoring Providers
   app.get('/api/tutoring-providers', async (req, res) => {
     try {

@@ -7,13 +7,47 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
-import { CheckCircle, XCircle, AlertTriangle, Search, Eye, EyeOff, Upload } from "lucide-react";
+import { CheckCircle, XCircle, AlertTriangle, Search, Eye, EyeOff, Upload, Shield } from "lucide-react";
 import AdminEditModal from "@/components/admin/admin-edit-modal";
 
 export default function Admin() {
   const { toast } = useToast();
+  const { isAuthenticated, isAdmin, isLoading: authLoading } = useAuth();
   const queryClient = useQueryClient();
+
+  // Show loading state while auth is loading
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show access denied if not admin
+  if (!isAuthenticated || !isAdmin) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Card className="max-w-md mx-auto">
+            <CardHeader className="text-center">
+              <Shield className="h-12 w-12 mx-auto text-red-500 mb-4" />
+              <CardTitle>Access Denied</CardTitle>
+              <CardDescription>
+                You need admin privileges to access this page.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   const { data: pendingApprovals, isLoading } = useQuery({
     queryKey: ["/api/admin/pending-approvals"],
@@ -26,6 +60,11 @@ export default function Admin() {
   const { data: liveListings } = useQuery({
     queryKey: ["/api/admin/live-listings"],
     enabled: false, // Don't load automatically
+  });
+
+  // User management queries
+  const { data: users } = useQuery({
+    queryKey: ["/api/admin/users"],
   });
 
   // Search states
@@ -136,6 +175,27 @@ export default function Admin() {
       toast({
         title: "Error",
         description: "Failed to activate listing",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // User role update mutation
+  const updateRoleMutation = useMutation({
+    mutationFn: async ({ userId, role }: { userId: string; role: "admin" | "user" }) => {
+      await apiRequest("PUT", `/api/admin/users/${userId}/role`, { role });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Success",
+        description: "User role updated successfully",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/users"] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: "Failed to update user role",
         variant: "destructive",
       });
     },
@@ -285,6 +345,9 @@ export default function Admin() {
             </TabsTrigger>
             <TabsTrigger value="import">
               Import Data
+            </TabsTrigger>
+            <TabsTrigger value="users">
+              User Management
             </TabsTrigger>
           </TabsList>
 
@@ -928,6 +991,78 @@ export default function Admin() {
               </Card>
             </div>
           </TabsContent>
+
+          {/* User Management Tab */}
+          <TabsContent value="users">
+            <Card>
+              <CardHeader>
+                <CardTitle>User Management</CardTitle>
+                <CardDescription>
+                  Manage user roles and permissions
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {isLoading ? (
+                    <div className="text-center py-8">Loading users...</div>
+                  ) : users && users.length > 0 ? (
+                    <div className="space-y-2">
+                      {users.map((user: any) => (
+                        <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-medium">
+                                {user.firstName || user.lastName 
+                                  ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+                                  : user.email
+                                }
+                              </h3>
+                              <Badge variant={user.role === "admin" ? "default" : "secondary"}>
+                                {user.role}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-gray-600">{user.email}</p>
+                            {user.location && (
+                              <p className="text-sm text-gray-500">{user.location}</p>
+                            )}
+                            <p className="text-xs text-gray-400">
+                              Joined {new Date(user.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <div className="flex gap-2">
+                            {user.role === "admin" ? (
+                              <Button
+                                onClick={() => updateRoleMutation.mutate({ userId: user.id, role: "user" })}
+                                disabled={updateRoleMutation.isPending}
+                                variant="outline"
+                                size="sm"
+                              >
+                                Remove Admin
+                              </Button>
+                            ) : (
+                              <Button
+                                onClick={() => updateRoleMutation.mutate({ userId: user.id, role: "admin" })}
+                                disabled={updateRoleMutation.isPending}
+                                variant="outline"
+                                size="sm"
+                              >
+                                Make Admin
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      No users found
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
         </Tabs>
       </div>
     </div>

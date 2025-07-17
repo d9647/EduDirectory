@@ -7,7 +7,7 @@ import { Link, useLocation } from "wouter";
 import { Bookmark, Plus, ChevronDown, Settings, LogOut } from "lucide-react";
 
 export default function Header() {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isAdmin } = useAuth();
   const [location] = useLocation();
 
   const navItems = [
@@ -84,12 +84,14 @@ export default function Header() {
                     <Settings className="h-4 w-4 mr-2" />
                     Settings
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/admin">
-                      <Badge variant="secondary" className="h-4 w-4 mr-2" />
-                      Admin
-                    </Link>
-                  </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin">
+                        <Badge variant="secondary" className="h-4 w-4 mr-2" />
+                        Admin Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem onClick={() => window.location.href = "/api/logout"}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Sign Out

@@ -35,6 +35,7 @@ export const users = pgTable("users", {
   profileImageUrl: varchar("profile_image_url"),
   location: varchar("location"),
   phone: varchar("phone"),
+  role: varchar("role", { length: 20 }).default("user").notNull(), // "admin" or "user"
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
