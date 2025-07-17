@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
-import { CheckCircle, XCircle, AlertTriangle, Search, Eye, EyeOff, Upload, Shield } from "lucide-react";
+import { CheckCircle, XCircle, AlertTriangle, Search, Eye, EyeOff, Upload, Shield, RefreshCw } from "lucide-react";
 import AdminEditModal from "@/components/admin/admin-edit-modal";
 
 export default function Admin() {
@@ -49,12 +49,15 @@ export default function Admin() {
     );
   }
 
-  const { data: pendingApprovals, isLoading } = useQuery({
+  const { data: pendingApprovals, isLoading, refetch: refetchPendingApprovals } = useQuery({
     queryKey: ["/api/admin/pending-approvals"],
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
-  const { data: reports } = useQuery({
+  const { data: reports, refetch: refetchReports } = useQuery({
     queryKey: ["/api/admin/reports"],
+    refetchOnMount: true,
   });
 
   const { data: liveListings } = useQuery({
@@ -63,8 +66,9 @@ export default function Admin() {
   });
 
   // User management queries
-  const { data: users } = useQuery({
+  const { data: users, refetch: refetchUsers } = useQuery({
     queryKey: ["/api/admin/users"],
+    refetchOnMount: true,
   });
 
   // Search states
@@ -352,6 +356,21 @@ export default function Admin() {
           </TabsList>
 
           <TabsContent value="approvals" className="mt-6">
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h2 className="text-xl font-semibold">Pending Approvals</h2>
+                <p className="text-sm text-gray-600">Review and approve new business submissions</p>
+              </div>
+              <Button
+                onClick={() => refetchPendingApprovals()}
+                variant="outline"
+                size="sm"
+                disabled={isLoading}
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
+            </div>
             <div className="space-y-6">
               {/* Tutoring Providers */}
               {pendingApprovals?.tutoringProviders?.length > 0 && (
