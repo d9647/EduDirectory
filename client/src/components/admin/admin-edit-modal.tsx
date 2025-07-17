@@ -76,6 +76,9 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
   const [selectedSchedule, setSelectedSchedule] = useState<string[]>(
     Array.isArray(listing.schedule) ? listing.schedule : []
   );
+  const [selectedDeliveryModes, setSelectedDeliveryModes] = useState<string[]>(
+    Array.isArray(listing.deliveryMode) ? listing.deliveryMode : []
+  );
   
   // Photo upload state
   const [photoFile, setPhotoFile] = useState<File | null>(null);
@@ -108,6 +111,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
         duration: selectedDuration,
         jobType: selectedJobTypes,
         schedule: selectedSchedule,
+        deliveryMode: selectedDeliveryModes,
         photoUrl: photoUrl,
       };
       
@@ -233,6 +237,18 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
 
   const removeSchedule = (schedule: string) => {
     setSelectedSchedule(prev => prev.filter(s => s !== schedule));
+  };
+
+  const toggleDeliveryMode = (mode: string) => {
+    setSelectedDeliveryModes(prev => 
+      prev.includes(mode) 
+        ? prev.filter(m => m !== mode)
+        : [...prev, mode]
+    );
+  };
+
+  const removeDeliveryMode = (mode: string) => {
+    setSelectedDeliveryModes(prev => prev.filter(m => m !== mode));
   };
 
   // Photo upload functions
@@ -372,19 +388,34 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="deliveryMode">Delivery Mode</Label>
-            <Select value={formData.deliveryMode || ""} onValueChange={(value) => handleChange("deliveryMode", value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select delivery mode" />
-              </SelectTrigger>
-              <SelectContent>
-                {DELIVERY_MODE_OPTIONS.map((mode) => (
-                  <SelectItem key={mode.value} value={mode.value}>
+            <Label>Delivery Mode</Label>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              {DELIVERY_MODE_OPTIONS.map((mode) => (
+                <div key={mode.value} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`delivery-${mode.value}`}
+                    checked={selectedDeliveryModes.includes(mode.value)}
+                    onCheckedChange={() => toggleDeliveryMode(mode.value)}
+                  />
+                  <Label htmlFor={`delivery-${mode.value}`} className="text-sm cursor-pointer">
                     {mode.label}
-                  </SelectItem>
+                  </Label>
+                </div>
+              ))}
+            </div>
+            {selectedDeliveryModes.length > 0 && (
+              <div className="flex flex-wrap gap-1 mt-2">
+                {selectedDeliveryModes.map((mode) => (
+                  <Badge key={mode} variant="secondary" className="text-xs">
+                    {mode}
+                    <X 
+                      className="h-3 w-3 ml-1 cursor-pointer" 
+                      onClick={() => removeDeliveryMode(mode)} 
+                    />
+                  </Badge>
                 ))}
-              </SelectContent>
-            </Select>
+              </div>
+            )}
           </div>
         </div>
 

@@ -298,7 +298,7 @@ export default function ListingTable({
               {/* Show delivery mode if available */}
               {listing.deliveryMode && (
                 <div className="text-xs text-blue-600 mt-1">
-                  {listing.deliveryMode}
+                  {Array.isArray(listing.deliveryMode) ? listing.deliveryMode.join(", ") : listing.deliveryMode}
                 </div>
               )}
             </div>
