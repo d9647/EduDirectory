@@ -522,18 +522,51 @@ export default function ListingDetailModal({
 
             {/* Categories, Tags, Job Types, and Schedule */}
             <div>
-              <h4 className="font-semibold text-gray-900 mb-3">
-                {listingType === "tutoring" ? "Subjects & Specializations" : 
-                 listingType === "camps" ? "Categories" : 
-                 listingType === "internships" ? "Categories" : "Categories"}
-              </h4>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {(listing.categories || listing.subjects || listing.types || []).map((item: string, index: number) => (
-                  <Badge key={index} variant="secondary">
-                    {item}
-                  </Badge>
-                ))}
-              </div>
+              {listingType === "tutoring" ? (
+                <>
+                  {/* Categories Section */}
+                  {listing.categories && listing.categories.length > 0 && (
+                    <div className="mb-4">
+                      <h4 className="font-semibold text-gray-900 mb-3">Categories</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {listing.categories.map((item: string, index: number) => (
+                          <Badge key={index} variant="secondary">
+                            {item}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Subjects Section */}
+                  {listing.subjects && listing.subjects.length > 0 && (
+                    <div className="mb-4">
+                      <h4 className="font-semibold text-gray-900 mb-3">Subjects & Specializations</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {listing.subjects.map((item: string, index: number) => (
+                          <Badge key={index} variant="outline">
+                            {item}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <h4 className="font-semibold text-gray-900 mb-3">
+                    {listingType === "camps" ? "Categories" : 
+                     listingType === "internships" ? "Categories" : "Categories"}
+                  </h4>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {(listing.categories || listing.types || []).map((item: string, index: number) => (
+                      <Badge key={index} variant="secondary">
+                        {item}
+                      </Badge>
+                    ))}
+                  </div>
+                </>
+              )}
 
               {/* Tags section for camps */}
               {listingType === "camps" && listing.tags && listing.tags.length > 0 && (
