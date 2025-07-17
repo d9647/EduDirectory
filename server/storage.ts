@@ -354,6 +354,7 @@ export class DatabaseStorage implements IStorage {
       state: tutoringProviders.state,
       categories: tutoringProviders.categories,
       subjects: tutoringProviders.subjects,
+      deliveryMode: tutoringProviders.deliveryMode,
       photoUrl: tutoringProviders.photoUrl,
       isApproved: tutoringProviders.isApproved,
       submittedAt: tutoringProviders.submittedAt,
