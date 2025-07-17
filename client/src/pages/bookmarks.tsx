@@ -244,6 +244,7 @@ export default function Bookmarks() {
                         <MapPin className="h-4 w-4" />
                         <span>{listing.city || listing.location}</span>
                         {listing.state && <span>, {listing.state}</span>}
+                        {listing.zipcode && <span> {listing.zipcode}</span>}
                       </div>
                     )}
                     {listing.isRemote && (

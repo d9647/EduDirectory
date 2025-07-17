@@ -55,6 +55,7 @@ export const tutoringProviders = pgTable("tutoring_providers", {
   address: text("address"),
   city: varchar("city"),
   state: varchar("state"),
+  zipcode: varchar("zipcode"),
   categories: text("categories").array(), // Mathematics, English, etc.
   subjects: text("subjects").array(), // Algebra, SAT Prep, etc.
   deliveryMode: varchar("delivery_mode"), // In-person, Remote, Hybrid
@@ -75,6 +76,7 @@ export const summerCamps = pgTable("summer_camps", {
   address: varchar("address", { length: 255 }),
   city: varchar("city"),
   state: varchar("state"),
+  zipcode: varchar("zipcode"),
   categories: text("categories").array(), // STEM, Leadership, etc.
   tags: text("tags").array(), // Women Only, Boys Only, etc.
   selectivityLevel: integer("selectivity_level"), // 1-4 (Open Enrollment to Very Competitive)
@@ -109,6 +111,7 @@ export const internships = pgTable("internships", {
   address: varchar("address", { length: 255 }),
   city: varchar("city"),
   state: varchar("state"),
+  zipcode: varchar("zipcode"),
   isRemote: boolean("is_remote").default(false),
   types: text("types").array(), // Academic, STEM, Healthcare, etc.
   compensation: varchar("compensation"), // Paid, Unpaid, Stipend, Academic Credit
@@ -143,6 +146,7 @@ export const jobs = pgTable("jobs", {
   address: varchar("address", { length: 255 }),
   city: varchar("city"),
   state: varchar("state"),
+  zipcode: varchar("zipcode"),
   isRemote: boolean("is_remote").default(false),
   categories: text("categories").array(), // Retail & Customer Service, etc.
   compensation: varchar("compensation"), // Hourly Wage, Stipend, etc.
