@@ -225,7 +225,7 @@ export default function FilterSidebar({
                   <Input
                     type="text"
                     placeholder="e.g., Algebra, SAT Prep..."
-                    className="max-w-48 px-2 py-1 text-sm"
+                    className="max-w-xs px-2 py-1 text-sm"
                     onKeyPress={(e) => {
                       if (e.key === "Enter") {
                         const value = e.currentTarget.value.trim();
