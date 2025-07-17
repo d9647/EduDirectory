@@ -234,6 +234,7 @@ export default function FilterSidebar({
                         }
                       }
                     }}
+                    key={filters.subjects?.length || 0}
                   />
                   {filters.subjects && filters.subjects.length > 0 && (
                     <div className="flex flex-wrap gap-1 mt-2">
