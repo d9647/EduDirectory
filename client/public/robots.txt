@@ -1,3 +1,53 @@
+# edu-yellowpages.org — robots.txt
+# Last updated: 2025‑07‑17
+# ------------------------------------------------------------
+# 1) Allow major search engines full access
+User-agent: Googlebot
+Allow: /
 
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# 2) Default rule for all other crawlers
 User-agent: *
+Disallow: /api/            # JSON & GraphQL endpoints
+Disallow: /_next/          # Next.js build artefacts (if used)
+Disallow: /admin/          # Admin interface
+Disallow: /internal/       # Any private routes
+Disallow: /login
+Disallow: /register
+Disallow: /search          # Prevent endless query permutations
+Disallow: /@vite/          # Vite HMR client (dev only)
+Disallow: /@fs/            # Vite virtual FS routes (dev only)
+Crawl-delay: 10            # Slow down generic bots
+
+# 3) Explicit blocks for common commercial scrapers
+User-agent: AhrefsBot
 Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: Yandex
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: ia_archiver
+Disallow: /
+
+# 4) Sitemap location (keep updated)
+Sitemap: https://edu-yellowpages.org/sitemap.xml
