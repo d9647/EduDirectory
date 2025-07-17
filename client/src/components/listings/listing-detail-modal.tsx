@@ -209,7 +209,7 @@ export default function ListingDetailModal({
       window.location.href = "/api/login";
       return;
     }
-
+    
     const reason = prompt("Please provide a reason for reporting this listing:");
     if (reason) {
       reportMutation.mutate({ reason, description: "" });
@@ -325,7 +325,7 @@ export default function ListingDetailModal({
                 <div className="text-sm">
                   {formatDescription(listing.description)}
                 </div>
-
+                
                 {/* Prerequisites/Requirements */}
                 {listing.prerequisites && (
                   <div className="mt-4">
@@ -336,7 +336,7 @@ export default function ListingDetailModal({
                   </div>
                 )}
               </div>
-
+              
               <div>
                 <h4 className="font-semibold text-gray-900 mb-3">Details</h4>
                 <div className="space-y-2 text-sm">
@@ -365,18 +365,19 @@ export default function ListingDetailModal({
                       <span className="text-gray-700">{listing.email}</span>
                     </div>
                   )}
-                  {listing.deliveryMode && (
-                    <div className="flex items-center">
-                      <Monitor className="h-4 w-4 text-gray-400 mr-3" />
-                      <span className="text-gray-700">Delivery Mode: {listing.deliveryMode}</span>
-                    </div>
-                  )}
                   {(listing.city || listing.location || listing.streetAddress) && (
                     <div className="flex items-center">
                       <MapPin className="h-4 w-4 text-gray-400 mr-3" />
                       <span className="text-gray-700">
-                        {[listing.streetAddress, listing.location, listing.city, listing.state].filter(Boolean).join(", ") || "Location not specified"}
+                        {listing.deliveryMode === "Remote" || listing.isRemote ? "Remote" : 
+                         [listing.streetAddress, listing.location, listing.city, listing.state].filter(Boolean).join(", ")}
                       </span>
+                    </div>
+                  )}
+                  {listing.deliveryMode && (
+                    <div className="flex items-center">
+                      <Monitor className="h-4 w-4 text-gray-400 mr-3" />
+                      <span className="text-gray-700">Delivery: {listing.deliveryMode}</span>
                     </div>
                   )}
                   {(listing.costRange || listing.compensation || listing.salaryRange || listing.tuition || (listing.salaryMin && listing.salaryMax)) && (
@@ -531,7 +532,7 @@ export default function ListingDetailModal({
                       </div>
                     </div>
                   )}
-
+                  
                   {/* Subjects Section */}
                   {listing.subjects && listing.subjects.length > 0 && (
                     <div className="mb-4">
