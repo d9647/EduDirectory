@@ -85,8 +85,7 @@ export default function Header() {
             <Button size="sm" className="bg-primary hover:bg-primary/90 text-xs sm:text-sm px-2 sm:px-3" asChild>
               <Link href="/submit-listing">
                 <Plus className="h-4 w-4 sm:mr-1" />
-                <span className="hidden md:inline">List Your Service</span>
-                <span className="md:hidden">List</span>
+                <span className="hidden sm:inline">Add Listing</span>
               </Link>
             </Button>
 
