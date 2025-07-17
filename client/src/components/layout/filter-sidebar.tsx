@@ -224,7 +224,7 @@ export default function FilterSidebar({
                   </Label>
                   <Input
                     type="text"
-                    placeholder="e.g., Algebra, SAT Prep..."
+                    placeholder="e.g., Algebra, SAT..."
                     className="max-w-xs px-2 py-1 text-sm"
                     onKeyPress={(e) => {
                       if (e.key === "Enter") {
