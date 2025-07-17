@@ -959,25 +959,33 @@ export class DatabaseStorage implements IStorage {
 
   // Reviews
   async getReviews(listingType: string, listingId: number): Promise<any[]> {
-    return await db
-      .select({
-        id: reviews.id,
-        userId: reviews.userId,
-        listingType: reviews.listingType,
-        listingId: reviews.listingId,
-        rating: reviews.rating,
-        comment: reviews.comment,
-        createdAt: reviews.createdAt,
-        updatedAt: reviews.updatedAt,
-        reviewerFirstName: users.firstName,
-        reviewerLastName: users.lastName,
-        reviewerEmail: users.email,
-        reviewerProfileImageUrl: users.profileImageUrl,
-      })
-      .from(reviews)
-      .leftJoin(users, eq(reviews.userId, users.id))
-      .where(and(eq(reviews.listingType, listingType), eq(reviews.listingId, listingId)))
-      .orderBy(desc(reviews.createdAt));
+    try {
+      const result = await db.execute(sql`
+        SELECT 
+          r.id, 
+          r.user_id as "userId", 
+          r.listing_type as "listingType", 
+          r.listing_id as "listingId", 
+          r.title, 
+          r.rating, 
+          r.content, 
+          r.created_at as "createdAt", 
+          r.updated_at as "updatedAt",
+          u.first_name as "reviewerFirstName",
+          u.last_name as "reviewerLastName", 
+          u.email as "reviewerEmail",
+          u.profile_image_url as "reviewerProfileImageUrl"
+        FROM reviews r
+        LEFT JOIN users u ON r.user_id = u.id
+        WHERE r.listing_type = ${listingType} AND r.listing_id = ${listingId}
+        ORDER BY r.created_at DESC
+      `);
+      
+      return result.rows || [];
+    } catch (error) {
+      console.error("Error in getReviews:", error);
+      throw error;
+    }
   }
 
   async createReview(review: InsertReview): Promise<Review> {
