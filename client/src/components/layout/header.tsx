@@ -34,7 +34,7 @@ export default function Header() {
               </Link>
             </div>
             
-            <nav className="hidden sm:flex space-x-2 lg:space-x-6">
+            <nav className="hidden md:flex space-x-2 lg:space-x-6">
               {navItems.map((item) => (
                 <Link key={item.href} href={item.href}>
                   <span
@@ -108,8 +108,8 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation - Only show on portrait mobile */}
-        <div className="sm:hidden border-t border-gray-200 bg-white">
+        {/* Mobile Navigation - Show on smaller screens */}
+        <div className="md:hidden border-t border-gray-200 bg-white">
           <div className="px-4 py-2 space-y-1">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href}>
