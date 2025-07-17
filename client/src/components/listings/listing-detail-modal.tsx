@@ -737,7 +737,7 @@ export default function ListingDetailModal({
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          {user?.id === review.userId && (
+                          {(user?.id === review.userId || user?.role === 'admin') && (
                             <Button
                               variant="ghost"
                               size="sm"
