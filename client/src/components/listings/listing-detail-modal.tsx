@@ -240,45 +240,40 @@ export default function ListingDetailModal({
         <DialogContent className="max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto mx-2 sm:mx-auto">
           {/* Modal Header */}
           <DialogHeader className="pb-3 sm:pb-4">
-            <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-0">
-              <div className="flex items-center w-full sm:w-auto">
-                <Avatar className="h-12 w-12 sm:h-16 sm:w-16 mr-3 sm:mr-4 flex-shrink-0">
-                  <AvatarImage 
-                    src={listing.photoUrl || listing.photo_url || ""} 
-                    alt={listing.name || listing.title}
-                    className="object-cover"
-                  />
-                  <AvatarFallback>
-                    {(listing.name || listing.title || "").charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="min-w-0 flex-1">
-                  <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900 leading-tight">
-                    {listing.name || listing.title}
-                  </DialogTitle>
-                  <DialogDescription className="text-sm sm:text-base text-gray-600">
-                    {listing.type || listing.companyName} • {listingType === "tutoring" ? "Tutoring" : 
-                     listingType === "camps" ? "Summer Camp" :
-                     listingType === "internships" ? "Internship" : "Job"}
-                  </DialogDescription>
-                  <div className="flex items-center mt-1">
-                    <div className="flex text-yellow-400 mr-2">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star 
-                          key={star} 
-                          className={`h-3 w-3 sm:h-4 sm:w-4 ${star <= Math.floor(averageRating) ? "fill-current" : ""}`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs sm:text-sm text-gray-600">
-                      {averageRating.toFixed(1)} ({reviews?.length || 0} reviews)
-                    </span>
+            <div className="flex items-center">
+              <Avatar className="h-12 w-12 sm:h-16 sm:w-16 mr-3 sm:mr-4 flex-shrink-0">
+                <AvatarImage 
+                  src={listing.photoUrl || listing.photo_url || ""} 
+                  alt={listing.name || listing.title}
+                  className="object-cover"
+                />
+                <AvatarFallback>
+                  {(listing.name || listing.title || "").charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <DialogTitle className="text-lg sm:text-xl font-semibold text-gray-900 leading-tight">
+                  {listing.name || listing.title}
+                </DialogTitle>
+                <DialogDescription className="text-sm sm:text-base text-gray-600">
+                  {listing.type || listing.companyName} • {listingType === "tutoring" ? "Tutoring" : 
+                   listingType === "camps" ? "Summer Camp" :
+                   listingType === "internships" ? "Internship" : "Job"}
+                </DialogDescription>
+                <div className="flex items-center mt-1">
+                  <div className="flex text-yellow-400 mr-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star 
+                        key={star} 
+                        className={`h-3 w-3 sm:h-4 sm:w-4 ${star <= Math.floor(averageRating) ? "fill-current" : ""}`}
+                      />
+                    ))}
                   </div>
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    {averageRating.toFixed(1)} ({reviews?.length || 0} reviews)
+                  </span>
                 </div>
               </div>
-              <Button variant="ghost" size="sm" onClick={onClose} className="absolute top-2 right-2 sm:static">
-                <X className="h-4 w-4" />
-              </Button>
             </div>
           </DialogHeader>
 

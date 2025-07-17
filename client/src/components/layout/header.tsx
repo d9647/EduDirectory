@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Link, useLocation } from "wouter";
-import { Bookmark, Plus, ChevronDown, Settings, LogOut } from "lucide-react";
+import { Bookmark, Plus, ChevronDown, Settings, LogOut, Menu } from "lucide-react";
 
 export default function Header() {
   const { user, isAuthenticated, isAdmin } = useAuth();
@@ -24,18 +24,20 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo and Main Nav */}
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-2 sm:space-x-4 lg:space-x-8">
             <div className="flex-shrink-0">
               <Link href="/">
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-primary cursor-pointer">EduPages</h1>
+                <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-primary cursor-pointer">
+                  Education Yellow Pages
+                </h1>
               </Link>
             </div>
             
-            <nav className="hidden md:flex space-x-6">
+            <nav className="hidden xl:flex space-x-2 lg:space-x-6">
               {navItems.map((item) => (
                 <Link key={item.href} href={item.href}>
                   <span
-                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                    className={`px-2 lg:px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors cursor-pointer ${
                       isActiveRoute(item.href)
                         ? "bg-primary-50 text-primary-700 border border-primary-200"
                         : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
@@ -46,22 +48,43 @@ export default function Header() {
                 </Link>
               ))}
             </nav>
+
+            {/* Mobile Navigation Dropdown */}
+            <div className="xl:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="p-2">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  {navItems.map((item) => (
+                    <DropdownMenuItem key={item.href} asChild>
+                      <Link href={item.href}>
+                        <span className={`w-full ${isActiveRoute(item.href) ? "text-primary-700 font-medium" : "text-gray-600"}`}>
+                          {item.label}
+                        </span>
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
 
           {/* User Actions */}
-          <div className="flex items-center space-x-2 sm:space-x-4">
-            <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900" asChild>
+          <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
+            <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 px-2 sm:px-3" asChild>
               <Link href="/bookmarks">
-                <Bookmark className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Saved</span>
+                <Bookmark className="h-4 w-4 sm:mr-1" />
+                <span className="hidden md:inline">Saved</span>
               </Link>
             </Button>
             
-            <Button size="sm" className="bg-primary hover:bg-primary/90 text-xs sm:text-sm" asChild>
+            <Button size="sm" className="bg-primary hover:bg-primary/90 text-xs sm:text-sm px-2 sm:px-3" asChild>
               <Link href="/submit-listing">
-                <Plus className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">List Your Service</span>
-                <span className="sm:hidden">List</span>
+                <Plus className="h-4 w-4 sm:mr-1" />
+                <span className="hidden sm:inline">Add Listing</span>
               </Link>
             </Button>
 
@@ -105,24 +128,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        <div className="md:hidden border-t border-gray-200 bg-white">
-          <div className="px-4 py-2 space-y-1">
-            {navItems.map((item) => (
-              <Link key={item.href} href={item.href}>
-                <span
-                  className={`block px-3 py-2 rounded-md text-sm font-medium cursor-pointer ${
-                    isActiveRoute(item.href)
-                      ? "bg-primary-50 text-primary-700 border border-primary-200"
-                      : "text-gray-600"
-                  }`}
-                >
-                  {item.label}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
+        
       </div>
     </header>
   );

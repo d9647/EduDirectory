@@ -28,11 +28,11 @@ export default function BusinessSubmission() {
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="tutoring">Tutoring Service</TabsTrigger>
-                <TabsTrigger value="camp">Summer Camp</TabsTrigger>
-                <TabsTrigger value="internship">Internship</TabsTrigger>
-                <TabsTrigger value="job">Job Opportunity</TabsTrigger>
+              <TabsList className="flex flex-wrap w-full h-auto p-1 gap-1 sm:grid sm:grid-cols-4 sm:h-10">
+                <TabsTrigger value="tutoring" className="flex-1 min-w-[120px] sm:min-w-0">Tutoring Service</TabsTrigger>
+                <TabsTrigger value="camp" className="flex-1 min-w-[120px] sm:min-w-0">Summer Camp</TabsTrigger>
+                <TabsTrigger value="internship" className="flex-1 min-w-[120px] sm:min-w-0">Internship</TabsTrigger>
+                <TabsTrigger value="job" className="flex-1 min-w-[120px] sm:min-w-0">Job Opportunity</TabsTrigger>
               </TabsList>
               
               <TabsContent value="tutoring" className="mt-6">
