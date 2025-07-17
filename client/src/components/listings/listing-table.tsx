@@ -298,7 +298,7 @@ export default function ListingTable({
               {/* Show delivery mode if available */}
               {listing.deliveryMode && (
                 <div className="text-xs text-blue-600 mt-1">
-                  {Array.isArray(listing.deliveryMode) ? listing.deliveryMode.join(", ") : listing.deliveryMode}
+                  {formatArrayField(listing.deliveryMode)}
                 </div>
               )}
             </div>
@@ -380,7 +380,7 @@ export default function ListingTable({
       case "location":
         return (
           <div className="text-sm text-gray-900">
-            {listing.isRemote 
+            {(Array.isArray(listing.deliveryMode) && listing.deliveryMode.includes("Remote")) || listing.isRemote
               ? "Remote" 
               : listing.location || [listing.city, listing.state, listing.zipcode].filter(Boolean).join(", ")}
           </div>
