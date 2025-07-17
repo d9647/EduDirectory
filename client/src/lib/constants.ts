@@ -11,6 +11,13 @@ export const TUTORING_CATEGORIES = [
   { value: "Music & Arts", label: "Music & Arts" },
   { value: "Counseling", label: "Counseling" },
   { value: "Life Skills & Vocational Training", label: "Life Skills & Vocational Training" },
+  { value: "Team Sports", label: "Team Sports" },
+  { value: "Individual Sports", label: "Individual Sports" },
+  { value: "Water Sports", label: "Water Sports" },
+  { value: "Racquet Sports", label: "Racquet Sports" },
+  { value: "Combat Sports", label: "Combat Sports" },
+  { value: "Adventure & Outdoor", label: "Adventure & Outdoor" },
+  { value: "Fitness & Conditioning", label: "Fitness & Conditioning" },
 ];
 
 export const TUTORING_SUBJECTS = [
@@ -78,9 +85,42 @@ export const TUTORING_SUBJECTS = [
   { value: "Brass", label: "Brass", category: "Music & Arts" },
   { value: "Percussion", label: "Percussion", category: "Music & Arts" },
   { value: "Woodwinds", label: "Woodwinds", category: "Music & Arts" },
+
+  // Instrument‑specific & vocal
+  { value: "Guitar", label: "Guitar", category: "Music & Arts" },
+  { value: "Ukulele", label: "Ukulele", category: "Music & Arts" },
+  { value: "Harp", label: "Harp", category: "Music & Arts" },
+  { value: "Voice & Vocal Training", label: "Voice & Vocal Training", category: "Music & Arts" },
+
+  // Music creation & ensembles
+  { value: "Music Theory", label: "Music Theory", category: "Music & Arts" },
+  { value: "Composition & Songwriting", label: "Composition & Songwriting", category: "Music & Arts" },
+  { value: "Digital Music Production", label: "Digital Music Production", category: "Music & Arts" },
+  { value: "Recording & Audio Engineering", label: "Recording & Audio Engineering", category: "Music & Arts" },
+  { value: "Choir & Ensemble", label: "Choir & Ensemble", category: "Music & Arts" },
+  { value: "Band & Orchestra", label: "Band & Orchestra", category: "Music & Arts" },
+
+  // Performing arts
+  { value: "Acting & Drama", label: "Acting & Drama", category: "Music & Arts" },
+  { value: "Musical Theatre", label: "Musical Theatre", category: "Music & Arts" },
+  { value: "Dance (Ballet, Jazz, Hip‑Hop)", label: "Dance (Ballet, Jazz, Hip‑Hop)", category: "Music & Arts" },
+
+  // Visual & digital arts
   { value: "Painting", label: "Painting", category: "Music & Arts" },
   { value: "Drawing", label: "Drawing", category: "Music & Arts" },
   { value: "Sculpture", label: "Sculpture", category: "Music & Arts" },
+  { value: "Photography", label: "Photography", category: "Music & Arts" },
+  { value: "Film & Video Production", label: "Film & Video Production", category: "Music & Arts" },
+  { value: "Graphic Design", label: "Graphic Design", category: "Music & Arts" },
+  { value: "Digital Illustration", label: "Digital Illustration", category: "Music & Arts" },
+  { value: "Animation & 3D Modeling", label: "Animation & 3D Modeling", category: "Music & Arts" },
+
+  // Crafts & specialty arts
+  { value: "Ceramics & Pottery", label: "Ceramics & Pottery", category: "Music & Arts" },
+  { value: "Printmaking", label: "Printmaking", category: "Music & Arts" },
+  { value: "Textile & Fiber Arts", label: "Textile & Fiber Arts", category: "Music & Arts" },
+  { value: "Calligraphy", label: "Calligraphy", category: "Music & Arts" },
+  { value: "Art History & Appreciation", label: "Art History & Appreciation", category: "Music & Arts" },
   
   // Counseling
   { value: "Academic Counseling", label: "Academic Counseling", category: "Counseling" },
@@ -98,6 +138,51 @@ export const TUTORING_SUBJECTS = [
   { value: "Personal Safety & First Aid", label: "Personal Safety & First Aid", category: "Life Skills & Vocational Training" },
   { value: "Gardening & Sustainability", label: "Gardening & Sustainability", category: "Life Skills & Vocational Training" },
   { value: "Fashion & Beauty", label: "Fashion & Beauty", category: "Life Skills & Vocational Training" },
+
+  // Team Sports
+  { value: "Basketball", label: "Basketball", category: "Team Sports" },
+  { value: "Soccer", label: "Soccer", category: "Team Sports" },
+  { value: "Baseball", label: "Baseball", category: "Team Sports" },
+  { value: "Volleyball", label: "Volleyball", category: "Team Sports" },
+  { value: "Football", label: "Football", category: "Team Sports" },
+  { value: "Hockey", label: "Hockey", category: "Team Sports" },
+
+  // Individual Sports
+  { value: "Track & Field", label: "Track & Field", category: "Individual Sports" },
+  { value: "Gymnastics", label: "Gymnastics", category: "Individual Sports" },
+  { value: "Golf", label: "Golf", category: "Individual Sports" },
+  { value: "Bowling", label: "Bowling", category: "Individual Sports" },
+
+  // Water Sports
+  { value: "Swimming", label: "Swimming", category: "Water Sports" },
+  { value: "Surfing", label: "Surfing", category: "Water Sports" },
+  { value: "Rowing", label: "Rowing", category: "Water Sports" },
+  { value: "Sailing", label: "Sailing", category: "Water Sports" },
+
+  // Racquet Sports
+  { value: "Tennis", label: "Tennis", category: "Racquet Sports" },
+  { value: "Badminton", label: "Badminton", category: "Racquet Sports" },
+  { value: "Table Tennis", label: "Table Tennis", category: "Racquet Sports" },
+  { value: "Squash", label: "Squash", category: "Racquet Sports" },
+
+  // Combat Sports
+  { value: "Karate", label: "Karate", category: "Combat Sports" },
+  { value: "Judo", label: "Judo", category: "Combat Sports" },
+  { value: "Taekwondo", label: "Taekwondo", category: "Combat Sports" },
+  { value: "Boxing", label: "Boxing", category: "Combat Sports" },
+  { value: "Wrestling", label: "Wrestling", category: "Combat Sports" },
+
+  // Adventure & Outdoor
+  { value: "Rock Climbing", label: "Rock Climbing", category: "Adventure & Outdoor" },
+  { value: "Hiking", label: "Hiking", category: "Adventure & Outdoor" },
+  { value: "Mountain Biking", label: "Mountain Biking", category: "Adventure & Outdoor" },
+  { value: "Camping Skills", label: "Camping Skills", category: "Adventure & Outdoor" },
+
+  // Fitness & Conditioning
+  { value: "Yoga", label: "Yoga", category: "Fitness & Conditioning" },
+  { value: "Pilates", label: "Pilates", category: "Fitness & Conditioning" },
+  { value: "Weight Training", label: "Weight Training", category: "Fitness & Conditioning" },
+  { value: "Aerobics", label: "Aerobics", category: "Fitness & Conditioning" },
 
 ];
 
