@@ -27,7 +27,10 @@ export default function Header() {
           <div className="flex items-center space-x-8">
             <div className="flex-shrink-0">
               <Link href="/">
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-primary cursor-pointer">Education Yellow Pages</h1>
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-primary cursor-pointer">
+                  <span className="sm:hidden">EduPages</span>
+                  <span className="hidden sm:inline">Education Yellow Pages</span>
+                </h1>
               </Link>
             </div>
             
