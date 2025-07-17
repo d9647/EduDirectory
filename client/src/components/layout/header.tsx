@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Link, useLocation } from "wouter";
-import { Bookmark, Plus, ChevronDown, Settings, LogOut } from "lucide-react";
+import { Bookmark, Plus, ChevronDown, Settings, LogOut, Menu } from "lucide-react";
 
 export default function Header() {
   const { user, isAuthenticated, isAdmin } = useAuth();
@@ -49,6 +49,28 @@ export default function Header() {
                 </Link>
               ))}
             </nav>
+
+            {/* Mobile Navigation Dropdown */}
+            <div className="md:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="p-2">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  {navItems.map((item) => (
+                    <DropdownMenuItem key={item.href} asChild>
+                      <Link href={item.href}>
+                        <span className={`w-full ${isActiveRoute(item.href) ? "text-primary-700 font-medium" : "text-gray-600"}`}>
+                          {item.label}
+                        </span>
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
 
           {/* User Actions */}
@@ -108,24 +130,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Navigation - Show on smaller screens */}
-        <div className="md:hidden border-t border-gray-200 bg-white">
-          <div className="px-4 py-2 space-y-1">
-            {navItems.map((item) => (
-              <Link key={item.href} href={item.href}>
-                <span
-                  className={`block px-3 py-2 rounded-md text-sm font-medium cursor-pointer ${
-                    isActiveRoute(item.href)
-                      ? "bg-primary-50 text-primary-700 border border-primary-200"
-                      : "text-gray-600"
-                  }`}
-                >
-                  {item.label}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
+        
       </div>
     </header>
   );
