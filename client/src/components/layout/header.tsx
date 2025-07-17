@@ -11,8 +11,8 @@ export default function Header() {
   const [location] = useLocation();
 
   const navItems = [
-    { href: "/tutoring-providers", label: "Tutoring Providers" },
-    { href: "/summer-camps", label: "Summer Camps" },
+    { href: "/tutoring-providers", label: "Tutors" },
+    { href: "/summer-camps", label: "Camps" },
     { href: "/internships", label: "Internships" },
     { href: "/jobs", label: "Jobs" },
   ];
