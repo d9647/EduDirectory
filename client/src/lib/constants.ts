@@ -61,12 +61,18 @@ export const TUTORING_SUBJECTS = [
   { value: "Religious Studies", label: "Religious Studies", category: "Humanities" },
   
   // Standardized Tests
-  { value: "SAT", label: "SAT", category: "Standardized Tests" },
-  { value: "ACT", label: "ACT", category: "Standardized Tests" },
-  { value: "GRE", label: "GRE", category: "Standardized Tests" },
-  { value: "GMAT", label: "GMAT", category: "Standardized Tests" },
-  { value: "LSAT", label: "LSAT", category: "Standardized Tests" },
-  { value: "MCAT", label: "MCAT", category: "Standardized Tests" },
+  { value: "SAT Prep", label: "SAT Prep", category: "Standardized Tests" },
+  { value: "ACT Prep", label: "ACT Prep", category: "Standardized Tests" },
+  { value: "GRE Prep", label: "GRE Prep", category: "Standardized Tests" },
+  { value: "GMAT Prep", label: "GMAT Prep", category: "Standardized Tests" },
+  { value: "LSAT Prep", label: "LSAT Prep", category: "Standardized Tests" },
+  { value: "MCAT Prep", label: "MCAT Prep", category: "Standardized Tests" },
+  { value: "ISEE Prep", label: "ISEE Prep", category: "Standardized Tests" },
+  { value: "SSAT Prep", label: "SSAT Prep", category: "Standardized Tests" },
+  { value: "PSAT Prep", label: "PSAT Prep", category: "Standardized Tests" },
+  { value: "NMSQT Prep", label: "NMSQT Prep", category: "Standardized Tests" },
+  { value: "AP Prep", label: "AP Prep", category: "Standardized Tests" },
+  { value: "IB Prep", label: "IB Prep", category: "Standardized Tests" },
   
   // Languages
   { value: "Chinese", label: "Chinese", category: "Other Languages" },
@@ -125,6 +131,7 @@ export const TUTORING_SUBJECTS = [
   // Counseling
   { value: "Academic Counseling", label: "Academic Counseling", category: "Counseling" },
   { value: "College Counseling", label: "College Counseling", category: "Counseling" },
+  { value: "College Essay Help", label: "College Essay Help", category: "Counseling" },
   { value: "Mental Health Counseling", label: "Mental Health Counseling", category: "Counseling" },
   { value: "Career Counseling", label: "Career Counseling", category: "Counseling" },
   { value: "Family Counseling", label: "Family Counseling", category: "Counseling" },
