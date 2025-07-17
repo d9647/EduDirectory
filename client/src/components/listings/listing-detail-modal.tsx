@@ -699,25 +699,26 @@ export default function ListingDetailModal({
                 {reviewsLoading ? (
                   <div className="text-center py-4">Loading reviews...</div>
                 ) : reviews && reviews.length > 0 ? (
-                  reviews.map((review: ReviewData) => (
+                  reviews.map((review: any) => (
                     <div key={review.id} className="border border-gray-200 rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center">
                           <Avatar className="h-8 w-8 mr-3">
                             <AvatarImage 
-                              src={review.user?.profileImageUrl || ""} 
-                              alt={review.user?.firstName || review.user?.email || ""}
+                              src={review.reviewerProfileImageUrl || ""} 
+                              alt={review.reviewerFirstName || review.reviewerEmail || ""}
                               className="object-cover"
                             />
                             <AvatarFallback>
-                              {(review.user?.firstName || review.user?.email || "U").charAt(0).toUpperCase()}
+                              {(review.reviewerFirstName || review.reviewerEmail || "U").charAt(0).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
                           <div>
                             <h5 className="font-medium text-gray-900">
-                              {review.user?.firstName ? 
-                                `${review.user.firstName} ${review.user.lastName?.charAt(0) || ""}.` :
-                                review.user?.email?.split('@')[0] || "Anonymous"
+                              {review.reviewerFirstName && review.reviewerLastName ? 
+                                `${review.reviewerFirstName} ${review.reviewerLastName.charAt(0)}.` :
+                                review.reviewerFirstName ||
+                                review.reviewerEmail?.split('@')[0] || "Anonymous"
                               }
                             </h5>
                             <div className="flex items-center">
@@ -735,13 +736,27 @@ export default function ListingDetailModal({
                             </div>
                           </div>
                         </div>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={() => handleReport()}
-                        >
-                          <Flag className="h-3 w-3" />
-                        </Button>
+                        <div className="flex items-center space-x-2">
+                          {user?.id === review.userId && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedReview(review);
+                                setReviewModalOpen(true);
+                              }}
+                            >
+                              Edit
+                            </Button>
+                          )}
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => handleReport()}
+                          >
+                            <Flag className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                       <h6 className="font-medium text-gray-900 mb-1">{review.title}</h6>
                       {review.content && (

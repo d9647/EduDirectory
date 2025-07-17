@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,28 +37,30 @@ export default function Settings() {
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      firstName: user?.firstName || "",
-      lastName: user?.lastName || "",
-      phone: user?.phone || "",
-      location: user?.location || "",
-      schoolName: user?.schoolName || "",
-      grade: user?.grade || "",
-      address: user?.address || "",
+      firstName: "",
+      lastName: "",
+      phone: "",
+      location: "",
+      schoolName: "",
+      grade: "",
+      address: "",
     },
   });
 
-  // Reset form when user data loads
-  if (user && !form.getValues().firstName && user.firstName) {
-    form.reset({
-      firstName: user.firstName || "",
-      lastName: user.lastName || "",
-      phone: user.phone || "",
-      location: user.location || "",
-      schoolName: user.schoolName || "",
-      grade: user.grade || "",
-      address: user.address || "",
-    });
-  }
+  // Reset form when user data loads - use useEffect to avoid render warnings
+  React.useEffect(() => {
+    if (user) {
+      form.reset({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        phone: user.phone || "",
+        location: user.location || "",
+        schoolName: user.schoolName || "",
+        grade: user.grade || "",
+        address: user.address || "",
+      });
+    }
+  }, [user, form]);
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data: ProfileFormData) => {

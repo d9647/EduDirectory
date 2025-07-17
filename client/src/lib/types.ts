@@ -58,12 +58,10 @@ export interface ReviewData {
   content?: string;
   createdAt: string;
   updatedAt: string;
-  user?: {
-    firstName?: string;
-    lastName?: string;
-    email: string;
-    profileImageUrl?: string;
-  };
+  reviewerFirstName?: string;
+  reviewerLastName?: string;
+  reviewerEmail?: string;
+  reviewerProfileImageUrl?: string;
 }
 
 export interface UserInteractions {
