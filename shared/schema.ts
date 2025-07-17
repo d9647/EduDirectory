@@ -35,6 +35,9 @@ export const users = pgTable("users", {
   profileImageUrl: varchar("profile_image_url"),
   location: varchar("location"),
   phone: varchar("phone"),
+  schoolName: varchar("school_name"),
+  grade: varchar("grade"),
+  address: varchar("address"),
   role: varchar("role", { length: 20 }).default("user").notNull(), // "admin" or "user"
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -306,6 +309,14 @@ export const upsertUserSchema = createInsertSchema(users).omit({
   createdAt: true,
   updatedAt: true,
 });
+
+export const updateUserProfileSchema = createInsertSchema(users).omit({
+  id: true,
+  email: true,
+  role: true,
+  createdAt: true,
+  updatedAt: true,
+}).partial();
 
 // Types
 export type UpsertUser = z.infer<typeof upsertUserSchema>;

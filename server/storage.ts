@@ -33,6 +33,7 @@ export interface IStorage {
   // User operations (mandatory for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  updateUserProfile(id: string, profileData: Partial<User>): Promise<User>;
   
   // User role management
   updateUserRole(id: string, role: "admin" | "user"): Promise<User>;
@@ -223,6 +224,38 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(users.createdAt));
     
     return allUsers;
+  }
+
+  async updateUserProfile(id: string, profileData: Partial<User>): Promise<User> {
+    const allowedFields = [
+      'firstName', 'lastName', 'phone', 'location', 
+      'schoolName', 'grade', 'address', 'profileImageUrl'
+    ];
+    
+    // Filter out non-allowed fields and undefined values
+    const updateData = Object.keys(profileData)
+      .filter(key => allowedFields.includes(key))
+      .reduce((obj, key) => {
+        if (profileData[key] !== undefined) {
+          obj[key] = profileData[key];
+        }
+        return obj;
+      }, {} as any);
+
+    // Add updatedAt timestamp
+    updateData.updatedAt = new Date();
+
+    const [updatedUser] = await db
+      .update(users)
+      .set(updateData)
+      .where(eq(users.id, id))
+      .returning();
+    
+    if (!updatedUser) {
+      throw new Error("User not found");
+    }
+    
+    return updatedUser;
   }
 
   // Tutoring Providers
