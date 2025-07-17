@@ -286,10 +286,12 @@ export class DatabaseStorage implements IStorage {
     }
 
     if (filters.subjects?.length) {
-      conditions.push(sql`EXISTS (
-        SELECT 1 FROM unnest(${tutoringProviders.subjects}) AS subj
-        WHERE LOWER(subj) = ANY(ARRAY[${sql.join(filters.subjects.map(subj => sql`${subj.toLowerCase()}`), sql`, `)}]::text[])
-      )`);
+      for (const subj of filters.subjects) {
+        conditions.push(sql`EXISTS (
+          SELECT 1 FROM unnest(${tutoringProviders.subjects}) AS s
+          WHERE LOWER(s) LIKE '%' || LOWER(${subj}) || '%'
+        )`);
+      }
     }
 
     if (filters.type) {
