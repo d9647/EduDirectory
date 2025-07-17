@@ -11,6 +11,7 @@ import { ExternalLink, MapPin, Calendar, Star, X, ChevronLeft, ChevronRight } fr
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import Header from "@/components/layout/header";
+import ListingDetailModal from "@/components/listings/listing-detail-modal";
 
 export default function Bookmarks() {
   const { toast } = useToast();
@@ -18,6 +19,8 @@ export default function Bookmarks() {
   const queryClient = useQueryClient();
   const [limit, setLimit] = useState(10);
   const [offset, setOffset] = useState(0);
+  const [selectedListing, setSelectedListing] = useState<any>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
 
   // Redirect to home if not authenticated
   useEffect(() => {
@@ -297,13 +300,13 @@ export default function Bookmarks() {
                         variant="default"
                         size="sm"
                         onClick={() => {
-                          const routes = {
-                            tutoring: '/tutoring-providers',
-                            camps: '/summer-camps',
-                            internships: '/internships',
-                            jobs: '/jobs'
+                          // Add listingType to the listing object for the modal
+                          const listingWithType = {
+                            ...bookmark.listing,
+                            listingType: bookmark.listingType
                           };
-                          window.location.href = routes[listingType as keyof typeof routes] || '/';
+                          setSelectedListing(listingWithType);
+                          setDetailModalOpen(true);
                         }}
                       >
                         View Details
@@ -380,6 +383,19 @@ export default function Bookmarks() {
         </>
       )}
       </main>
+
+      {/* Listing Detail Modal */}
+      {selectedListing && (
+        <ListingDetailModal
+          listing={selectedListing}
+          listingType={selectedListing.listingType as "tutoring" | "camps" | "internships" | "jobs"}
+          isOpen={detailModalOpen}
+          onClose={() => {
+            setDetailModalOpen(false);
+            setSelectedListing(null);
+          }}
+        />
+      )}
     </div>
   );
 }
