@@ -120,7 +120,6 @@ export const internships = pgTable("internships", {
   tuition: varchar("tuition"),
   eligibility: text("eligibility"),
   website: varchar("website"),
-  photoUrl: varchar("photo_url"),
   hasMentorship: boolean("has_mentorship").default(false),
   isApproved: boolean("is_approved").default(false),
   isActive: boolean("is_active").default(true),
@@ -128,6 +127,7 @@ export const internships = pgTable("internships", {
   approvedAt: timestamp("approved_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+  photoUrl: varchar("photo_url")
 });
 
 // Jobs
@@ -157,7 +157,6 @@ export const jobs = pgTable("jobs", {
   applicationDeadline: date("application_deadline"),
   eligibility: text("eligibility"),
   applicationLink: varchar("application_link"),
-  photoUrl: varchar("photo_url"),
   hasTraining: boolean("has_training").default(false),
   hasAdvancement: boolean("has_advancement").default(false),
   requiresTransportation: boolean("requires_transportation").default(false),
@@ -168,6 +167,7 @@ export const jobs = pgTable("jobs", {
   approvedAt: timestamp("approved_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+  photoUrl: varchar("photo_url")
 });
 
 // Reviews
