@@ -34,7 +34,7 @@ export default function Header() {
               </Link>
             </div>
             
-            <nav className="hidden md:flex space-x-2 lg:space-x-6">
+            <nav className="hidden lg:flex space-x-2 lg:space-x-6">
               {navItems.map((item) => (
                 <Link key={item.href} href={item.href}>
                   <span
@@ -51,7 +51,7 @@ export default function Header() {
             </nav>
 
             {/* Mobile Navigation Dropdown */}
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="p-2">
