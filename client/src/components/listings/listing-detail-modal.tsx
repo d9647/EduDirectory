@@ -370,7 +370,7 @@ export default function ListingDetailModal({
                       <MapPin className="h-4 w-4 text-gray-400 mr-3" />
                       <span className="text-gray-700">
                         {listing.deliveryMode === "Remote" || listing.isRemote ? "Remote" : 
-                         [listing.address, listing.location || listing.city, listing.state].filter(Boolean).join(", ")}
+                         [listing.address, listing.location || listing.city, listing.state, listing.zipcode].filter(Boolean).join(", ")}
                       </span>
                     </div>
                   )}

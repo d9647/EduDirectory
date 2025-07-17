@@ -336,7 +336,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="city">City *</Label>
               <Input
@@ -359,6 +359,15 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="zipcode">Zipcode</Label>
+              <Input
+                id="zipcode"
+                value={formData.zipcode || ""}
+                onChange={(e) => handleChange("zipcode", e.target.value)}
+                placeholder="12345"
+              />
             </div>
           </div>
 

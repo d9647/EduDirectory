@@ -382,7 +382,7 @@ export default function ListingTable({
           <div className="text-sm text-gray-900">
             {listing.isRemote 
               ? "Remote" 
-              : listing.location || `${listing.city}, ${listing.state}`}
+              : listing.location || [listing.city, listing.state, listing.zipcode].filter(Boolean).join(", ")}
           </div>
         );
 
