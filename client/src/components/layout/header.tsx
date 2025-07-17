@@ -27,7 +27,7 @@ export default function Header() {
           <div className="flex items-center space-x-8">
             <div className="flex-shrink-0">
               <Link href="/">
-                <h1 className="text-2xl font-bold text-primary cursor-pointer">Education Yellow Pages</h1>
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-primary cursor-pointer">EduPages</h1>
               </Link>
             </div>
             
@@ -49,7 +49,7 @@ export default function Header() {
           </div>
 
           {/* User Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 sm:space-x-4">
             <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900" asChild>
               <Link href="/bookmarks">
                 <Bookmark className="h-4 w-4 mr-1" />
@@ -57,10 +57,11 @@ export default function Header() {
               </Link>
             </Button>
             
-            <Button size="sm" className="bg-primary hover:bg-primary/90" asChild>
+            <Button size="sm" className="bg-primary hover:bg-primary/90 text-xs sm:text-sm" asChild>
               <Link href="/submit-listing">
                 <Plus className="h-4 w-4 mr-1" />
-                List Your Service
+                <span className="hidden sm:inline">List Your Service</span>
+                <span className="sm:hidden">List</span>
               </Link>
             </Button>
 
