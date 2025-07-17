@@ -369,7 +369,7 @@ export default function ListingDetailModal({
                     <div className="flex items-center">
                       <MapPin className="h-4 w-4 text-gray-400 mr-3" />
                       <span className="text-gray-700">
-                        {listing.deliveryMode === "Remote" || listing.isRemote ? "Remote" : 
+                        {(Array.isArray(listing.deliveryMode) && listing.deliveryMode.includes("Remote")) || listing.isRemote ? "Remote" : 
                          [listing.address, listing.location || listing.city, listing.state, listing.zipcode].filter(Boolean).join(", ")}
                       </span>
                     </div>
@@ -377,7 +377,7 @@ export default function ListingDetailModal({
                   {listing.deliveryMode && (
                     <div className="flex items-center">
                       <Monitor className="h-4 w-4 text-gray-400 mr-3" />
-                      <span className="text-gray-700">Delivery Mode: {listing.deliveryMode}</span>
+                      <span className="text-gray-700">Delivery Mode: {formatArrayField(listing.deliveryMode)}</span>
                     </div>
                   )}
                   {(listing.costRange || listing.compensation || listing.salaryRange || listing.tuition || (listing.salaryMin && listing.salaryMax)) && (
