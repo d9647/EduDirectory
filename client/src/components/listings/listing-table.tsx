@@ -380,7 +380,8 @@ export default function ListingTable({
       case "location":
         return (
           <div className="text-sm text-gray-900">
-            {(Array.isArray(listing.deliveryMode) && listing.deliveryMode.includes("Remote")) || listing.isRemote
+            {/* Only show "Remote" if it's ONLY remote delivery, not when it also has in-person */}
+            {(Array.isArray(listing.deliveryMode) && listing.deliveryMode.length === 1 && listing.deliveryMode.includes("Remote")) || listing.isRemote
               ? "Remote" 
               : listing.location || [listing.city, listing.state].filter(Boolean).join(", ")}
           </div>
