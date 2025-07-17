@@ -28,8 +28,7 @@ export default function Header() {
             <div className="flex-shrink-0">
               <Link href="/">
                 <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-primary cursor-pointer">
-                  <span className="sm:hidden">EduPages</span>
-                  <span className="hidden sm:inline">Education Yellow Pages</span>
+                  Education Yellow Pages
                 </h1>
               </Link>
             </div>
