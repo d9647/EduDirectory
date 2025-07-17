@@ -805,143 +805,209 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
         return (
           <>
             {commonFields}
-            <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
-              <Input
-                id="companyName"
-                value={formData.companyName || ""}
-                onChange={(e) => handleChange("companyName", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="types">Categories (comma-separated)</Label>
-              <Input
-                id="types"
-                value={Array.isArray(formData.types) ? formData.types.join(", ") : formData.types || ""}
-                onChange={(e) => handleArrayChange("types", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="compensation">Compensation</Label>
-              <Input
-                id="compensation"
-                value={formData.compensation || ""}
-                onChange={(e) => handleChange("compensation", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="duration">Duration (comma-separated)</Label>
-              <Input
-                id="duration"
-                value={Array.isArray(formData.duration) ? formData.duration.join(", ") : formData.duration || ""}
-                onChange={(e) => handleArrayChange("duration", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="internshipDates">Internship Dates</Label>
-              <Input
-                id="internshipDates"
-                value={formData.internshipDates || ""}
-                onChange={(e) => handleChange("internshipDates", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="length">Length</Label>
-              <Input
-                id="length"
-                value={formData.length || ""}
-                onChange={(e) => handleChange("length", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="deliveryMode">Delivery Mode</Label>
-              <Input
-                id="deliveryMode"
-                value={formData.deliveryMode || ""}
-                onChange={(e) => handleChange("deliveryMode", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="minimumAge">Minimum Age</Label>
-              <Input
-                id="minimumAge"
-                type="number"
-                value={formData.minimumAge || ""}
-                onChange={(e) => handleChange("minimumAge", parseInt(e.target.value))}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="applicationOpen">Application Open Date</Label>
-                <Input
-                  id="applicationOpen"
-                  type="date"
-                  value={formData.applicationOpen || ""}
-                  onChange={(e) => handleChange("applicationOpen", e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="applicationDeadline">Application Deadline</Label>
-                <Input
-                  id="applicationDeadline"
-                  type="date"
-                  value={formData.applicationDeadline || ""}
-                  onChange={(e) => handleChange("applicationDeadline", e.target.value)}
-                />
+            
+            {/* Categories */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Categories</h3>
+              
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                  Categories *
+                </Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                  {INTERNSHIP_TYPES.map((typeOption) => (
+                    <div key={typeOption.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={typeOption.value}
+                        checked={selectedTypes.includes(typeOption.value)}
+                        onCheckedChange={() => toggleType(typeOption.value)}
+                      />
+                      <Label htmlFor={typeOption.value} className="text-sm">
+                        {typeOption.label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                {selectedTypes.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedTypes.map((typeValue) => (
+                      <Badge key={typeValue} variant="secondary">
+                        {typeValue}
+                        <button
+                          type="button"
+                          onClick={() => removeType(typeValue)}
+                          className="ml-1 hover:text-red-600"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="prerequisites">Prerequisites</Label>
-              <Textarea
-                id="prerequisites"
-                value={formData.prerequisites || ""}
-                onChange={(e) => handleChange("prerequisites", e.target.value)}
-                rows={3}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="tuition">Tuition</Label>
-              <Input
-                id="tuition"
-                value={formData.tuition || ""}
-                onChange={(e) => handleChange("tuition", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="eligibility">Eligibility</Label>
-              <Textarea
-                id="eligibility"
-                value={formData.eligibility || ""}
-                onChange={(e) => handleChange("eligibility", e.target.value)}
-                rows={2}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="isRemote">Is Remote</Label>
-                <select
-                  id="isRemote"
-                  value={formData.isRemote === true ? "true" : formData.isRemote === false ? "false" : ""}
-                  onChange={(e) => handleChange("isRemote", e.target.value === "true" ? true : e.target.value === "false" ? false : undefined)}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="">Not specified</option>
-                  <option value="true">Yes</option>
-                  <option value="false">No</option>
-                </select>
+
+            {/* Internship Details */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Internship Details</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="compensation">Compensation Type</Label>
+                  <Select value={formData.compensation || ""} onValueChange={(value) => handleChange("compensation", value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select compensation" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {COMPENSATION_TYPES.map((comp) => (
+                        <SelectItem key={comp.value} value={comp.value}>
+                          {comp.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="minimumAge">Minimum Age</Label>
+                  <Input
+                    id="minimumAge"
+                    type="number"
+                    min="14"
+                    max="25"
+                    value={formData.minimumAge || ""}
+                    onChange={(e) => handleChange("minimumAge", parseInt(e.target.value) || undefined)}
+                  />
+                </div>
+
+                {/* Mentorship Available */}
+                <div className="space-y-2">
+                  <Label>Mentorship Available</Label>
+                  <div className="flex items-center space-x-3 rounded-md border p-4">
+                    <Checkbox
+                      id="hasMentorship"
+                      checked={formData.hasMentorship === true}
+                      onCheckedChange={(checked) => handleChange("hasMentorship", checked)}
+                    />
+                    <Label htmlFor="hasMentorship" className="text-sm">
+                      Mentorship Available
+                    </Label>
+                  </div>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="hasMentorship">Has Mentorship</Label>
-                <select
-                  id="hasMentorship"
-                  value={formData.hasMentorship === true ? "true" : formData.hasMentorship === false ? "false" : ""}
-                  onChange={(e) => handleChange("hasMentorship", e.target.value === "true" ? true : e.target.value === "false" ? false : undefined)}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="">Not specified</option>
-                  <option value="true">Yes</option>
-                  <option value="false">No</option>
-                </select>
+
+              {/* Duration */}
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                  Duration
+                </Label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+                  {INTERNSHIP_DURATION_OPTIONS.map((duration) => (
+                    <div key={duration.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={duration.value}
+                        checked={selectedDuration.includes(duration.value)}
+                        onCheckedChange={() => toggleDuration(duration.value)}
+                      />
+                      <Label htmlFor={duration.value} className="text-sm">
+                        {duration.label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                {selectedDuration.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedDuration.map((duration) => (
+                      <Badge key={duration} variant="secondary">
+                        {duration}
+                        <button
+                          type="button"
+                          onClick={() => removeDuration(duration)}
+                          className="ml-1 hover:text-red-600"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Internship Dates and Length */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="internshipDates">Internship Dates</Label>
+                  <Input
+                    id="internshipDates"
+                    value={formData.internshipDates || ""}
+                    onChange={(e) => handleChange("internshipDates", e.target.value)}
+                    placeholder="e.g., June 1 - August 15, 2024"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="length">Length</Label>
+                  <Input
+                    id="length"
+                    value={formData.length || ""}
+                    onChange={(e) => handleChange("length", e.target.value)}
+                    placeholder="e.g., 10 weeks, 3 months"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Important Dates */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Important Dates</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="applicationOpen">Application Open Date</Label>
+                  <Input
+                    id="applicationOpen"
+                    type="date"
+                    value={formData.applicationOpen || ""}
+                    onChange={(e) => handleChange("applicationOpen", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="applicationDeadline">Application Deadline</Label>
+                  <Input
+                    id="applicationDeadline"
+                    type="date"
+                    value={formData.applicationDeadline || ""}
+                    onChange={(e) => handleChange("applicationDeadline", e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Additional Information</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="prerequisites">Prerequisites</Label>
+                  <Textarea
+                    id="prerequisites"
+                    value={formData.prerequisites || ""}
+                    onChange={(e) => handleChange("prerequisites", e.target.value)}
+                    rows={3}
+                    placeholder="e.g., GPA requirements, coursework, skills..."
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="tuition">Tuition</Label>
+                  <Input
+                    id="tuition"
+                    value={formData.tuition || ""}
+                    onChange={(e) => handleChange("tuition", e.target.value)}
+                    placeholder="e.g., $500, Free, N/A"
+                  />
+                </div>
               </div>
             </div>
           </>
@@ -951,177 +1017,266 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
         return (
           <>
             {commonFields}
-            <div className="space-y-2">
-              <Label htmlFor="companyName">Company Name</Label>
-              <Input
-                id="companyName"
-                value={formData.companyName || ""}
-                onChange={(e) => handleChange("companyName", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="categories">Categories (comma-separated)</Label>
-              <Input
-                id="categories"
-                value={Array.isArray(formData.categories) ? formData.categories.join(", ") : formData.categories || ""}
-                onChange={(e) => handleArrayChange("categories", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="compensation">Compensation</Label>
-              <Input
-                id="compensation"
-                value={formData.compensation || ""}
-                onChange={(e) => handleChange("compensation", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="compensationRange">Compensation Range</Label>
-              <Input
-                id="compensationRange"
-                value={formData.compensationRange || ""}
-                onChange={(e) => handleChange("compensationRange", e.target.value)}
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="salaryMin">Minimum Salary</Label>
-                <Input
-                  id="salaryMin"
-                  type="number"
-                  step="0.01"
-                  value={formData.salaryMin || ""}
-                  onChange={(e) => handleChange("salaryMin", e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="salaryMax">Maximum Salary</Label>
-                <Input
-                  id="salaryMax"
-                  type="number"
-                  step="0.01"
-                  value={formData.salaryMax || ""}
-                  onChange={(e) => handleChange("salaryMax", e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="salaryType">Salary Type</Label>
-                <Input
-                  id="salaryType"
-                  value={formData.salaryType || ""}
-                  onChange={(e) => handleChange("salaryType", e.target.value)}
-                />
+            
+            {/* Categories */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Categories</h3>
+              
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                  Job Categories *
+                </Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                  {JOB_CATEGORIES.map((category) => (
+                    <div key={category.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={category.value}
+                        checked={selectedCategories.includes(category.value)}
+                        onCheckedChange={() => toggleCategory(category.value)}
+                      />
+                      <Label htmlFor={category.value} className="text-sm">
+                        {category.label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                {selectedCategories.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedCategories.map((category) => (
+                      <Badge key={category} variant="secondary">
+                        {category}
+                        <button
+                          type="button"
+                          onClick={() => removeCategory(category)}
+                          className="ml-1 hover:text-red-600"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="jobType">Job Type (comma-separated)</Label>
-              <Input
-                id="jobType"
-                value={Array.isArray(formData.jobType) ? formData.jobType.join(", ") : formData.jobType || ""}
-                onChange={(e) => handleArrayChange("jobType", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="schedule">Schedule (comma-separated)</Label>
-              <Input
-                id="schedule"
-                value={Array.isArray(formData.schedule) ? formData.schedule.join(", ") : formData.schedule || ""}
-                onChange={(e) => handleArrayChange("schedule", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="workSchedule">Work Schedule</Label>
-              <Input
-                id="workSchedule"
-                value={formData.workSchedule || ""}
-                onChange={(e) => handleChange("workSchedule", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="minimumAge">Minimum Age</Label>
-              <Input
-                id="minimumAge"
-                type="number"
-                value={formData.minimumAge || ""}
-                onChange={(e) => handleChange("minimumAge", parseInt(e.target.value))}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="openingDate">Opening Date</Label>
-                <Input
-                  id="openingDate"
-                  type="date"
-                  value={formData.openingDate || ""}
-                  onChange={(e) => handleChange("openingDate", e.target.value)}
-                />
+
+            {/* Job Details */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Job Details</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="compensation">Compensation Type</Label>
+                  <Select value={formData.compensation || ""} onValueChange={(value) => handleChange("compensation", value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select compensation" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {JOB_COMPENSATION_TYPES.map((comp) => (
+                        <SelectItem key={comp.value} value={comp.value}>
+                          {comp.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
+
+              {/* Job Type */}
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                  Job Type
+                </Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                  {JOB_TYPE_OPTIONS.map((jobType) => (
+                    <div key={jobType.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={jobType.value}
+                        checked={selectedJobTypes.includes(jobType.value)}
+                        onCheckedChange={() => toggleJobType(jobType.value)}
+                      />
+                      <Label htmlFor={jobType.value} className="text-sm">
+                        {jobType.label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                {selectedJobTypes.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedJobTypes.map((jobType) => (
+                      <Badge key={jobType} variant="secondary">
+                        {jobType}
+                        <button
+                          type="button"
+                          onClick={() => removeJobType(jobType)}
+                          className="ml-1 hover:text-red-600"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Schedule */}
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                  Schedule
+                </Label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+                  {SCHEDULE_OPTIONS.map((schedule) => (
+                    <div key={schedule.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={schedule.value}
+                        checked={selectedSchedule.includes(schedule.value)}
+                        onCheckedChange={() => toggleSchedule(schedule.value)}
+                      />
+                      <Label htmlFor={schedule.value} className="text-sm">
+                        {schedule.label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                {selectedSchedule.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedSchedule.map((schedule) => (
+                      <Badge key={schedule} variant="secondary">
+                        {schedule}
+                        <button
+                          type="button"
+                          onClick={() => removeSchedule(schedule)}
+                          className="ml-1 hover:text-red-600"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Salary Range */}
               <div className="space-y-2">
-                <Label htmlFor="closingDate">Closing Date</Label>
-                <Input
-                  id="closingDate"
-                  type="date"
-                  value={formData.closingDate || ""}
-                  onChange={(e) => handleChange("closingDate", e.target.value)}
-                />
+                <Label className="text-sm font-medium text-gray-700">Salary Range</Label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="salaryMin">Minimum</Label>
+                    <Input
+                      id="salaryMin"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={formData.salaryMin || ""}
+                      onChange={(e) => handleChange("salaryMin", e.target.value)}
+                      placeholder="0.00"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="salaryMax">Maximum</Label>
+                    <Input
+                      id="salaryMax"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={formData.salaryMax || ""}
+                      onChange={(e) => handleChange("salaryMax", e.target.value)}
+                      placeholder="0.00"
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="salaryType">Salary Type</Label>
+                    <Select value={formData.salaryType || ""} onValueChange={(value) => handleChange("salaryType", value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {SALARY_TYPE_OPTIONS.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="applicationLink">Application Link</Label>
-              <Input
-                id="applicationLink"
-                value={formData.applicationLink || ""}
-                onChange={(e) => handleChange("applicationLink", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="eligibility">Eligibility</Label>
-              <Textarea
-                id="eligibility"
-                value={formData.eligibility || ""}
-                onChange={(e) => handleChange("eligibility", e.target.value)}
-                rows={2}
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="isRemote">Is Remote</Label>
-                <select
-                  id="isRemote"
-                  value={formData.isRemote === true ? "true" : formData.isRemote === false ? "false" : ""}
-                  onChange={(e) => handleChange("isRemote", e.target.value === "true" ? true : e.target.value === "false" ? false : undefined)}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="">Not specified</option>
-                  <option value="true">Yes</option>
-                  <option value="false">No</option>
-                </select>
+
+            {/* Important Dates */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Important Dates</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="openingDate">Opening Date</Label>
+                  <Input
+                    id="openingDate"
+                    type="date"
+                    value={formData.openingDate || ""}
+                    onChange={(e) => handleChange("openingDate", e.target.value)}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="closingDate">Closing Date</Label>
+                  <Input
+                    id="closingDate"
+                    type="date"
+                    value={formData.closingDate || ""}
+                    onChange={(e) => handleChange("closingDate", e.target.value)}
+                  />
+                </div>
               </div>
+
+              {/* Ongoing Option */}
               <div className="space-y-2">
-                <Label htmlFor="hasTraining">Has Training</Label>
-                <select
-                  id="hasTraining"
-                  value={formData.hasTraining === true ? "true" : formData.hasTraining === false ? "false" : ""}
-                  onChange={(e) => handleChange("hasTraining", e.target.value === "true" ? true : e.target.value === "false" ? false : undefined)}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="">Not specified</option>
-                  <option value="true">Yes</option>
-                  <option value="false">No</option>
-                </select>
+                <Label>Ongoing Position</Label>
+                <div className="flex items-center space-x-3">
+                  <Checkbox
+                    id="isOngoing"
+                    checked={formData.isOngoing === true}
+                    onCheckedChange={(checked) => handleChange("isOngoing", checked)}
+                  />
+                  <Label htmlFor="isOngoing" className="text-sm">
+                    Ongoing Position (no closing date)
+                  </Label>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="isOngoing">Is Ongoing</Label>
-                <select
-                  id="isOngoing"
-                  value={formData.isOngoing === true ? "true" : formData.isOngoing === false ? "false" : ""}
-                  onChange={(e) => handleChange("isOngoing", e.target.value === "true" ? true : e.target.value === "false" ? false : undefined)}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="">Not specified</option>
-                  <option value="true">Yes</option>
-                  <option value="false">No</option>
-                </select>
+            </div>
+
+            {/* Additional Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Additional Information</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Training Provided */}
+                <div className="space-y-2">
+                  <Label>Training Provided</Label>
+                  <div className="flex items-center space-x-3 rounded-md border p-4">
+                    <Checkbox
+                      id="hasTraining"
+                      checked={formData.hasTraining === true}
+                      onCheckedChange={(checked) => handleChange("hasTraining", checked)}
+                    />
+                    <Label htmlFor="hasTraining" className="text-sm">
+                      Training Provided
+                    </Label>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="minimumAge">Minimum Age</Label>
+                  <Input
+                    id="minimumAge"
+                    type="number"
+                    min="14"
+                    max="25"
+                    value={formData.minimumAge || ""}
+                    onChange={(e) => handleChange("minimumAge", parseInt(e.target.value) || undefined)}
+                  />
+                </div>
               </div>
             </div>
           </>
