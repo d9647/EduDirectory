@@ -27,7 +27,7 @@ export default function Header() {
           <div className="flex items-center space-x-2 sm:space-x-4 lg:space-x-8">
             <div className="flex-shrink-0">
               <Link href="/">
-                <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-primary cursor-pointer"> 
+                <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold bg-yellow-400 text-black px-3 py-1 rounded cursor-pointer">
                   Education Yellow Pages
                 </h1>
               </Link>
