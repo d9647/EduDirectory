@@ -77,6 +77,7 @@ export default function TutoringProviders() {
               { key: "rating", label: "Rating", sortable: true },
               { key: "thumbsUpCount", label: "👍", sortable: true },
               { key: "categories", label: "Categories", sortable: false },
+              { key: "subjects", label: "Subjects", sortable: false },
               { key: "location", label: "Location", sortable: true },
               { key: "actions", label: "Actions", sortable: false },
             ]}
