@@ -255,8 +255,8 @@ export default function FilterSidebar({
                 </div>
               )}
 
-              {/* Selectivity Level Filter (Camps only) */}
-              {listingType === "camps" && filterOptions.selectivityLevels && (
+              {/* Selectivity Level Filter (Camps and Internships) */}
+              {(listingType === "camps" || listingType === "internships") && filterOptions.selectivityLevels && (
                 <div>
                   <Label className="text-sm font-medium text-gray-900 mb-3 block">
                     Selectivity Level

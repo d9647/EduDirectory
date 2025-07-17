@@ -114,6 +114,7 @@ export const internships = pgTable("internships", {
   zipcode: varchar("zipcode"),
   isRemote: boolean("is_remote").default(false),
   types: text("types").array(), // Academic, STEM, Healthcare, etc.
+  selectivityLevel: integer("selectivity_level"), // 1-4 (Open Enrollment to Very Competitive)
   compensation: varchar("compensation"), // Paid, Unpaid, Stipend, Academic Credit
   description: text("description"),
   duration: text("duration").array(), // Summer, Academic Year, Semester, Part-time, Full-time
