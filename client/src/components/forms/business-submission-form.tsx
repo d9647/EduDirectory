@@ -1068,6 +1068,34 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
                     <>
                       <FormField
                         control={form.control}
+                        name="selectivityLevel" as any
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Selectivity Level</FormLabel>
+                            <Select onValueChange={(value) => field.onChange(parseInt(value))}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select selectivity level" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {SELECTIVITY_LEVELS.map((level) => (
+                                  <SelectItem key={level.value} value={level.value.toString()}>
+                                    <div className="flex items-center space-x-2">
+                                      <div className={`w-3 h-3 rounded-full ${level.color}`}></div>
+                                      <span>{level.label}</span>
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      
+                      <FormField
+                        control={form.control}
                         name="minimumAge" as any
                         render={({ field }) => (
                           <FormItem>

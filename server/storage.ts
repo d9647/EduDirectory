@@ -624,6 +624,7 @@ export class DatabaseStorage implements IStorage {
   async getInternships(filters: {
     search?: string;
     types?: string[];
+    selectivityLevel?: number[];
     compensation?: string[];
     city?: string;
     state?: string;
@@ -645,6 +646,10 @@ export class DatabaseStorage implements IStorage {
 
     if (filters.types?.length) {
       conditions.push(sql`${internships.types} && ARRAY[${sql.join(filters.types.map(type => sql`${type}`), sql`, `)}]::text[]`);
+    }
+
+    if (filters.selectivityLevel?.length) {
+      conditions.push(sql`${internships.selectivityLevel} = ANY(ARRAY[${sql.join(filters.selectivityLevel.map(level => sql`${level}`), sql`, `)}]::integer[])`);
     }
 
     if (filters.compensation?.length) {
@@ -716,6 +721,7 @@ export class DatabaseStorage implements IStorage {
       zipcode: internships.zipcode,
       isRemote: internships.isRemote,
       types: internships.types,
+      selectivityLevel: internships.selectivityLevel,
       compensation: internships.compensation,
       description: internships.description,
       duration: internships.duration,

@@ -909,6 +909,25 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="selectivityLevel">Selectivity Level</Label>
+                  <Select value={formData.selectivityLevel?.toString() || ""} onValueChange={(value) => handleChange("selectivityLevel", parseInt(value))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select selectivity level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SELECTIVITY_LEVELS.map((level) => (
+                        <SelectItem key={level.value} value={level.value.toString()}>
+                          <div className="flex items-center space-x-2">
+                            <div className={`w-3 h-3 rounded-full ${level.color}`}></div>
+                            <span>{level.label}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="minimumAge">Minimum Age</Label>
                   <Input
                     id="minimumAge"

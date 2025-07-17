@@ -223,6 +223,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const filters = {
         search: req.query.search as string,
         types: req.query.types ? (req.query.types as string).split(',') : undefined,
+        selectivityLevel: req.query.selectivityLevel ? (req.query.selectivityLevel as string).split(',').map(Number) : undefined,
         compensation: req.query.compensation ? (req.query.compensation as string).split(',') : undefined,
         city: req.query.city as string,
         state: req.query.state as string,

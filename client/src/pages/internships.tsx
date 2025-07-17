@@ -3,12 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/layout/header";
 import FilterSidebar from "@/components/layout/filter-sidebar";
 import ListingTable from "@/components/listings/listing-table";
-import { INTERNSHIP_TYPES, COMPENSATION_TYPES } from "@/lib/constants";
+import { INTERNSHIP_TYPES, COMPENSATION_TYPES, SELECTIVITY_LEVELS } from "@/lib/constants";
 
 export default function Internships() {
   const [filters, setFilters] = useState({
     search: "",
     types: [] as string[],
+    selectivityLevel: [] as number[],
     compensation: [] as string[],
     city: "",
     state: "",
@@ -46,6 +47,7 @@ export default function Internships() {
 
   const filterOptions = {
     types: INTERNSHIP_TYPES,
+    selectivityLevels: SELECTIVITY_LEVELS,
     compensation: COMPENSATION_TYPES,
     remoteOptions: [
       { value: undefined, label: "All" },
@@ -85,6 +87,7 @@ export default function Internships() {
               { key: "thumbsUpCount", label: "👍", sortable: true },
               { key: "compensation", label: "Compensation", sortable: false },
               { key: "types", label: "Categories", sortable: false },
+              { key: "selectivityLevel", label: "Selectivity", sortable: false },
               { key: "duration", label: "Duration", sortable: false },
               { key: "location", label: "Location", sortable: true },
               { key: "actions", label: "Actions", sortable: false },
