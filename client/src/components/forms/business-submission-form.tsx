@@ -54,6 +54,7 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
   const [selectedDuration, setSelectedDuration] = useState<string[]>([]);
   const [selectedJobTypes, setSelectedJobTypes] = useState<string[]>([]);
   const [selectedSchedule, setSelectedSchedule] = useState<string[]>([]);
+  const [selectedDeliveryModes, setSelectedDeliveryModes] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
@@ -111,7 +112,7 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
       length: "",
       jobType: [],
       schedule: [],
-      deliveryMode: "",
+      deliveryMode: [],
       streetAddress: "",
       tuition: "",
       prerequisites: "",
@@ -144,6 +145,7 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
         duration: selectedDuration,
         jobType: selectedJobTypes,
         schedule: selectedSchedule,
+        deliveryMode: selectedDeliveryModes,
       };
 
       // Clean up empty date fields by converting empty strings to null
@@ -187,6 +189,7 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
       setSelectedDuration([]);
       setSelectedJobTypes([]);
       setSelectedSchedule([]);
+      setSelectedDeliveryModes([]);
       setPhotoFile(null);
       setPhotoPreview(null);
     },
@@ -282,6 +285,19 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
 
   const removeSchedule = (schedule: string) => {
     setSelectedSchedule(prev => prev.filter(s => s !== schedule));
+  };
+
+  // Delivery Mode management functions
+  const toggleDeliveryMode = (mode: string) => {
+    setSelectedDeliveryModes(prev => 
+      prev.includes(mode)
+        ? prev.filter(m => m !== mode)
+        : [...prev, mode]
+    );
+  };
+
+  const removeDeliveryMode = (mode: string) => {
+    setSelectedDeliveryModes(prev => prev.filter(m => m !== mode));
   };
 
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -557,30 +573,36 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
               </div>
 
               {/* Delivery Mode */}
-              <FormField
-                control={form.control}
-                name="deliveryMode" as any
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Delivery Mode</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select delivery mode" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {DELIVERY_MODE_OPTIONS.map((mode) => (
-                          <SelectItem key={mode.value} value={mode.value}>
-                            {mode.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
+              <div className="space-y-2">
+                <Label>Delivery Mode *</Label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  {DELIVERY_MODE_OPTIONS.map((mode) => (
+                    <div key={mode.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`delivery-${mode.value}`}
+                        checked={selectedDeliveryModes.includes(mode.value)}
+                        onCheckedChange={() => toggleDeliveryMode(mode.value)}
+                      />
+                      <Label htmlFor={`delivery-${mode.value}`} className="text-sm cursor-pointer">
+                        {mode.label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                {selectedDeliveryModes.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {selectedDeliveryModes.map((mode) => (
+                      <Badge key={mode} variant="secondary" className="text-xs">
+                        {mode}
+                        <X 
+                          className="h-3 w-3 ml-1 cursor-pointer" 
+                          onClick={() => removeDeliveryMode(mode)} 
+                        />
+                      </Badge>
+                    ))}
+                  </div>
                 )}
-              />
+              </div>
 
 
             </div>
