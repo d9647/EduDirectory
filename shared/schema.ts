@@ -58,7 +58,7 @@ export const tutoringProviders = pgTable("tutoring_providers", {
   zipcode: varchar("zipcode"),
   categories: text("categories").array(), // Mathematics, English, etc.
   subjects: text("subjects").array(), // Algebra, SAT Prep, etc.
-  deliveryMode: varchar("delivery_mode"), // In-person, Remote, Hybrid
+  deliveryMode: text("delivery_mode").array(), // In-person, Remote, Hybrid (multiple selection)
   photoUrl: varchar("photo_url"),
   isApproved: boolean("is_approved").default(false),
   isActive: boolean("is_active").default(true),
@@ -91,7 +91,7 @@ export const summerCamps = pgTable("summer_camps", {
   hasScholarship: boolean("has_scholarship").default(false),
   eligibility: text("eligibility"),
   description: text("description"),
-  deliveryMode: varchar("delivery_mode"), // In-person, Remote, Hybrid
+  deliveryMode: text("delivery_mode").array(), // In-person, Remote, Hybrid (multiple selection)
   website: varchar("website"),
   photoUrl: varchar("photo_url"),
   isApproved: boolean("is_approved").default(false),
@@ -119,7 +119,7 @@ export const internships = pgTable("internships", {
   duration: text("duration").array(), // Summer, Academic Year, Semester, Part-time, Full-time
   internshipDates: text("internship_dates"), // Specific dates field from form
   length: varchar("length", { length: 100 }), // Length field from form (e.g., "10 weeks", "3 months")
-  deliveryMode: varchar("delivery_mode"), // In-person, Remote, Hybrid
+  deliveryMode: text("delivery_mode").array(), // In-person, Remote, Hybrid (multiple selection)
   minimumAge: integer("minimum_age"),
   applicationOpen: date("application_open"),
   applicationDeadline: date("application_deadline"),
