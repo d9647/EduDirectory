@@ -286,7 +286,10 @@ export class DatabaseStorage implements IStorage {
     }
 
     if (filters.subjects?.length) {
-      conditions.push(sql`${tutoringProviders.subjects} && ARRAY[${sql.join(filters.subjects.map(subj => sql`${subj}`), sql`, `)}]::text[]`);
+      conditions.push(sql`EXISTS (
+        SELECT 1 FROM unnest(${tutoringProviders.subjects}) AS subj
+        WHERE LOWER(subj) = ANY(ARRAY[${sql.join(filters.subjects.map(subj => sql`${subj.toLowerCase()}`), sql`, `)}]::text[])
+      )`);
     }
 
     if (filters.type) {
