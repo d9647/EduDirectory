@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GraduationCap, Users, MapPin, Star } from "lucide-react";
+import Footer from "@/components/layout/footer";
 
 export default function Landing() {
   return (
@@ -10,7 +11,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-primary">Education Yellow Pages</h1>
+              <h1 className="text-2xl font-bold text-primary">Education Yellow Pages | Dragonfly AI</h1>
             </div>
             <Button onClick={() => window.location.href = "/api/login"} className="bg-primary hover:bg-primary/90">
               Sign In
@@ -144,24 +145,7 @@ export default function Landing() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-white">
-        <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
-          <div className="flex justify-center space-x-6 md:order-2">
-            <a href="#" className="text-gray-400 hover:text-gray-500">
-              Privacy Policy
-            </a>
-            <a href="#" className="text-gray-400 hover:text-gray-500">
-              Terms of Service
-            </a>
-          </div>
-          <div className="mt-8 md:mt-0 md:order-1">
-            <p className="text-center text-base text-gray-400">
-              &copy; 2024 Education Yellow Pages. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
