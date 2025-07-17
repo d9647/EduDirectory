@@ -13,6 +13,7 @@ import Internships from "@/pages/internships";
 import Jobs from "@/pages/jobs";
 import BusinessSubmission from "@/pages/business-submission";
 import Admin from "@/pages/admin";
+import Settings from "@/pages/settings";
 import Bookmarks from "@/pages/bookmarks";
 
 function Router() {
@@ -31,6 +32,7 @@ function Router() {
           <Route path="/jobs" component={Jobs} />
           <Route path="/submit-listing" component={BusinessSubmission} />
           <Route path="/bookmarks" component={Bookmarks} />
+          <Route path="/settings" component={Settings} />
           <Route path="/admin" component={Admin} />
         </>
       )}

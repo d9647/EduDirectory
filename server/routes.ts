@@ -86,6 +86,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User profile update route
+  app.put('/api/auth/profile', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      
+      // Use the updateUserProfileSchema for validation
+      const { updateUserProfileSchema } = await import("../shared/schema.js");
+      const profileData = updateUserProfileSchema.parse(req.body);
+      
+      const updatedUser = await storage.updateUserProfile(userId, profileData);
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      if (error.message === "User not found") {
+        return res.status(404).json({ message: "User not found" });
+      }
+      if (error.name === "ZodError") {
+        return res.status(400).json({ message: "Invalid profile data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update profile" });
+    }
+  });
+
   // Tutoring Providers
   app.get('/api/tutoring-providers', async (req, res) => {
     try {
