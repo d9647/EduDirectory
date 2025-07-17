@@ -369,7 +369,8 @@ export default function ListingDetailModal({
                     <div className="flex items-center">
                       <MapPin className="h-4 w-4 text-gray-400 mr-3" />
                       <span className="text-gray-700">
-                        {(Array.isArray(listing.deliveryMode) && listing.deliveryMode.includes("Remote")) || listing.isRemote ? "Remote" : 
+                        {/* Only show "Remote" if it's ONLY remote delivery, otherwise show full address */}
+                        {(Array.isArray(listing.deliveryMode) && listing.deliveryMode.length === 1 && listing.deliveryMode.includes("Remote")) || listing.isRemote ? "Remote" : 
                          [listing.address, listing.location || listing.city, listing.state, listing.zipcode].filter(Boolean).join(", ")}
                       </span>
                     </div>
