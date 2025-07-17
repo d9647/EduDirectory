@@ -566,138 +566,236 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
         return (
           <>
             {commonFields}
-            <div className="space-y-2">
-              <Label htmlFor="categories">Categories (comma-separated)</Label>
-              <Input
-                id="categories"
-                value={Array.isArray(formData.categories) ? formData.categories.join(", ") : formData.categories || ""}
-                onChange={(e) => handleArrayChange("categories", e.target.value)}
-              />
+            
+            {/* Categories */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Categories</h3>
+              
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                  Camp Categories *
+                </Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                  {CAMP_CATEGORIES.map((category) => (
+                    <div key={category.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={category.value}
+                        checked={selectedCategories.includes(category.value)}
+                        onCheckedChange={() => toggleCategory(category.value)}
+                      />
+                      <Label htmlFor={category.value} className="text-sm">
+                        {category.label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                {selectedCategories.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedCategories.map((category) => (
+                      <Badge key={category} variant="secondary">
+                        {category}
+                        <button
+                          type="button"
+                          onClick={() => removeCategory(category)}
+                          className="ml-1 hover:text-red-600"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="tags">Tags (comma-separated)</Label>
-              <Input
-                id="tags"
-                value={Array.isArray(formData.tags) ? formData.tags.join(", ") : formData.tags || ""}
-                onChange={(e) => handleArrayChange("tags", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="selectivityLevel">Selectivity Level (1-5)</Label>
-              <Input
-                id="selectivityLevel"
-                type="number"
-                min="1"
-                max="5"
-                value={formData.selectivityLevel || ""}
-                onChange={(e) => handleChange("selectivityLevel", parseInt(e.target.value))}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="dates">Dates</Label>
-              <Input
-                id="dates"
-                value={formData.dates || ""}
-                onChange={(e) => handleChange("dates", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="length">Length</Label>
-              <Input
-                id="length"
-                value={formData.length || ""}
-                onChange={(e) => handleChange("length", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="cost">Cost</Label>
-              <Input
-                id="cost"
-                value={formData.cost || ""}
-                onChange={(e) => handleChange("cost", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="deliveryMode">Delivery Mode</Label>
-              <Input
-                id="deliveryMode"
-                value={formData.deliveryMode || ""}
-                onChange={(e) => handleChange("deliveryMode", e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="minimumAge">Minimum Age</Label>
-              <Input
-                id="minimumAge"
-                type="number"
-                value={formData.minimumAge || ""}
-                onChange={(e) => handleChange("minimumAge", parseInt(e.target.value))}
-              />
-            </div>
-            <div className="grid grid-cols-3 gap-4">
+
+            {/* Camp Details */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Camp Details</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="selectivityLevel">Selectivity Level</Label>
+                  <Select value={formData.selectivityLevel?.toString() || ""} onValueChange={(value) => handleChange("selectivityLevel", parseInt(value))}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select selectivity level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SELECTIVITY_LEVELS.map((level) => (
+                        <SelectItem key={level.value} value={level.value.toString()}>
+                          <div className="flex items-center space-x-2">
+                            <div className={`w-3 h-3 rounded-full ${level.color}`}></div>
+                            <span>{level.label}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Program Tags */}
+                <div>
+                  <Label className="text-base font-medium text-gray-900 mb-3 block">Program Tags</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {CAMP_TAGS.map((tag) => (
+                      <div key={tag.value} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={tag.value}
+                          checked={selectedTags.includes(tag.value)}
+                          onCheckedChange={() => toggleTag(tag.value)}
+                        />
+                        <Label htmlFor={tag.value} className="text-sm text-gray-700">
+                          {tag.label}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                  {selectedTags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {selectedTags.map((tag) => (
+                        <Badge key={tag} variant="secondary" className="text-xs">
+                          {tag}
+                          <button
+                            type="button"
+                            onClick={() => removeTag(tag)}
+                            className="ml-1 hover:text-red-600"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Scholarship Available */}
+                <div className="space-y-2">
+                  <Label>Scholarship Available</Label>
+                  <div className="flex items-center space-x-3 rounded-md border p-4">
+                    <Checkbox
+                      id="hasScholarship"
+                      checked={formData.hasScholarship === true}
+                      onCheckedChange={(checked) => handleChange("hasScholarship", checked)}
+                    />
+                    <Label htmlFor="hasScholarship" className="text-sm">
+                      Scholarship Available
+                    </Label>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="dates">Camp Dates</Label>
+                  <Input
+                    id="dates"
+                    value={formData.dates || ""}
+                    onChange={(e) => handleChange("dates", e.target.value)}
+                    placeholder="e.g., June 15-29, July 6-20"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="length">Length</Label>
+                  <Input
+                    id="length"
+                    value={formData.length || ""}
+                    onChange={(e) => handleChange("length", e.target.value)}
+                    placeholder="e.g., 2 weeks, 1 week"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="minimumAge">Minimum Age</Label>
+                  <Input
+                    id="minimumAge"
+                    type="number"
+                    min="5"
+                    max="18"
+                    value={formData.minimumAge || ""}
+                    onChange={(e) => handleChange("minimumAge", parseInt(e.target.value) || undefined)}
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <Label htmlFor="applicationOpen">Application Open Date</Label>
-                <Input
-                  id="applicationOpen"
-                  type="date"
-                  value={formData.applicationOpen || ""}
-                  onChange={(e) => handleChange("applicationOpen", e.target.value)}
+                <Label htmlFor="cost">Cost Range</Label>
+                <Select value={formData.cost || ""} onValueChange={(value) => handleChange("cost", value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select cost range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CAMP_COST_OPTIONS.map((cost) => (
+                      <SelectItem key={cost.value} value={cost.value}>
+                        {cost.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Important Dates */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Important Dates</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="applicationOpen">Application Open Date</Label>
+                  <Input
+                    id="applicationOpen"
+                    type="date"
+                    value={formData.applicationOpen || ""}
+                    onChange={(e) => handleChange("applicationOpen", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="applicationDueDate">Application Due Date</Label>
+                  <Input
+                    id="applicationDueDate"
+                    type="date"
+                    value={formData.applicationDueDate || ""}
+                    onChange={(e) => handleChange("applicationDueDate", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="applicationDeadline">Application Deadline</Label>
+                  <Input
+                    id="applicationDeadline"
+                    type="date"
+                    value={formData.applicationDeadline || ""}
+                    onChange={(e) => handleChange("applicationDeadline", e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Additional Information</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="eligibility">Eligibility Requirements</Label>
+                <Textarea
+                  id="eligibility"
+                  value={formData.eligibility || ""}
+                  onChange={(e) => handleChange("eligibility", e.target.value)}
+                  rows={3}
+                  placeholder="Describe eligibility requirements..."
                 />
               </div>
+
               <div className="space-y-2">
-                <Label htmlFor="applicationDueDate">Application Due Date</Label>
-                <Input
-                  id="applicationDueDate"
-                  type="date"
-                  value={formData.applicationDueDate || ""}
-                  onChange={(e) => handleChange("applicationDueDate", e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="applicationDeadline">Application Deadline</Label>
-                <Input
-                  id="applicationDeadline"
-                  type="date"
-                  value={formData.applicationDeadline || ""}
-                  onChange={(e) => handleChange("applicationDeadline", e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="eligibility">Eligibility</Label>
-              <Textarea
-                id="eligibility"
-                value={formData.eligibility || ""}
-                onChange={(e) => handleChange("eligibility", e.target.value)}
-                rows={2}
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="hasScholarship">Has Scholarship</Label>
-                <select
-                  id="hasScholarship"
-                  value={formData.hasScholarship === true ? "true" : formData.hasScholarship === false ? "false" : ""}
-                  onChange={(e) => handleChange("hasScholarship", e.target.value === "true" ? true : e.target.value === "false" ? false : undefined)}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="">Not specified</option>
-                  <option value="true">Yes</option>
-                  <option value="false">No</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="applicationAvailable">Application Available</Label>
-                <select
-                  id="applicationAvailable"
-                  value={formData.applicationAvailable === true ? "true" : formData.applicationAvailable === false ? "false" : ""}
-                  onChange={(e) => handleChange("applicationAvailable", e.target.value === "true" ? true : e.target.value === "false" ? false : undefined)}
-                  className="w-full p-2 border rounded"
-                >
-                  <option value="">Not specified</option>
-                  <option value="true">Yes</option>
-                  <option value="false">No</option>
-                </select>
+                <Label>Application Available</Label>
+                <div className="flex items-center space-x-3 rounded-md border p-4">
+                  <Checkbox
+                    id="applicationAvailable"
+                    checked={formData.applicationAvailable === true}
+                    onCheckedChange={(checked) => handleChange("applicationAvailable", checked)}
+                  />
+                  <Label htmlFor="applicationAvailable" className="text-sm">
+                    Application Available
+                  </Label>
+                </div>
               </div>
             </div>
           </>
