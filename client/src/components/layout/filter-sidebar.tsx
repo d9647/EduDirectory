@@ -108,7 +108,7 @@ export default function FilterSidebar({
           </div>
         </CardHeader>
 
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 sm:space-y-6">
           {/* Global Search */}
           <div>
             <Label className="text-sm font-medium text-gray-700">Search</Label>
@@ -118,14 +118,14 @@ export default function FilterSidebar({
                 placeholder="Search providers, subjects..."
                 value={filters.search}
                 onChange={(e) => updateFilter("search", e.target.value)}
-                className="pl-10"
+                className="pl-10 text-sm sm:text-base"
               />
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
             </div>
           </div>
 
-          <ScrollArea className="h-96">
-            <div className="space-y-6 pr-4">
+          <ScrollArea className="h-80 sm:h-96">
+            <div className="space-y-4 sm:space-y-6 pr-2 sm:pr-4">
               {/* Location Filters */}
               <div>
                 <Label className="text-sm font-medium text-gray-900 mb-3 block">

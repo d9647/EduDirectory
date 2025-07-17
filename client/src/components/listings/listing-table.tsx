@@ -498,15 +498,15 @@ export default function ListingTable({
               </p>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
               {/* Sort Dropdown */}
               <div className="flex items-center space-x-2">
-                <label className="text-sm text-gray-700 font-medium">Sort by:</label>
+                <label className="text-sm text-gray-700 font-medium hidden sm:inline">Sort by:</label>
                 <Select
                   value={filters.sortBy}
                   onValueChange={(value) => handleSort(value)}
                 >
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-full sm:w-[160px] md:w-[180px]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -521,7 +521,7 @@ export default function ListingTable({
 
               {/* Items Per Page */}
               <div className="flex items-center space-x-2">
-                <label className="text-sm text-gray-700 font-medium">Show:</label>
+                <label className="text-sm text-gray-700 font-medium hidden sm:inline">Show:</label>
                 <Select
                   value={filters.limit.toString()}
                   onValueChange={handleLimitChange}
@@ -546,12 +546,12 @@ export default function ListingTable({
       <Card>
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader>
+            <TableHeader className="hidden sm:table-header-group">
               <TableRow className="bg-gray-50">
                 {columns.map((column) => (
                   <TableHead
                     key={column.key}
-                    className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${
+                    className={`px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${
                       column.sortable ? "cursor-pointer hover:bg-gray-100" : ""
                     }`}
                     onClick={() => column.sortable && handleSort(column.key)}
@@ -591,11 +591,14 @@ export default function ListingTable({
                 listings.map((listing: any) => (
                   <TableRow
                     key={listing.id}
-                    className="hover:bg-gray-50 transition-colors cursor-pointer"
+                    className="hover:bg-gray-50 transition-colors cursor-pointer block sm:table-row border-b sm:border-0 mb-4 sm:mb-0"
                     onClick={() => handleViewDetails(listing)}
                   >
-                    {columns.map((column) => (
-                      <TableCell key={column.key} className="px-6 py-4">
+                    {columns.map((column, index) => (
+                      <TableCell key={column.key} className="px-3 sm:px-6 py-2 sm:py-4 block sm:table-cell">
+                        <div className="sm:hidden">
+                          <span className="font-medium text-gray-500 text-sm">{column.label}: </span>
+                        </div>
                         {renderCellContent(column.key, listing)}
                       </TableCell>
                     ))}
@@ -608,15 +611,15 @@ export default function ListingTable({
 
         {/* Pagination */}
         {data && data.total > 0 && (
-          <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-            <div className="flex items-center text-sm text-gray-700">
+          <div className="px-3 sm:px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center text-xs sm:text-sm text-gray-700">
               <span>
                 Showing <span className="font-medium">{Math.min(filters.offset + 1, data.total)}</span> to{" "}
                 <span className="font-medium">{Math.min(filters.offset + filters.limit, data.total)}</span> of{" "}
                 <span className="font-medium">{data.total}</span> results
               </span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 sm:space-x-2">
               <Button
                 variant="outline"
                 size="sm"
