@@ -355,6 +355,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const id = parseInt(req.params.id);
+      
+      // Check if the review belongs to the user or if user is admin
+      const existingReview = await storage.getReviewById(id);
+      if (!existingReview) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+      
+      const userRole = await storage.getUserRole(userId);
+      if (existingReview.userId !== userId && userRole !== 'admin') {
+        return res.status(403).json({ message: "Not authorized to edit this review" });
+      }
+      
       const validatedData = insertReviewSchema.partial().parse(req.body);
       const review = await storage.updateReview(id, validatedData);
       res.json(review);
@@ -371,6 +383,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const id = parseInt(req.params.id);
+      
+      // Check if the review belongs to the user or if user is admin
+      const existingReview = await storage.getReviewById(id);
+      if (!existingReview) {
+        return res.status(404).json({ message: "Review not found" });
+      }
+      
+      const userRole = await storage.getUserRole(userId);
+      if (existingReview.userId !== userId && userRole !== 'admin') {
+        return res.status(403).json({ message: "Not authorized to delete this review" });
+      }
+      
       await storage.deleteReview(id, userId);
       res.status(204).send();
     } catch (error) {

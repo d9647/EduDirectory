@@ -121,6 +121,7 @@ export interface IStorage {
 
   // Reviews
   getReviews(listingType: string, listingId: number): Promise<Review[]>;
+  getReviewById(id: number): Promise<Review | undefined>;
   createReview(review: InsertReview): Promise<Review>;
   updateReview(id: number, review: Partial<InsertReview>): Promise<Review>;
   deleteReview(id: number, userId: string): Promise<void>;
@@ -986,6 +987,16 @@ export class DatabaseStorage implements IStorage {
       console.error("Error in getReviews:", error);
       throw error;
     }
+  }
+
+  async getReviewById(id: number): Promise<Review | undefined> {
+    const result = await db
+      .select()
+      .from(reviews)
+      .where(eq(reviews.id, id))
+      .limit(1);
+    
+    return result[0];
   }
 
   async createReview(review: InsertReview): Promise<Review> {
