@@ -63,14 +63,36 @@ function updateUserSession(
 async function upsertUser(
   claims: any,
 ) {
-  await storage.upsertUser({
-    id: claims["sub"],
-    email: claims["email"],
-    firstName: claims["first_name"],
-    lastName: claims["last_name"],
-    profileImageUrl: claims["profile_image_url"],
-    role: "user", // Default role for new users
-  });
+  // Check if user already exists
+  const existingUser = await storage.getUser(claims["sub"]).catch(() => null);
+  
+  if (existingUser) {
+    // User exists, only update authentication-related fields
+    await storage.upsertUser({
+      id: claims["sub"],
+      email: claims["email"],
+      profileImageUrl: claims["profile_image_url"],
+      // Preserve existing profile data
+      firstName: existingUser.firstName,
+      lastName: existingUser.lastName,
+      phone: existingUser.phone,
+      location: existingUser.location,
+      schoolName: existingUser.schoolName,
+      grade: existingUser.grade,
+      address: existingUser.address,
+      role: existingUser.role,
+    });
+  } else {
+    // New user, use Replit claims as defaults
+    await storage.upsertUser({
+      id: claims["sub"],
+      email: claims["email"],
+      firstName: claims["first_name"] || "",
+      lastName: claims["last_name"] || "",
+      profileImageUrl: claims["profile_image_url"],
+      role: "user", // Default role for new users
+    });
+  }
 }
 
 export async function setupAuth(app: Express) {
