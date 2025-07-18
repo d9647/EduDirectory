@@ -97,6 +97,17 @@ Preferred UI design style: Clean, minimal layouts without redundant headers.
 - Enhanced form organization with clear section headers and consistent layout across all business types
 - All admin edit forms now provide identical user experience to submission forms with matching styling and functionality
 
+**Internship Selectivity Level Implementation (Latest Update - January 17, 2025)**
+- Added selectivity level field to internship database schema using same structure as summer camps
+- Enhanced internship business submission form with selectivity level dropdown featuring color-coded visual indicators
+- Updated admin edit modal to include selectivity level field for internships with proper form validation
+- Added selectivity level filtering to internships API routes and frontend page with checkbox interface
+- Enhanced internships listing table with new selectivity level column displaying color-coded badges
+- Extended filter sidebar to support selectivity level filtering for both camps and internships
+- Updated storage layer to include selectivity level in internship queries and display methods
+- Complete feature parity: internships now support same selectivity level functionality as summer camps
+- All selectivity levels (Open Enrollment, Application-Based, Competitive, Very Competitive) work across forms, filters, and displays
+
 **Delivery Mode Multiple Selection Implementation (Latest Update - January 17, 2025)**
 - Successfully converted delivery mode field from single dropdown to multiple checkbox selection across all business types
 - Updated database schema from varchar to text[] for delivery_mode field with safe data migration preserving existing values
