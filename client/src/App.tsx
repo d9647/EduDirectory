@@ -36,6 +36,8 @@ function Router() {
 
   return (
     <Switch>
+      <Route path="/terms-of-use" component={TermsOfUse} />
+      <Route path="/privacy-policy" component={PrivacyPolicy} />
       {!isAuthenticated ? (
         <Route path="/" component={Landing} />
       ) : (
@@ -50,8 +52,6 @@ function Router() {
               <Route path="/submit-listing" component={BusinessSubmission} />
               <Route path="/bookmarks" component={Bookmarks} />
               <Route path="/settings" component={Settings} />
-              <Route path="/terms-of-use" component={TermsOfUse} />
-              <Route path="/privacy-policy" component={PrivacyPolicy} />
               <Route component={NotFound} />
             </Switch>
           </div>
