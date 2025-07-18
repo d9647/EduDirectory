@@ -10,7 +10,7 @@ export default function Landing() {
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16">
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 flex items-center space-x-2">
               <img src="/logo.png" alt="Education Yellow Pages" className="h-8 w-8" />
               <h1 className="text-lg sm:text-xl lg:text-2xl font-bold font-bold bg-yellow-400 text-black px-3 py-1 rounded cursor-pointer">Education Yellow Pages</h1>
             </div>
