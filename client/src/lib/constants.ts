@@ -196,13 +196,23 @@ export const TUTORING_SUBJECTS = [
 // Summer Camp Categories
 export const CAMP_CATEGORIES = [
   { value: "STEM", label: "STEM" },
-  { value: "Leadership", label: "Leadership" },
-  { value: "Arts & Performance", label: "Arts & Performance" },
   { value: "Mathematics", label: "Mathematics" },
+  { value: "Leadership", label: "Leadership" },
+  { value: "Humanities & Social Sciences", label: "Humanities & Social Sciences" },
   { value: "Language & Cultural Immersion", label: "Language & Cultural Immersion" },
   { value: "Pre-Professional", label: "Pre-Professional" },
+  { value: "College Prep & Test Prep", label: "College Prep & Test Prep" },
+  { value: "Entrepreneurship & Business", label: "Entrepreneurship & Business" },
+  { value: "Visual Arts", label: "Visual Arts" },
+  { value: "Performing Arts", label: "Performing Arts" },
+  { value: "Music", label: "Music" },
+  { value: "Sports & Athletics", label: "Sports & Athletics" },
   { value: "Outdoor & Adventure", label: "Outdoor & Adventure" },
+  { value: "Environmental & Sustainability", label: "Environmental & Sustainability" },
   { value: "Wellness & Personal Development", label: "Wellness & Personal Development" },
+  { value: "Community Service", label: "Community Service" },
+  { value: "Special Needs & Inclusive", label: "Special Needs & Inclusive" },
+  { value: "Faith-Based", label: "Faith-Based" },
 ];
 
 // Summer Camp Tags
