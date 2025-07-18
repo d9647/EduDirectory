@@ -14,6 +14,8 @@ import Jobs from "@/pages/jobs";
 import BusinessSubmission from "@/pages/business-submission";
 import Admin from "@/pages/admin";
 import Settings from "@/pages/settings";
+import TermsOfUse from "./pages/terms-of-use";
+import PrivacyPolicy from "./pages/privacy-policy";
 import Bookmarks from "@/pages/bookmarks";
 import Footer from "@/components/layout/footer";
 
@@ -34,6 +36,8 @@ function Router() {
 
   return (
     <Switch>
+      <Route path="/terms-of-use" component={TermsOfUse} />
+      <Route path="/privacy-policy" component={PrivacyPolicy} />
       {!isAuthenticated ? (
         <Route path="/" component={Landing} />
       ) : (
@@ -48,7 +52,6 @@ function Router() {
               <Route path="/submit-listing" component={BusinessSubmission} />
               <Route path="/bookmarks" component={Bookmarks} />
               <Route path="/settings" component={Settings} />
-              <Route path="/admin" component={Admin} />
               <Route component={NotFound} />
             </Switch>
           </div>
