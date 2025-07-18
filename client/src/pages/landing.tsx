@@ -11,10 +11,7 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16">
             <div className="flex-shrink-0">
-              <div className="flex items-center space-x-2 bg-yellow-400 text-black px-3 py-1 rounded cursor-pointer">
-                <img src="/logo.png" alt="Education Yellow Pages" className="h-8 w-8" />
-                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold">Education Yellow Pages</h1>
-              </div>
+              <img src="/logo_header.png" alt="Education Yellow Pages" className="h-12 cursor-pointer" />
             </div>
             <Button onClick={() => window.location.href = "/api/login"} size="sm" className="bg-primary hover:bg-primary/90 text-xs sm:text-sm">
               Sign In
