@@ -52,6 +52,7 @@ function Router() {
               <Route path="/submit-listing" component={BusinessSubmission} />
               <Route path="/bookmarks" component={Bookmarks} />
               <Route path="/settings" component={Settings} />
+              <Route path="/admin" component={Admin} />
               <Route component={NotFound} />
             </Switch>
           </div>
