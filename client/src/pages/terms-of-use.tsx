@@ -1,12 +1,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import SimpleHeader from "@/components/layout/simple-header";
+import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 
 export default function TermsOfUse() {
   return (
     <div className="min-h-screen flex flex-col">
-      <SimpleHeader />
+      <Header />
       <main className="flex-1 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <Card>
