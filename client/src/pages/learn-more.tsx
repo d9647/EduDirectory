@@ -59,8 +59,7 @@ export default function LearnMore() {
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base">
-                  Message providers directly, join discussion threads, or build micro‑communities around 
-                  specific interests—from robotics to creative writing.
+                  Reach out to providers directly, and get your questions answered-send a quick inquiry to any listing and receive reply straight to your inbox.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -82,11 +81,11 @@ export default function LearnMore() {
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Read honest feedback from neighbors, not ads.</span>
+                  <span>Read honest feedback from neighbors, not sponsored ads.</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Create wish lists and get notified when new programs appear.</span>
+                  <span>Save promising listings to your personal bookmarks so you can revisit and compare them whenever you’re ready.</span>
                 </li>
               </ul>
             </CardContent>
@@ -109,7 +108,7 @@ export default function LearnMore() {
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Grow your impact through transparent reviews and community Q&A.</span>
+                  <span>Grow your impact with transparent reviews and real‑time listing analytics that show how many families you’re reaching.</span>
                 </li>
               </ul>
             </CardContent>
