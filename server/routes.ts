@@ -924,10 +924,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Delete routes (Admin only)
-  app.delete('/api/admin/delete/tutoring-providers/:id', isAuthenticated, requireAdmin, async (req, res) => {
+  app.delete('/api/admin/delete/tutoring-provider/:id', isAuthenticated, requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      console.log(`Deleting tutoring provider with ID: ${id}`);
       await storage.deleteTutoringProvider(id);
+      console.log(`Successfully deleted tutoring provider ${id}`);
       res.json({ message: "Tutoring provider deleted successfully" });
     } catch (error) {
       console.error("Error deleting tutoring provider:", error);
@@ -935,10 +937,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/admin/delete/summer-camps/:id', isAuthenticated, requireAdmin, async (req, res) => {
+  app.delete('/api/admin/delete/summer-camp/:id', isAuthenticated, requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      console.log(`Deleting summer camp with ID: ${id}`);
       await storage.deleteSummerCamp(id);
+      console.log(`Successfully deleted summer camp ${id}`);
       res.json({ message: "Summer camp deleted successfully" });
     } catch (error) {
       console.error("Error deleting summer camp:", error);
@@ -946,10 +950,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/admin/delete/internships/:id', isAuthenticated, requireAdmin, async (req, res) => {
+  app.delete('/api/admin/delete/internship/:id', isAuthenticated, requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      console.log(`Deleting internship with ID: ${id}`);
       await storage.deleteInternship(id);
+      console.log(`Successfully deleted internship ${id}`);
       res.json({ message: "Internship deleted successfully" });
     } catch (error) {
       console.error("Error deleting internship:", error);
@@ -957,10 +963,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/admin/delete/jobs/:id', isAuthenticated, requireAdmin, async (req, res) => {
+  app.delete('/api/admin/delete/job/:id', isAuthenticated, requireAdmin, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
+      console.log(`Deleting job with ID: ${id}`);
       await storage.deleteJob(id);
+      console.log(`Successfully deleted job ${id}`);
       res.json({ message: "Job deleted successfully" });
     } catch (error) {
       console.error("Error deleting job:", error);

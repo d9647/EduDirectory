@@ -19,6 +19,7 @@ import {
   Search,
   Edit,
   Eye,
+  EyeOff,
   ThumbsUp,
   Flag,
   User,
