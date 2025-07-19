@@ -6,6 +6,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
@@ -25,6 +27,12 @@ import {
   User,
   Shield,
   AlertTriangle,
+  Calendar,
+  MapPin,
+  Phone,
+  Mail,
+  GraduationCap,
+  School,
 } from "lucide-react";
 import AdminEditModal from "@/components/admin/admin-edit-modal";
 import SimpleHeader from "@/components/layout/simple-header";
@@ -1337,27 +1345,176 @@ export default function Admin() {
                     <div className="space-y-2">
                       {users.map((user: any) => (
                         <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <h3 className="font-medium">
-                                {user.firstName || user.lastName 
-                                  ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
-                                  : user.email
+                          <div className="flex items-center gap-4 flex-1">
+                            <Avatar className="h-12 w-12">
+                              <AvatarImage src={user.profileImageUrl} alt={user.firstName || user.email} />
+                              <AvatarFallback>
+                                {user.firstName && user.lastName 
+                                  ? `${user.firstName[0]}${user.lastName[0]}`
+                                  : user.firstName 
+                                    ? user.firstName[0]
+                                    : user.email[0].toUpperCase()
                                 }
-                              </h3>
-                              <Badge variant={user.role === "admin" ? "default" : "secondary"}>
-                                {user.role}
-                              </Badge>
+                              </AvatarFallback>
+                            </Avatar>
+                            
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <h3 className="font-medium">
+                                  {user.firstName || user.lastName 
+                                    ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+                                    : user.email
+                                  }
+                                </h3>
+                                <Badge variant={user.role === "admin" ? "default" : "secondary"}>
+                                  {user.role}
+                                </Badge>
+                              </div>
+                              <p className="text-sm text-gray-600">{user.email}</p>
+                              {user.location && (
+                                <p className="text-sm text-gray-500 flex items-center gap-1">
+                                  <MapPin className="h-3 w-3" />
+                                  {user.location}
+                                </p>
+                              )}
+                              <p className="text-xs text-gray-400 flex items-center gap-1">
+                                <Calendar className="h-3 w-3" />
+                                Joined {new Date(user.createdAt).toLocaleDateString()}
+                              </p>
                             </div>
-                            <p className="text-sm text-gray-600">{user.email}</p>
-                            {user.location && (
-                              <p className="text-sm text-gray-500">{user.location}</p>
-                            )}
-                            <p className="text-xs text-gray-400">
-                              Joined {new Date(user.createdAt).toLocaleDateString()}
-                            </p>
                           </div>
+                          
                           <div className="flex gap-2">
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  View Profile
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-2xl">
+                                <DialogHeader>
+                                  <DialogTitle className="flex items-center gap-3">
+                                    <Avatar className="h-16 w-16">
+                                      <AvatarImage src={user.profileImageUrl} alt={user.firstName || user.email} />
+                                      <AvatarFallback className="text-lg">
+                                        {user.firstName && user.lastName 
+                                          ? `${user.firstName[0]}${user.lastName[0]}`
+                                          : user.firstName 
+                                            ? user.firstName[0]
+                                            : user.email[0].toUpperCase()
+                                        }
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                      <h2 className="text-xl font-semibold">
+                                        {user.firstName || user.lastName 
+                                          ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+                                          : user.email
+                                        }
+                                      </h2>
+                                      <Badge variant={user.role === "admin" ? "default" : "secondary"}>
+                                        {user.role}
+                                      </Badge>
+                                    </div>
+                                  </DialogTitle>
+                                  <DialogDescription>
+                                    User profile and account information
+                                  </DialogDescription>
+                                </DialogHeader>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-4">
+                                  <div className="space-y-4">
+                                    <h3 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">Contact Information</h3>
+                                    
+                                    <div className="flex items-center gap-3">
+                                      <Mail className="h-4 w-4 text-gray-500" />
+                                      <div>
+                                        <p className="text-sm font-medium">Email</p>
+                                        <p className="text-sm text-gray-600">{user.email}</p>
+                                      </div>
+                                    </div>
+                                    
+                                    {user.phone && (
+                                      <div className="flex items-center gap-3">
+                                        <Phone className="h-4 w-4 text-gray-500" />
+                                        <div>
+                                          <p className="text-sm font-medium">Phone</p>
+                                          <p className="text-sm text-gray-600">{user.phone}</p>
+                                        </div>
+                                      </div>
+                                    )}
+                                    
+                                    {user.location && (
+                                      <div className="flex items-center gap-3">
+                                        <MapPin className="h-4 w-4 text-gray-500" />
+                                        <div>
+                                          <p className="text-sm font-medium">Location</p>
+                                          <p className="text-sm text-gray-600">{user.location}</p>
+                                        </div>
+                                      </div>
+                                    )}
+                                    
+                                    {user.address && (
+                                      <div className="flex items-center gap-3">
+                                        <MapPin className="h-4 w-4 text-gray-500" />
+                                        <div>
+                                          <p className="text-sm font-medium">Address</p>
+                                          <p className="text-sm text-gray-600">{user.address}</p>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                  
+                                  <div className="space-y-4">
+                                    <h3 className="font-semibold text-sm text-gray-900 uppercase tracking-wide">Education Information</h3>
+                                    
+                                    {user.schoolName && (
+                                      <div className="flex items-center gap-3">
+                                        <School className="h-4 w-4 text-gray-500" />
+                                        <div>
+                                          <p className="text-sm font-medium">School</p>
+                                          <p className="text-sm text-gray-600">{user.schoolName}</p>
+                                        </div>
+                                      </div>
+                                    )}
+                                    
+                                    {user.grade && (
+                                      <div className="flex items-center gap-3">
+                                        <GraduationCap className="h-4 w-4 text-gray-500" />
+                                        <div>
+                                          <p className="text-sm font-medium">Grade</p>
+                                          <p className="text-sm text-gray-600">{user.grade}</p>
+                                        </div>
+                                      </div>
+                                    )}
+                                    
+                                    <div className="flex items-center gap-3">
+                                      <Calendar className="h-4 w-4 text-gray-500" />
+                                      <div>
+                                        <p className="text-sm font-medium">Member Since</p>
+                                        <p className="text-sm text-gray-600">
+                                          {new Date(user.createdAt).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric'
+                                          })}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    
+                                    <div className="flex items-center gap-3">
+                                      <User className="h-4 w-4 text-gray-500" />
+                                      <div>
+                                        <p className="text-sm font-medium">User ID</p>
+                                        <p className="text-sm text-gray-600 font-mono">{user.id}</p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                            
                             {user.role === "admin" ? (
                               <Button
                                 onClick={() => updateRoleMutation.mutate({ userId: user.id, role: "user" })}
@@ -1365,6 +1522,7 @@ export default function Admin() {
                                 variant="outline"
                                 size="sm"
                               >
+                                <Shield className="h-4 w-4 mr-2" />
                                 Remove Admin
                               </Button>
                             ) : (
@@ -1374,6 +1532,7 @@ export default function Admin() {
                                 variant="outline"
                                 size="sm"
                               >
+                                <Shield className="h-4 w-4 mr-2" />
                                 Make Admin
                               </Button>
                             )}
