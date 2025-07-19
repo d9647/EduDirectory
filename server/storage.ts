@@ -1289,6 +1289,90 @@ export class DatabaseStorage implements IStorage {
       .where(eq(reports.id, id));
   }
 
+  // Admin search functionality for live listings
+  async searchListings(type: string, query: string): Promise<any[]> {
+    const searchQuery = `%${query.toLowerCase()}%`;
+    
+    switch (type) {
+      case "tutoring-providers":
+        return await db
+          .select()
+          .from(tutoringProviders)
+          .where(
+            and(
+              eq(tutoringProviders.isApproved, true),
+              or(
+                ilike(tutoringProviders.name, searchQuery),
+                ilike(tutoringProviders.description, searchQuery),
+                ilike(tutoringProviders.location, searchQuery),
+                ilike(tutoringProviders.city, searchQuery)
+              )
+            )
+          )
+          .orderBy(desc(tutoringProviders.createdAt))
+          .limit(20);
+
+      case "summer-camps":
+        return await db
+          .select()
+          .from(summerCamps)
+          .where(
+            and(
+              eq(summerCamps.isApproved, true),
+              or(
+                ilike(summerCamps.name, searchQuery),
+                ilike(summerCamps.description, searchQuery),
+                ilike(summerCamps.location, searchQuery),
+                ilike(summerCamps.city, searchQuery)
+              )
+            )
+          )
+          .orderBy(desc(summerCamps.createdAt))
+          .limit(20);
+
+      case "internships":
+        return await db
+          .select()
+          .from(internships)
+          .where(
+            and(
+              eq(internships.isApproved, true),
+              or(
+                ilike(internships.title, searchQuery),
+                ilike(internships.companyName, searchQuery),
+                ilike(internships.description, searchQuery),
+                ilike(internships.location, searchQuery),
+                ilike(internships.city, searchQuery)
+              )
+            )
+          )
+          .orderBy(desc(internships.createdAt))
+          .limit(20);
+
+      case "jobs":
+        return await db
+          .select()
+          .from(jobs)
+          .where(
+            and(
+              eq(jobs.isApproved, true),
+              or(
+                ilike(jobs.title, searchQuery),
+                ilike(jobs.companyName, searchQuery),
+                ilike(jobs.description, searchQuery),
+                ilike(jobs.location, searchQuery),
+                ilike(jobs.city, searchQuery)
+              )
+            )
+          )
+          .orderBy(desc(jobs.createdAt))
+          .limit(20);
+
+      default:
+        return [];
+    }
+  }
+
 }
 
 export const storage = new DatabaseStorage();
