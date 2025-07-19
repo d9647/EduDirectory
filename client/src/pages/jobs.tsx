@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/layout/header";
-import FilterSidebar from "@/components/layout/filter-sidebar";
+import FilterSidebar from "@/components/layout/filter-sidebar-mobile";
 import ListingTable from "@/components/listings/listing-table";
 import { JOB_CATEGORIES, JOB_COMPENSATION_TYPES } from "@/lib/constants";
 

@@ -480,15 +480,86 @@ export default function ListingTable({
   const totalPages = data ? Math.ceil(data.total / filters.limit) : 0;
   const currentPage = Math.floor(filters.offset / filters.limit) + 1;
 
+  // Mobile Card Component for each listing
+  const MobileListingCard = ({ listing }: { listing: any }) => {
+    return (
+      <Card className="mb-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleViewDetails(listing)}>
+        <CardContent className="p-4">
+          <div className="flex items-start space-x-3">
+            {listing.photoUrl && (
+              <Avatar className="h-12 w-12 flex-shrink-0">
+                <AvatarImage src={listing.photoUrl} alt={listing.name || listing.title} />
+                <AvatarFallback>
+                  {(listing.name || listing.title)?.charAt(0) || "?"}
+                </AvatarFallback>
+              </Avatar>
+            )}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-start justify-between">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base font-semibold text-gray-900 truncate">
+                    {listing.name || listing.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                    {listing.description || "No description available"}
+                  </p>
+                  
+                  {/* Location & Key Info */}
+                  <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
+                    {(Array.isArray(listing.deliveryMode) && listing.deliveryMode.length === 1 && listing.deliveryMode.includes("Remote")) || listing.isRemote
+                      ? <Badge variant="outline" className="text-xs">Remote</Badge>
+                      : listing.location && <span>{listing.location}</span>
+                    }
+                    {listing.rating && (
+                      <span className="flex items-center">
+                        ⭐ {listing.rating}
+                      </span>
+                    )}
+                    {listing.thumbsUp > 0 && (
+                      <span className="flex items-center">
+                        👍 {listing.thumbsUp}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Categories/Tags - Mobile optimized */}
+                  {(listing.categories || listing.subjects || listing.types) && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {(listing.categories || listing.subjects || listing.types)?.slice(0, 2).map((item: string, index: number) => (
+                        <Badge key={index} variant="secondary" className="text-xs">
+                          {item}
+                        </Badge>
+                      ))}
+                      {((listing.categories || listing.subjects || listing.types)?.length || 0) > 2 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{((listing.categories || listing.subjects || listing.types)?.length || 0) - 2}
+                        </Badge>
+                      )}
+                    </div>
+                  )}
+                </div>
+                
+                {/* Action buttons - Mobile optimized */}
+                <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+                  <RowActions listing={listing} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
   return (
     <main className="flex-1 min-w-0">
       {/* Results Header */}
       <Card className="mb-4">
-        <CardContent className="p-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">{title}</h2>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1">
                 {data ? (
                   <>
                     Showing {Math.min(filters.offset + 1, data.total)}-{Math.min(filters.offset + filters.limit, data.total)} of {data.total} results
@@ -543,16 +614,50 @@ export default function ListingTable({
         </CardContent>
       </Card>
 
-      {/* Results Table */}
-      <Card>
+      {/* Mobile Card Layout */}
+      <div className="block lg:hidden">
+        {isLoading ? (
+          // Mobile Loading skeleton
+          Array.from({ length: filters.limit }).map((_, index) => (
+            <Card key={index} className="mb-3">
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-3">
+                  <Skeleton className="h-12 w-12 rounded-full flex-shrink-0" />
+                  <div className="flex-1">
+                    <Skeleton className="h-5 w-3/4 mb-2" />
+                    <Skeleton className="h-4 w-full mb-2" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        ) : listings.length === 0 ? (
+          <Card>
+            <CardContent className="text-center py-8">
+              <div className="text-gray-500">No results found</div>
+              <p className="text-sm text-gray-400 mt-1">
+                Try adjusting your filters or search terms
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          listings.map((listing: any) => (
+            <MobileListingCard key={listing.id} listing={listing} />
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table Layout */}
+      <Card className="hidden lg:block">
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="hidden sm:table-header-group">
+            <TableHeader>
               <TableRow className="bg-gray-50">
                 {columns.map((column) => (
                   <TableHead
                     key={column.key}
-                    className={`px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${
+                    className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${
                       column.sortable ? "cursor-pointer hover:bg-gray-100" : ""
                     }`}
                     onClick={() => column.sortable && handleSort(column.key)}
@@ -569,7 +674,7 @@ export default function ListingTable({
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                // Loading skeleton
+                // Desktop Loading skeleton
                 Array.from({ length: filters.limit }).map((_, index) => (
                   <TableRow key={index}>
                     {columns.map((column) => (
@@ -592,14 +697,11 @@ export default function ListingTable({
                 listings.map((listing: any) => (
                   <TableRow
                     key={listing.id}
-                    className="hover:bg-gray-50 transition-colors cursor-pointer block sm:table-row border-b sm:border-0 mb-4 sm:mb-0"
+                    className="hover:bg-gray-50 transition-colors cursor-pointer"
                     onClick={() => handleViewDetails(listing)}
                   >
-                    {columns.map((column, index) => (
-                      <TableCell key={column.key} className="px-3 sm:px-6 py-2 sm:py-4 block sm:table-cell">
-                        <div className="sm:hidden">
-                          <span className="font-medium text-gray-500 text-sm">{column.label}: </span>
-                        </div>
+                    {columns.map((column) => (
+                      <TableCell key={column.key} className="px-6 py-4">
                         {renderCellContent(column.key, listing)}
                       </TableCell>
                     ))}
@@ -610,17 +712,17 @@ export default function ListingTable({
           </Table>
         </div>
 
-        {/* Pagination */}
+        {/* Desktop Pagination */}
         {data && data.total > 0 && (
-          <div className="px-3 sm:px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center text-xs sm:text-sm text-gray-700">
+          <div className="px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center text-sm text-gray-700">
               <span>
                 Showing <span className="font-medium">{Math.min(filters.offset + 1, data.total)}</span> to{" "}
                 <span className="font-medium">{Math.min(filters.offset + filters.limit, data.total)}</span> of{" "}
                 <span className="font-medium">{data.total}</span> results
               </span>
             </div>
-            <div className="flex items-center space-x-1 sm:space-x-2">
+            <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -673,6 +775,46 @@ export default function ListingTable({
           </div>
         )}
       </Card>
+
+      {/* Mobile Pagination */}
+      {data && data.total > 0 && (
+        <Card className="block lg:hidden mt-4">
+          <CardContent className="p-3">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="text-xs text-gray-700 text-center sm:text-left">
+                Page {currentPage} of {totalPages} • {data.total} total results
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(Math.max(0, filters.offset - filters.limit))}
+                  disabled={filters.offset === 0}
+                  className="text-xs px-3"
+                >
+                  <ChevronLeft className="h-3 w-3 mr-1" />
+                  Prev
+                </Button>
+                
+                <span className="text-xs text-gray-500 px-2">
+                  {currentPage}/{totalPages}
+                </span>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(filters.offset + filters.limit)}
+                  disabled={filters.offset + filters.limit >= data.total}
+                  className="text-xs px-3"
+                >
+                  Next
+                  <ChevronRight className="h-3 w-3 ml-1" />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Detail Modal */}
       {selectedListing && (

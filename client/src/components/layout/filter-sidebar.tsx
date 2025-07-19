@@ -7,9 +7,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, X } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Search, X, Filter, SlidersHorizontal } from "lucide-react";
 import { US_STATES } from "@/lib/constants";
 import type { FilterState, FilterOptions } from "@/lib/types";
+import { useState } from "react";
 
 interface FilterSidebarProps {
   filters: FilterState;
@@ -24,6 +26,8 @@ export default function FilterSidebar({
   filterOptions,
   listingType,
 }: FilterSidebarProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  
   const updateFilter = (key: string, value: any) => {
     setFilters({
       ...filters,
@@ -94,38 +98,139 @@ export default function FilterSidebar({
     return count;
   };
 
+  // Create a FilterContent component for reuse
+  const FilterContent = () => (
+    <ScrollArea className="h-full max-h-[calc(100vh-8rem)]">
+      <div className="space-y-4 p-1">
+        {/* Search */}
+        <div className="space-y-2">
+          <Label htmlFor="search" className="text-sm font-medium text-gray-700">
+            Search
+          </Label>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Input
+              id="search"
+              placeholder="Search listings..."
+              value={filters.search}
+              onChange={(e) => updateFilter("search", e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+
+        {/* Location */}
+        <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label htmlFor="city" className="text-sm font-medium text-gray-700">
+              City
+            </Label>
+            <Input
+              id="city"
+              placeholder="City"
+              value={filters.city}
+              onChange={(e) => updateFilter("city", e.target.value)}
+              className="text-sm"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="state" className="text-sm font-medium text-gray-700">
+              State
+            </Label>
+            <Select value={filters.state} onValueChange={(value) => updateFilter("state", value)}>
+              <SelectTrigger className="text-sm">
+                <SelectValue placeholder="State" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">All States</SelectItem>
+                {US_STATES.map((state) => (
+                  <SelectItem key={state.value} value={state.value}>
+                    {state.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Clear Filters */}
+        {getActiveFiltersCount() > 0 && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={clearAllFilters}
+            className="w-full text-sm"
+          >
+            <X className="mr-2 h-4 w-4" />
+            Clear All ({getActiveFiltersCount()})
+          </Button>
+        )}
+      </div>
+    </ScrollArea>
+  );
+
   return (
-    <aside className="w-full lg:w-80 flex-shrink-0">
-      <Card className="sticky top-24">
-        <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-semibold text-gray-900">
-              Search & Filter
-            </CardTitle>
-            {getActiveFiltersCount() > 0 && (
-              <Badge variant="secondary">{getActiveFiltersCount()}</Badge>
-            )}
+    <>
+      {/* Mobile Filter Button */}
+      <div className="lg:hidden mb-4">
+        <div className="flex items-center gap-3">
+          {/* Mobile Search Bar */}
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Input
+              placeholder="Quick search..."
+              value={filters.search}
+              onChange={(e) => updateFilter("search", e.target.value)}
+              className="pl-10 h-10"
+            />
           </div>
-        </CardHeader>
+          
+          {/* Mobile Filter Button */}
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="sm" className="flex-shrink-0 h-10 px-3">
+                <SlidersHorizontal className="h-4 w-4 mr-2" />
+                Filters
+                {getActiveFiltersCount() > 0 && (
+                  <Badge variant="secondary" className="ml-2 text-xs">
+                    {getActiveFiltersCount()}
+                  </Badge>
+                )}
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[85vw] sm:w-[400px] p-0">
+              <SheetHeader className="p-4 border-b">
+                <SheetTitle className="text-left">Search & Filter</SheetTitle>
+              </SheetHeader>
+              <div className="p-4">
+                <FilterContent />
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
 
-        <CardContent className="space-y-4 sm:space-y-6">
-          {/* Global Search */}
-          <div>
-            <Label className="text-sm font-medium text-gray-700">Search</Label>
-            <div className="relative mt-2">
-              <Input
-                type="text"
-                placeholder="Search providers, subjects..."
-                value={filters.search}
-                onChange={(e) => updateFilter("search", e.target.value)}
-                className="pl-10 text-sm sm:text-base"
-              />
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:block w-80 flex-shrink-0">
+        <Card className="sticky top-24">
+          <CardHeader className="pb-4">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg font-semibold text-gray-900">
+                Search & Filter
+              </CardTitle>
+              {getActiveFiltersCount() > 0 && (
+                <Badge variant="secondary">{getActiveFiltersCount()}</Badge>
+              )}
             </div>
-          </div>
-
-          <ScrollArea className="h-80 sm:h-96">
-            <div className="space-y-4 sm:space-y-6 pr-2 sm:pr-4">
+          </CardHeader>
+          <CardContent className="pt-0">
+            <FilterContent />
+          </CardContent>
+        </Card>
+      </aside>
+    </>
+  );
+}
               {/* Location Filters */}
               <div>
                 <Label className="text-sm font-medium text-gray-900 mb-3 block">
