@@ -356,9 +356,15 @@ export default function Admin() {
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result as string;
-      const lines = text.split("\n");
+      const lines = text.split("\n").filter(line => line.trim() !== '');
+      
+      if (lines.length < 2) {
+        console.error("CSV must have at least a header row and one data row");
+        return;
+      }
+
       const headers = lines[0].split(",").map(h => h.replace(/"/g, ""));
-      const data = lines.slice(1).filter(line => line.trim()).map(line => {
+      const data = lines.slice(1).map(line => {
         const values = line.split(",").map(v => v.replace(/"/g, ""));
         const row: any = {};
         headers.forEach((header, index) => {
@@ -366,6 +372,9 @@ export default function Admin() {
         });
         return row;
       });
+      
+      console.log(`Frontend parsed ${data.length} rows from CSV`); // Debug log
+      console.log("First few rows:", data.slice(0, 3)); // Debug log
       
       setPreviewData(data.slice(0, 5)); // Show first 5 rows
       setImportData(prev => ({
