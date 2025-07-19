@@ -367,7 +367,15 @@ export default function ListingDetailModal({
                   )}
                   {(listing.city || listing.location || listing.address) && (
                     <div className="flex items-center">
-                      <MapPin className="h-4 w-4 text-gray-400 mr-3" />
+                      <a 
+                        href={`https://maps.google.com/?q=${encodeURIComponent([listing.address, listing.location || listing.city, listing.state, listing.zipcode].filter(Boolean).join(", "))}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                        title="Open in Maps"
+                      >
+                        <MapPin className="h-4 w-4 mr-3" />
+                      </a>
                       <span className="text-gray-700 allow-select">
                         {/* Only show "Remote" if it's ONLY remote delivery, otherwise show full address */}
                         {(Array.isArray(listing.deliveryMode) && listing.deliveryMode.length === 1 && listing.deliveryMode.includes("Remote")) || listing.isRemote ? "Remote" : 
