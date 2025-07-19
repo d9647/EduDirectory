@@ -14,7 +14,7 @@ export default function Footer() {
         </div>
         <div className="mt-4 md:mt-0 md:order-1">
           <p className="text-center text-xs text-gray-400">
-            &copy; 2025 Education Yellow Pages | Dragonfly AI. All rights reserved.
+            &copy; 2025 Education Yellow Pages | Dragonfly AI. All rights reserved. | Contact us at <a href="mailto:info@educationyellowpages.com">info@educationyellowpages.com</a>
           </p>
         </div>
       </div>
