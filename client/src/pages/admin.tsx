@@ -292,25 +292,34 @@ export default function Admin() {
       return;
     }
 
+    // Validate selectedFile exists
+    if (!selectedFile) {
+      setImportStatus({
+        success: false,
+        message: "Please select a file to import"
+      });
+      return;
+    }
+
     // Convert camelCase to kebab-case for API endpoint
     const endpointType = importType.replace(/([A-Z])/g, '-$1').toLowerCase();
 
     setIsImporting(true);
     try {
+      // Create FormData and append the file
+      const formData = new FormData();
+      formData.append('csvFile', selectedFile);
+
       const response = await fetch(`/api/admin/import/${endpointType}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          data: dataForType
-        }),
+        body: formData, // Send as FormData instead of JSON
       });
 
       if (response.ok) {
+        const result = await response.json();
         setImportStatus({
           success: true,
-          message: `Successfully imported ${dataForType.length} ${importType}`
+          message: result.message || `Successfully imported ${dataForType.length} ${importType}`
         });
         setImportData(prev => ({
           ...prev,
@@ -319,12 +328,13 @@ export default function Admin() {
         setPreviewData([]);
         setSelectedFile(null);
       } else {
-        throw new Error("Import failed");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Import failed");
       }
     } catch (error) {
       setImportStatus({
         success: false,
-        message: "Import failed. Please check your data format."
+        message: error.message || "Import failed. Please check your data format."
       });
     } finally {
       setIsImporting(false);
