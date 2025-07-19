@@ -347,7 +347,7 @@ export default function ListingDetailModal({
                         href={listing.website} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-primary hover:text-primary/80"
+                        className="text-primary hover:text-primary/80 allow-select"
                       >
                         {listing.website}
                       </a>
@@ -356,19 +356,19 @@ export default function ListingDetailModal({
                   {listing.phone && (
                     <div className="flex items-center">
                       <Phone className="h-4 w-4 text-gray-400 mr-3" />
-                      <span className="text-gray-700">{listing.phone}</span>
+                      <span className="text-gray-700 allow-select">{listing.phone}</span>
                     </div>
                   )}
                   {listing.email && (
                     <div className="flex items-center">
                       <Mail className="h-4 w-4 text-gray-400 mr-3" />
-                      <span className="text-gray-700">{listing.email}</span>
+                      <span className="text-gray-700 allow-select">{listing.email}</span>
                     </div>
                   )}
                   {(listing.city || listing.location || listing.address) && (
                     <div className="flex items-center">
                       <MapPin className="h-4 w-4 text-gray-400 mr-3" />
-                      <span className="text-gray-700">
+                      <span className="text-gray-700 allow-select">
                         {/* Only show "Remote" if it's ONLY remote delivery, otherwise show full address */}
                         {(Array.isArray(listing.deliveryMode) && listing.deliveryMode.length === 1 && listing.deliveryMode.includes("Remote")) || listing.isRemote ? "Remote" : 
                          [listing.address, listing.location || listing.city, listing.state, listing.zipcode].filter(Boolean).join(", ")}
