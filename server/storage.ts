@@ -8,7 +8,6 @@ import {
   thumbsUp,
   bookmarks,
   reports,
-
   type User,
   type UpsertUser,
   type TutoringProvider,
@@ -35,7 +34,7 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserProfile(id: string, profileData: Partial<User>): Promise<User>;
-  
+
   // User role management
   updateUserRole(id: string, role: "admin" | "user"): Promise<User>;
   getUserRole(id: string): Promise<string | undefined>;
@@ -142,9 +141,6 @@ export interface IStorage {
   getReports(): Promise<Report[]>;
   resolveReport(id: number): Promise<void>;
 
-  // Forum
-
-
   // Admin
   getPendingApprovals(): Promise<{
     tutoringProviders: TutoringProvider[];
@@ -204,11 +200,11 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(users.id, id))
       .returning();
-    
+
     if (!updatedUser) {
       throw new Error("User not found");
     }
-    
+
     return updatedUser;
   }
 
@@ -218,7 +214,7 @@ export class DatabaseStorage implements IStorage {
       .from(users)
       .where(eq(users.id, id))
       .limit(1);
-    
+
     return user[0]?.role;
   }
 
@@ -227,7 +223,7 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(users)
       .orderBy(desc(users.createdAt));
-    
+
     return allUsers;
   }
 
@@ -236,7 +232,7 @@ export class DatabaseStorage implements IStorage {
       'firstName', 'lastName', 'phone', 'location', 
       'schoolName', 'grade', 'address', 'profileImageUrl'
     ];
-    
+
     // Filter out non-allowed fields and undefined values
     const updateData = Object.keys(profileData)
       .filter(key => allowedFields.includes(key))
@@ -255,11 +251,11 @@ export class DatabaseStorage implements IStorage {
       .set(updateData)
       .where(eq(users.id, id))
       .returning();
-    
+
     if (!updatedUser) {
       throw new Error("User not found");
     }
-    
+
     return updatedUser;
   }
 
@@ -281,16 +277,7 @@ export class DatabaseStorage implements IStorage {
 
     if (filters.search) {
       conditions.push(
-        sql`(${tutoringProviders.name} ILIKE ${`%${filters.search}%`} 
-            OR ${tutoringProviders.description} ILIKE ${`%${filters.search}%`}
-            OR EXISTS (
-              SELECT 1 FROM unnest(${tutoringProviders.categories}) AS cat
-              WHERE LOWER(cat) LIKE '%' || LOWER(${filters.search}) || '%'
-            )
-            OR EXISTS (
-              SELECT 1 FROM unnest(${tutoringProviders.subjects}) AS subj
-              WHERE LOWER(subj) LIKE '%' || LOWER(${filters.search}) || '%'
-            ))`
+        sql`(${tutoringProviders.name} ILIKE ${`%${filters.search}%`} OR ${tutoringProviders.description} ILIKE ${`%${filters.search}%`})`
       );
     }
 
@@ -382,7 +369,7 @@ export class DatabaseStorage implements IStorage {
     const providersQuery = whereClause 
       ? mainQuery.where(whereClause)
       : mainQuery;
-    
+
     const providers = await providersQuery
       .orderBy(orderBy)
       .limit(filters.limit || 10)
@@ -393,7 +380,7 @@ export class DatabaseStorage implements IStorage {
     const totalQuery = whereClause 
       ? countQuery.where(whereClause)
       : countQuery;
-    
+
     const totalResult = await totalQuery;
 
     return {
@@ -450,16 +437,7 @@ export class DatabaseStorage implements IStorage {
 
     if (filters.search) {
       conditions.push(
-        sql`(${summerCamps.name} ILIKE ${`%${filters.search}%`} 
-            OR ${summerCamps.description} ILIKE ${`%${filters.search}%`}
-            OR EXISTS (
-              SELECT 1 FROM unnest(${summerCamps.categories}) AS cat
-              WHERE LOWER(cat) LIKE '%' || LOWER(${filters.search}) || '%'
-            )
-            OR EXISTS (
-              SELECT 1 FROM unnest(${summerCamps.tags}) AS tag
-              WHERE LOWER(tag) LIKE '%' || LOWER(${filters.search}) || '%'
-            ))`
+        sql`(${summerCamps.name} ILIKE ${`%${filters.search}%`} OR ${summerCamps.description} ILIKE ${`%${filters.search}%`})`
       );
     }
 
@@ -479,7 +457,7 @@ export class DatabaseStorage implements IStorage {
       // Handle "Not specified" filter separately
       const hasNotSpecified = filters.cost.includes("Not specified");
       const otherCosts = filters.cost.filter(cost => cost !== "Not specified");
-      
+
       if (hasNotSpecified && otherCosts.length > 0) {
         // Both "Not specified" and other cost ranges selected
         conditions.push(sql`(${summerCamps.costRange} IS NULL OR ${summerCamps.costRange} = '' OR ${summerCamps.costRange} = ANY(ARRAY[${sql.join(otherCosts.map(cost => sql`${cost}`), sql`, `)}]::text[]))`);
@@ -596,7 +574,7 @@ export class DatabaseStorage implements IStorage {
     const campsQuery = whereClause 
       ? mainQuery.where(whereClause)
       : mainQuery;
-    
+
     const camps = await campsQuery
       .orderBy(orderBy)
       .limit(filters.limit || 10)
@@ -607,7 +585,7 @@ export class DatabaseStorage implements IStorage {
     const totalQuery = whereClause 
       ? countQuery.where(whereClause)
       : countQuery;
-    
+
     const totalResult = await totalQuery;
 
     return {
@@ -662,13 +640,7 @@ export class DatabaseStorage implements IStorage {
 
     if (filters.search) {
       conditions.push(
-        sql`(${internships.title} ILIKE ${`%${filters.search}%`} 
-            OR ${internships.description} ILIKE ${`%${filters.search}%`} 
-            OR ${internships.companyName} ILIKE ${`%${filters.search}%`}
-            OR EXISTS (
-              SELECT 1 FROM unnest(${internships.types}) AS type
-              WHERE LOWER(type) LIKE '%' || LOWER(${filters.search}) || '%'
-            ))`
+        sql`(${internships.title} ILIKE ${`%${filters.search}%`} OR ${internships.description} ILIKE ${`%${filters.search}%`} OR ${internships.companyName} ILIKE ${`%${filters.search}%`})`
       );
     }
 
@@ -777,7 +749,7 @@ export class DatabaseStorage implements IStorage {
     const internshipsQuery = whereClause 
       ? mainQuery.where(whereClause)
       : mainQuery;
-    
+
     const internshipList = await internshipsQuery
       .orderBy(orderBy)
       .limit(filters.limit || 10)
@@ -788,7 +760,7 @@ export class DatabaseStorage implements IStorage {
     const totalQuery = whereClause 
       ? countQuery.where(whereClause)
       : countQuery;
-    
+
     const totalResult = await totalQuery;
 
     return {
@@ -843,13 +815,7 @@ export class DatabaseStorage implements IStorage {
 
     if (filters.search) {
       conditions.push(
-        sql`(${jobs.title} ILIKE ${`%${filters.search}%`} 
-            OR ${jobs.description} ILIKE ${`%${filters.search}%`} 
-            OR ${jobs.companyName} ILIKE ${`%${filters.search}%`}
-            OR EXISTS (
-              SELECT 1 FROM unnest(${jobs.categories}) AS cat
-              WHERE LOWER(cat) LIKE '%' || LOWER(${filters.search}) || '%'
-            ))`
+        sql`(${jobs.title} ILIKE ${`%${filters.search}%`} OR ${jobs.description} ILIKE ${`%${filters.search}%`} OR ${jobs.companyName} ILIKE ${`%${filters.search}%`})`
       );
     }
 
@@ -962,7 +928,7 @@ export class DatabaseStorage implements IStorage {
     const jobsQuery = whereClause 
       ? mainQuery.where(whereClause)
       : mainQuery;
-    
+
     const jobsList = await jobsQuery
       .orderBy(orderBy)
       .limit(filters.limit || 10)
@@ -973,7 +939,7 @@ export class DatabaseStorage implements IStorage {
     const totalQuery = whereClause 
       ? countQuery.where(whereClause)
       : countQuery;
-    
+
     const totalResult = await totalQuery;
 
     return {
@@ -1031,7 +997,7 @@ export class DatabaseStorage implements IStorage {
         WHERE r.listing_type = ${listingType} AND r.listing_id = ${listingId}
         ORDER BY r.created_at DESC
       `);
-      
+
       return result.rows || [];
     } catch (error) {
       console.error("Error in getReviews:", error);
@@ -1045,7 +1011,7 @@ export class DatabaseStorage implements IStorage {
       .from(reviews)
       .where(eq(reviews.id, id))
       .limit(1);
-    
+
     return result[0];
   }
 
@@ -1069,7 +1035,7 @@ export class DatabaseStorage implements IStorage {
     if (hasReviewed) {
       throw new Error('User has already reviewed this listing');
     }
-    
+
     const [newReview] = await db.insert(reviews).values(review).returning();
     return newReview;
   }
@@ -1086,7 +1052,7 @@ export class DatabaseStorage implements IStorage {
   async deleteReview(id: number, userId: string): Promise<void> {
     // Check if user is admin
     const userRole = await this.getUserRole(userId);
-    
+
     if (userRole === 'admin') {
       // Admin can delete any review
       await db
@@ -1202,7 +1168,7 @@ export class DatabaseStorage implements IStorage {
       .select({ count: count() })
       .from(bookmarks)
       .where(eq(bookmarks.userId, userId));
-    
+
     const total = totalResult[0]?.count || 0;
 
     // Get paginated bookmarks
@@ -1218,7 +1184,7 @@ export class DatabaseStorage implements IStorage {
     const bookmarksWithListings = await Promise.all(
       userBookmarks.map(async (bookmark) => {
         let listing = null;
-        
+
         try {
           switch (bookmark.listingType) {
             case "tutoring":
@@ -1247,7 +1213,7 @@ export class DatabaseStorage implements IStorage {
 
     // Filter out bookmarks where the listing was not found (deleted listings)
     const validBookmarks = bookmarksWithListings.filter(b => b.listing !== null);
-    
+
     return {
       bookmarks: validBookmarks,
       total
@@ -1289,83 +1255,123 @@ export class DatabaseStorage implements IStorage {
       .where(eq(reports.id, id));
   }
 
-  // Admin search functionality for live listings
+  // Admin
+  async getPendingApprovals(): Promise<{
+    tutoringProviders: TutoringProvider[];
+    summerCamps: SummerCamp[];
+    internships: Internship[];
+    jobs: Job[];
+  }> {
+    const [
+      pendingTutoringProviders,
+      pendingSummerCamps,
+      pendingInternships,
+      pendingJobs,
+    ] = await Promise.all([
+      db.select().from(tutoringProviders).where(eq(tutoringProviders.isApproved, false)),
+      db.select().from(summerCamps).where(eq(summerCamps.isApproved, false)),
+      db.select().from(internships).where(eq(internships.isApproved, false)),
+      db.select().from(jobs).where(eq(jobs.isApproved, false)),
+    ]);
+
+    return {
+      tutoringProviders: pendingTutoringProviders,
+      summerCamps: pendingSummerCamps,
+      internships: pendingInternships,
+      jobs: pendingJobs,
+    };
+  }
+
+  async getLiveListings(): Promise<{
+    tutoringProviders: TutoringProvider[];
+    summerCamps: SummerCamp[];
+    internships: Internship[];
+    jobs: Job[];
+  }> {
+    const [
+      liveTutoringProviders,
+      liveSummerCamps,
+      liveInternships,
+      liveJobs,
+    ] = await Promise.all([
+      db.select().from(tutoringProviders).where(eq(tutoringProviders.isApproved, true)).limit(50),
+      db.select().from(summerCamps).where(eq(summerCamps.isApproved, true)).limit(50),
+      db.select().from(internships).where(eq(internships.isApproved, true)).limit(50),
+      db.select().from(jobs).where(eq(jobs.isApproved, true)).limit(50),
+    ]);
+
+    return {
+      tutoringProviders: liveTutoringProviders,
+      summerCamps: liveSummerCamps,
+      internships: liveInternships,
+      jobs: liveJobs,
+    };
+  }
+
   async searchListings(type: string, query: string): Promise<any[]> {
-    const searchQuery = `%${query.toLowerCase()}%`;
-    
+    const searchTerm = `%${query}%`;
+
     switch (type) {
-      case "tutoring-providers":
+      case 'tutoring-providers':
         return await db
           .select()
           .from(tutoringProviders)
-          .where(
-            and(
-              eq(tutoringProviders.isApproved, true),
-              or(
-                ilike(tutoringProviders.name, searchQuery),
-                ilike(tutoringProviders.description, searchQuery),
-                ilike(tutoringProviders.location, searchQuery),
-                ilike(tutoringProviders.city, searchQuery)
-              )
+          .where(and(
+            eq(tutoringProviders.isApproved, true),
+            or(
+              ilike(tutoringProviders.name, searchTerm),
+              ilike(tutoringProviders.description, searchTerm),
+              ilike(tutoringProviders.city, searchTerm),
+              ilike(tutoringProviders.state, searchTerm)
             )
-          )
-          .orderBy(desc(tutoringProviders.createdAt))
+          ))
           .limit(20);
 
-      case "summer-camps":
+      case 'summer-camps':
         return await db
           .select()
           .from(summerCamps)
-          .where(
-            and(
-              eq(summerCamps.isApproved, true),
-              or(
-                ilike(summerCamps.name, searchQuery),
-                ilike(summerCamps.description, searchQuery),
-                ilike(summerCamps.location, searchQuery),
-                ilike(summerCamps.city, searchQuery)
-              )
+          .where(and(
+            eq(summerCamps.isApproved, true),
+            or(
+              ilike(summerCamps.name, searchTerm),
+              ilike(summerCamps.description, searchTerm),
+              ilike(summerCamps.city, searchTerm),
+              ilike(summerCamps.state, searchTerm)
             )
-          )
-          .orderBy(desc(summerCamps.createdAt))
+          ))
           .limit(20);
 
-      case "internships":
+      case 'internships':
         return await db
           .select()
           .from(internships)
-          .where(
-            and(
-              eq(internships.isApproved, true),
-              or(
-                ilike(internships.title, searchQuery),
-                ilike(internships.companyName, searchQuery),
-                ilike(internships.description, searchQuery),
-                ilike(internships.location, searchQuery),
-                ilike(internships.city, searchQuery)
-              )
+          .where(and(
+            eq(internships.isApproved, true),
+            or(
+              ilike(internships.title, searchTerm),
+              ilike(internships.companyName, searchTerm),
+              ilike(internships.description, searchTerm),
+              ilike(internships.city, searchTerm),
+              ilike(internships.state, searchTerm)
             )
-          )
-          .orderBy(desc(internships.createdAt))
+          ))
           .limit(20);
 
-      case "jobs":
+      case 'jobs':
         return await db
           .select()
           .from(jobs)
-          .where(
-            and(
-              eq(jobs.isApproved, true),
-              or(
-                ilike(jobs.title, searchQuery),
-                ilike(jobs.companyName, searchQuery),
-                ilike(jobs.description, searchQuery),
-                ilike(jobs.location, searchQuery),
-                ilike(jobs.city, searchQuery)
-              )
+          .where(and(
+            eq(jobs.isApproved, true),
+            or(
+              ilike(jobs.title, searchTerm),
+              ilike(jobs.companyName, searchTerm),
+              ilike(jobs.description, searchTerm),
+              ilike(jobs.city, searchTerm),
+              ilike(jobs.state, searchTerm)
             )
-          )
-          .orderBy(desc(jobs.createdAt))
+          ))
           .limit(20);
 
       default:
@@ -1373,6 +1379,63 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
+  async deactivateListing(type: string, id: number): Promise<void> {
+    switch (type) {
+      case 'tutoring-provider':
+        await db
+          .update(tutoringProviders)
+          .set({ isActive: false, updatedAt: new Date() })
+          .where(eq(tutoringProviders.id, id));
+        break;
+      case 'summer-camp':
+        await db
+          .update(summerCamps)
+          .set({ isActive: false, updatedAt: new Date() })
+          .where(eq(summerCamps.id, id));
+        break;
+      case 'internship':
+        await db
+          .update(internships)
+          .set({ isActive: false, updatedAt: new Date() })
+          .where(eq(internships.id, id));
+        break;
+      case 'job':
+        await db
+          .update(jobs)
+          .set({ isActive: false, updatedAt: new Date() })
+          .where(eq(jobs.id, id));
+        break;
+    }
+  }
+
+  async activateListing(type: string, id: number): Promise<void> {
+    switch (type) {
+      case 'tutoring-provider':
+        await db
+          .update(tutoringProviders)
+          .set({ isActive: true, updatedAt: new Date() })
+          .where(eq(tutoringProviders.id, id));
+        break;
+      case 'summer-camp':
+        await db
+          .update(summerCamps)
+          .set({ isActive: true, updatedAt: new Date() })
+          .where(eq(summerCamps.id, id));
+        break;
+      case 'internship':
+        await db
+          .update(internships)
+          .set({ isActive: true, updatedAt: new Date() })
+          .where(eq(internships.id, id));
+        break;
+      case 'job':
+        await db
+          .update(jobs)
+          .set({ isActive: true, updatedAt: new Date() })
+          .where(eq(jobs.id, id));
+        break;
+    }
+  }
 }
 
 export const storage = new DatabaseStorage();
