@@ -272,92 +272,6 @@ export default function Admin() {
   });
 
   // Import function
-  const handleImport = async (type: string) => {
-    const file = selectedFiles[type as keyof typeof selectedFiles];
-    if (!file) {
-      toast({
-        title: "Error",
-        description: "Please select a CSV file to import",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setImportLoading(prev => ({ ...prev, [type]: true }));
-
-    try {
-      const formData = new FormData();
-      formData.append('csvFile', file);
-
-      const response = await fetch(`/api/admin/import/${type}`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: "Import Completed",
-          description: result.message,
-        });
-        
-        // Clear selected file
-        setSelectedFiles(prev => ({ ...prev, [type]: null }));
-        
-        // Reset file input
-        const fileInput = document.getElementById(`${type}-file`) as HTMLInputElement;
-        if (fileInput) fileInput.value = '';
-        
-        // Refresh pending approvals
-        queryClient.invalidateQueries({ queryKey: ["/api/admin/pending-approvals"] });
-      } else {
-        throw new Error(result.message || 'Import failed');
-      }
-    } catch (error) {
-      console.error('Import error:', error);
-      toast({
-        title: "Import Failed",
-        description: error instanceof Error ? error.message : "Unknown error occurred",
-        variant: "destructive",
-      });
-    } finally {
-      setImportLoading(prev => ({ ...prev, [type]: false }));
-    }
-  };
-
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file && file.type === "text/csv") {
-      setSelectedFile(file);
-      parseCSV(file);
-    }
-  };
-
-  const parseCSV = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target?.result as string;
-      const lines = text.split("\n");
-      const headers = lines[0].split(",").map(h => h.replace(/"/g, ""));
-      const data = lines.slice(1).filter(line => line.trim()).map(line => {
-        const values = line.split(",").map(v => v.replace(/"/g, ""));
-        const row: any = {};
-        headers.forEach((header, index) => {
-          row[header] = values[index] || "";
-        });
-        return row;
-      });
-      
-      setPreviewData(data.slice(0, 5)); // Show first 5 rows
-      setImportData(prev => ({
-        ...prev,
-        [importType]: data
-      }));
-    };
-    reader.readAsText(file);
-  };
-
   const handleImport = async () => {
     if (!importType || !importData[importType as keyof ImportData].length) {
       setImportStatus({
@@ -410,6 +324,30 @@ export default function Admin() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const parseCSV = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result as string;
+      const lines = text.split("\n");
+      const headers = lines[0].split(",").map(h => h.replace(/"/g, ""));
+      const data = lines.slice(1).filter(line => line.trim()).map(line => {
+        const values = line.split(",").map(v => v.replace(/"/g, ""));
+        const row: any = {};
+        headers.forEach((header, index) => {
+          row[header] = values[index] || "";
+        });
+        return row;
+      });
+      
+      setPreviewData(data.slice(0, 5)); // Show first 5 rows
+      setImportData(prev => ({
+        ...prev,
+        [importType]: data
+      }));
+    };
+    reader.readAsText(file);
   };
 
   if (isLoading) {
@@ -1005,12 +943,19 @@ export default function Admin() {
                         id="tutoring-providers-file"
                         type="file"
                         accept=".csv"
-                        onChange={handleFileSelect}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setSelectedFile(file);
+                            setImportType("tutoring-providers");
+                            parseCSV(file);
+                          }
+                        }}
                         className="mt-1"
                       />
                     </div>
                     <Button
-                      onClick={() => handleImport('tutoring-providers')}
+                      onClick={handleImport}
                       disabled={!selectedFile || importLoading['tutoring-providers']}
                     >
                       <Upload className="h-4 w-4 mr-2" />
@@ -1036,12 +981,19 @@ export default function Admin() {
                         id="summer-camps-file"
                         type="file"
                         accept=".csv"
-                        onChange={handleFileSelect}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setSelectedFile(file);
+                            setImportType("summer-camps");
+                            parseCSV(file);
+                          }
+                        }}
                         className="mt-1"
                       />
                     </div>
                     <Button
-                      onClick={() => handleImport('summer-camps')}
+                      onClick={handleImport}
                       disabled={!selectedFile || importLoading['summer-camps']}
                     >
                       <Upload className="h-4 w-4 mr-2" />
@@ -1067,12 +1019,19 @@ export default function Admin() {
                         id="internships-file"
                         type="file"
                         accept=".csv"
-                        onChange={handleFileSelect}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setSelectedFile(file);
+                            setImportType("internships");
+                            parseCSV(file);
+                          }
+                        }}
                         className="mt-1"
                       />
                     </div>
                     <Button
-                      onClick={() => handleImport('internships')}
+                      onClick={handleImport}
                       disabled={!selectedFile || importLoading['internships']}
                     >
                       <Upload className="h-4 w-4 mr-2" />
@@ -1098,12 +1057,19 @@ export default function Admin() {
                         id="jobs-file"
                         type="file"
                         accept=".csv"
-                        onChange={handleFileSelect}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setSelectedFile(file);
+                            setImportType("jobs");
+                            parseCSV(file);
+                          }
+                        }}
                         className="mt-1"
                       />
                     </div>
                     <Button
-                      onClick={() => handleImport('jobs')}
+                      onClick={handleImport}
                       disabled={!selectedFile || importLoading['jobs']}
                     >
                       <Upload className="h-4 w-4 mr-2" />
