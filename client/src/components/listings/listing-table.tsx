@@ -12,7 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import ListingDetailModal from "./listing-detail-modal";
-import { ThumbsUp, Bookmark, Share2, ChevronLeft, ChevronRight, ArrowUpDown } from "lucide-react";
+import { ThumbsUp, Bookmark, Share2, ChevronLeft, ChevronRight, ArrowUpDown, MapPin, Star } from "lucide-react";
 import type { FilterState, ListingData, TableColumn, UserInteractions } from "@/lib/types";
 import { formatArrayField, formatSalary, formatDate, formatBoolean } from "@/lib/textUtils";
 
@@ -480,17 +480,84 @@ export default function ListingTable({
   const totalPages = data ? Math.ceil(data.total / filters.limit) : 0;
   const currentPage = Math.floor(filters.offset / filters.limit) + 1;
 
-
+  // Mobile Card Component for listings
+  const MobileCard = ({ listing }: { listing: any }) => (
+    <Card className="mb-3 cursor-pointer hover:shadow-lg transition-shadow">
+      <CardContent className="p-3 sm:p-4">
+        <div className="flex items-start justify-between">
+          <div className="flex-1 min-w-0 pr-2">
+            <h3 className="text-sm font-medium text-gray-900 truncate">
+              {listing.name || listing.title || listing.companyName}
+            </h3>
+            <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+              {listing.description?.substring(0, 100)}...
+            </p>
+            
+            <div className="flex flex-wrap items-center gap-2 mt-2">
+              {(listing.location || [listing.city, listing.state].filter(Boolean).join(", ")) && (
+                <div className="flex items-center text-xs text-gray-500">
+                  <MapPin className="h-3 w-3 mr-1" />
+                  <span className="truncate max-w-20">
+                    {listing.location || [listing.city, listing.state].filter(Boolean).join(", ")}
+                  </span>
+                </div>
+              )}
+              
+              {listing.rating && (
+                <div className="flex items-center">
+                  <Star className="h-3 w-3 text-yellow-400 mr-1" />
+                  <span className="text-xs font-medium">{listing.rating}</span>
+                </div>
+              )}
+              
+              <div className="flex items-center text-xs text-gray-500">
+                <ThumbsUp className="h-3 w-3 mr-1" />
+                {listing.thumbsUpCount || 0}
+              </div>
+            </div>
+            
+            <div className="flex flex-wrap gap-1 mt-2">
+              {(listing.categories || listing.subjects || listing.types || []).slice(0, 2).map((item: string, index: number) => (
+                <Badge key={index} variant="secondary" className="text-xs">
+                  {item}
+                </Badge>
+              ))}
+              {(listing.categories || listing.subjects || listing.types || []).length > 2 && (
+                <Badge variant="outline" className="text-xs">
+                  +{(listing.categories || listing.subjects || listing.types || []).length - 2}
+                </Badge>
+              )}
+            </div>
+          </div>
+          
+          <div className="flex flex-col gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedListing(listing);
+                setDetailModalOpen(true);
+              }}
+              className="text-xs px-2 py-1 h-6"
+            >
+              View
+            </Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <main className="flex-1 min-w-0">
       {/* Results Header */}
-      <Card className="mb-4">
+      <Card className="mb-3 sm:mb-4">
         <CardContent className="p-3 sm:p-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">{title}</h2>
-              <p className="text-xs sm:text-sm text-gray-600 mt-1">
+              <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+              <p className="text-sm text-gray-600 mt-1">
                 {data ? (
                   <>
                     Showing {Math.min(filters.offset + 1, data.total)}-{Math.min(filters.offset + filters.limit, data.total)} of {data.total} results
@@ -500,16 +567,16 @@ export default function ListingTable({
                 )}
               </p>
             </div>
-            
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+
+            <div className="flex flex-col xs:flex-row xs:items-center gap-2 sm:gap-4">
               {/* Sort Dropdown */}
               <div className="flex items-center space-x-2">
-                <label className="text-sm text-gray-700 font-medium hidden sm:inline">Sort by:</label>
+                <label className="text-xs sm:text-sm text-gray-700 font-medium hidden sm:inline">Sort:</label>
                 <Select
                   value={filters.sortBy}
                   onValueChange={(value) => handleSort(value)}
                 >
-                  <SelectTrigger className="w-full sm:w-[160px] md:w-[180px]">
+                  <SelectTrigger className="w-full xs:w-32 sm:w-40">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -545,7 +612,38 @@ export default function ListingTable({
         </CardContent>
       </Card>
 
-      <Card>
+      {/* Mobile Card View */}
+      <div className="block lg:hidden space-y-3">
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <CardContent className="p-3">
+                <div className="flex items-start space-x-3">
+                  <Skeleton className="h-10 w-10 rounded-full" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        ) : listings.length === 0 ? (
+          <Card>
+            <CardContent className="text-center py-6">
+              <div className="text-gray-500 mb-2 text-sm">No {title.toLowerCase()} found</div>
+              <p className="text-gray-400 text-xs">Try adjusting your search criteria</p>
+            </CardContent>
+          </Card>
+        ) : (
+          listings.map((listing) => (
+            <MobileCard key={listing.id} listing={listing} />
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table View */}
+      <Card className="hidden lg:block">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -570,7 +668,7 @@ export default function ListingTable({
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                // Desktop Loading skeleton
+                // Loading skeleton
                 Array.from({ length: filters.limit }).map((_, index) => (
                   <TableRow key={index}>
                     {columns.map((column) => (
@@ -608,17 +706,17 @@ export default function ListingTable({
           </Table>
         </div>
 
-        {/* Desktop Pagination */}
+        {/* Pagination */}
         {data && data.total > 0 && (
-          <div className="px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center text-sm text-gray-700">
+          <div className="px-3 sm:px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center text-xs sm:text-sm text-gray-700">
               <span>
                 Showing <span className="font-medium">{Math.min(filters.offset + 1, data.total)}</span> to{" "}
                 <span className="font-medium">{Math.min(filters.offset + filters.limit, data.total)}</span> of{" "}
                 <span className="font-medium">{data.total}</span> results
               </span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1 sm:space-x-2">
               <Button
                 variant="outline"
                 size="sm"
@@ -628,7 +726,7 @@ export default function ListingTable({
                 <ChevronLeft className="h-4 w-4 mr-1" />
                 Previous
               </Button>
-              
+
               <div className="flex space-x-1">
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                   const pageNum = i + 1;
@@ -671,46 +769,6 @@ export default function ListingTable({
           </div>
         )}
       </Card>
-
-      {/* Mobile Pagination */}
-      {data && data.total > 0 && (
-        <Card className="block lg:hidden mt-4">
-          <CardContent className="p-3">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="text-xs text-gray-700 text-center sm:text-left">
-                Page {currentPage} of {totalPages} • {data.total} total results
-              </div>
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(Math.max(0, filters.offset - filters.limit))}
-                  disabled={filters.offset === 0}
-                  className="text-xs px-3"
-                >
-                  <ChevronLeft className="h-3 w-3 mr-1" />
-                  Prev
-                </Button>
-                
-                <span className="text-xs text-gray-500 px-2">
-                  {currentPage}/{totalPages}
-                </span>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(filters.offset + filters.limit)}
-                  disabled={filters.offset + filters.limit >= data.total}
-                  className="text-xs px-3"
-                >
-                  Next
-                  <ChevronRight className="h-3 w-3 ml-1" />
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Detail Modal */}
       {selectedListing && (

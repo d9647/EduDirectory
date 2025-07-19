@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/layout/header";
 import FilterSidebar from "@/components/layout/filter-sidebar";
@@ -21,23 +21,11 @@ export default function Jobs() {
     offset: 0,
   });
 
-  // Create debounced filters for search
-  const [debouncedFilters, setDebouncedFilters] = useState(filters);
-  
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedFilters(filters);
-    }, 500); // Wait 500ms after user stops typing
-    
-    return () => clearTimeout(timer);
-  }, [filters]);
-
   const { data, isLoading, error } = useQuery({
-    queryKey: ["/api/jobs", debouncedFilters],
-    enabled: true,
+    queryKey: ["/api/jobs", filters],
     queryFn: async () => {
       const params = new URLSearchParams();
-      Object.entries(debouncedFilters).forEach(([key, value]) => {
+      Object.entries(filters).forEach(([key, value]) => {
         if (value !== "" && value !== null && value !== undefined) {
           if (Array.isArray(value)) {
             if (value.length > 0) {
@@ -48,7 +36,7 @@ export default function Jobs() {
           }
         }
       });
-      
+
       const response = await fetch(`/api/jobs?${params}`);
       if (!response.ok) {
         throw new Error("Failed to fetch jobs");
@@ -75,16 +63,16 @@ export default function Jobs() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6">
-        <div className="flex gap-6">
+
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-3 sm:py-6">
+        <div className="flex flex-col lg:flex-row gap-3 sm:gap-6">
           <FilterSidebar
             filters={filters}
             setFilters={setFilters}
             filterOptions={filterOptions}
             listingType="jobs"
           />
-          
+
           <ListingTable
             data={data}
             isLoading={isLoading}
