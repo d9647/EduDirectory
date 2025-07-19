@@ -134,6 +134,7 @@ export default function Admin() {
   const [importStatus, setImportStatus] = useState<{
     success: boolean;
     message: string;
+    details?: any[];
   } | null>(null);
 
   // Search function
@@ -318,8 +319,9 @@ export default function Admin() {
       if (response.ok) {
         const result = await response.json();
         setImportStatus({
-          success: true,
-          message: result.message || `Successfully imported ${dataForType.length} ${importType}`
+          success: result.errors.length === 0,
+          message: result.message || `Successfully imported ${dataForType.length} ${importType}`,
+          details: result.errors.length > 0 ? result.errors : undefined
         });
         setImportData(prev => ({
           ...prev,
@@ -1146,9 +1148,20 @@ export default function Admin() {
                   ) : (
                     <AlertCircle className="h-4 w-4 text-red-600" />
                   )}
-                  <AlertDescription className={importStatus.success ? "text-green-800" : "text-red-800"}>
-                    {importStatus.message}
-                  </AlertDescription>
+                                      <AlertDescription className={importStatus.success ? "text-green-800" : "text-red-800"}>
+                      {importStatus.message}
+                      {importStatus.details && importStatus.details.length > 0 && (
+                        <>
+                          <br />
+                          <strong>Errors:</strong>
+                          <ul className="mt-2 list-disc list-inside">
+                            {importStatus.details.map((error: string, index: number) => (
+                              <li key={index} className="text-sm">{error}</li>
+                            ))}
+                          </ul>
+                        </>
+                      )}
+                    </AlertDescription>
                 </Alert>
               )}
             </div>
