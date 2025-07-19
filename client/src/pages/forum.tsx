@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { MessageSquare, Plus, Pin, Lock, User, Calendar, Search, Filter, Edit, Trash2 } from "lucide-react";
+import { MessageSquare, Plus, Pin, Lock, User, Calendar, Search, Filter, Edit, Trash2, ArrowLeft } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
