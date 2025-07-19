@@ -356,6 +356,7 @@ export default function Admin() {
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result as string;
+      console.log("Raw CSV content:", text); // Debug: Show raw CSV content
       const lines = text.split("\n").filter(line => line.trim() !== '');
       
       if (lines.length < 2) {
