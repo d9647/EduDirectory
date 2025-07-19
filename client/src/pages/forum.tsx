@@ -209,7 +209,7 @@ export function Forum() {
         <div className="container mx-auto px-4 py-8">
           <ForumPostDetail 
             postId={selectedPostId} 
-            onBack={() => setSelectedPostId(null)} 
+            onClose={() => setSelectedPostId(null)} 
           />
         </div>
         <Footer />
@@ -372,82 +372,72 @@ export function Forum() {
         </div>
 
         {/* Posts List */}
-        <div className="space-y-4">
+        <div className="bg-white rounded-lg border border-gray-200">
           {isLoading ? (
             <div className="text-center py-8">Loading posts...</div>
           ) : posts.length === 0 ? (
-            <Card>
-              <CardContent className="text-center py-8">
-                <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No posts found</h3>
-                <p className="text-muted-foreground mb-4">
-                  {search || selectedCategory 
-                    ? "Try adjusting your search or filters" 
-                    : "Be the first to start a discussion!"}
-                </p>
-                {!search && !selectedCategory && (
-                  <Button onClick={() => setShowCreatePost(true)}>
-                    Create First Post
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
+            <div className="text-center py-12">
+              <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No posts found</h3>
+              <p className="text-muted-foreground mb-4">
+                {search || selectedCategory 
+                  ? "Try adjusting your search or filters" 
+                  : "Be the first to start a discussion!"}
+              </p>
+              {!search && !selectedCategory && (
+                <Button onClick={() => setShowCreatePost(true)}>
+                  Create First Post
+                </Button>
+              )}
+            </div>
           ) : (
             posts.map((post: any) => (
-              <Card key={post.id} className="hover:shadow-md transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        {post.isSticky && <Pin className="h-4 w-4 text-blue-600" />}
-                        {post.isLocked && <Lock className="h-4 w-4 text-gray-600" />}
-                        <Badge variant="secondary">{post.category}</Badge>
+              <div key={post.id} className="group border-b border-gray-100 py-4 hover:bg-gray-50/50 transition-colors">
+                <div className="flex items-start gap-3">
+                  {/* Category Badge */}
+                  <Badge variant="outline" className="text-xs shrink-0 mt-1">
+                    {post.category}
+                  </Badge>
+                  
+                  {/* Main Content */}
+                  <div className="flex-1 min-w-0">
+                    {/* Title and Content */}
+                    <div 
+                      className="cursor-pointer"
+                      onClick={() => setSelectedPostId(post.id)}
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        {post.isSticky && <Pin className="h-3 w-3 text-blue-600" />}
+                        {post.isLocked && <Lock className="h-3 w-3 text-gray-600" />}
+                        <h3 className="font-medium text-gray-900 hover:text-blue-600 transition-colors truncate">
+                          {post.title}
+                        </h3>
                       </div>
-                      <CardTitle 
-                        className="text-lg hover:text-blue-600 cursor-pointer"
-                        onClick={() => setSelectedPostId(post.id)}
-                      >
-                        {post.title}
-                      </CardTitle>
-                      <CardDescription className="mt-2 line-clamp-2">
+                      <p className="text-sm text-gray-600 line-clamp-1 mb-2">
                         {post.content}
-                      </CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6">
-                          <AvatarImage src={post.authorProfileImageUrl} />
-                          <AvatarFallback>
-                            {post.authorFirstName?.[0]}{post.authorLastName?.[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span>{post.authorFirstName} {post.authorLastName}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
-                      </div>
+                      </p>
                     </div>
                     
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <MessageSquare className="h-4 w-4" />
+                    {/* Meta Info */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3 text-xs text-gray-500">
+                        <span>{post.authorFirstName} {post.authorLastName}</span>
+                        <span>•</span>
+                        <span>{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}</span>
+                        <span>•</span>
                         <span>{post.replyCount} replies</span>
                       </div>
+                      
+                      {/* Edit/Delete Actions */}
                       {(user?.id === post.userId || isAdmin) && (
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => startEditingPost(post)}
                             className="h-6 px-2 text-xs"
                           >
-                            <Edit className="h-3 w-3 mr-1" />
-                            Edit
+                            <Edit className="h-3 w-3" />
                           </Button>
                           <Button
                             variant="ghost"
@@ -455,15 +445,14 @@ export function Forum() {
                             onClick={() => handleDeletePost(post)}
                             className="h-6 px-2 text-xs text-red-600 hover:text-red-700"
                           >
-                            <Trash2 className="h-3 w-3 mr-1" />
-                            Delete
+                            <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
                       )}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))
           )}
         </div>

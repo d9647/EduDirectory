@@ -81,9 +81,7 @@ export function ForumPostDetail({ postId, onClose }: ForumPostDetailProps) {
   // Delete post mutation
   const deletePostMutation = useMutation({
     mutationFn: async () => {
-      return apiRequest(`/api/forum/posts/${postId}`, {
-        method: "DELETE",
-      });
+      return apiRequest("DELETE", `/api/forum/posts/${postId}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/forum/posts"] });
@@ -91,7 +89,7 @@ export function ForumPostDetail({ postId, onClose }: ForumPostDetailProps) {
         title: "Success",
         description: "Post has been deleted.",
       });
-      onBack();
+      onClose();
     },
     onError: (error: any) => {
       toast({
@@ -105,9 +103,7 @@ export function ForumPostDetail({ postId, onClose }: ForumPostDetailProps) {
   // Delete reply mutation
   const deleteReplyMutation = useMutation({
     mutationFn: async (replyId: number) => {
-      return apiRequest(`/api/forum/replies/${replyId}`, {
-        method: "DELETE",
-      });
+      return apiRequest("DELETE", `/api/forum/replies/${replyId}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/forum/posts/${postId}/replies`] });
@@ -158,7 +154,7 @@ export function ForumPostDetail({ postId, onClose }: ForumPostDetailProps) {
     return (
       <div className="text-center py-8">
         <p className="text-muted-foreground">Post not found.</p>
-        <Button onClick={onBack} className="mt-4">
+        <Button onClick={onClose} className="mt-4">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Forum
         </Button>
@@ -169,7 +165,7 @@ export function ForumPostDetail({ postId, onClose }: ForumPostDetailProps) {
   return (
     <div className="space-y-6">
       {/* Back Button */}
-      <Button variant="ghost" onClick={onBack} className="flex items-center gap-2">
+      <Button variant="ghost" onClick={onClose} className="flex items-center gap-2">
         <ArrowLeft className="h-4 w-4" />
         Back to Forum
       </Button>
