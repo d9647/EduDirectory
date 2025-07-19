@@ -83,10 +83,7 @@ export function Forum() {
   // Create post mutation
   const createPostMutation = useMutation({
     mutationFn: async (data: PostForm) => {
-      return apiRequest("/api/forum/posts", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+      return apiRequest("POST", "/api/forum/posts", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/forum/posts"] });
@@ -109,10 +106,7 @@ export function Forum() {
   // Edit post mutation
   const editPostMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: PostForm }) => {
-      return apiRequest(`/api/forum/posts/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(data),
-      });
+      return apiRequest("PUT", `/api/forum/posts/${id}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/forum/posts"] });
@@ -135,9 +129,7 @@ export function Forum() {
   // Delete post mutation
   const deletePostMutation = useMutation({
     mutationFn: async (id: number) => {
-      return apiRequest(`/api/forum/posts/${id}`, {
-        method: "DELETE",
-      });
+      return apiRequest("DELETE", `/api/forum/posts/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/forum/posts"] });
