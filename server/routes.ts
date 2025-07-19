@@ -785,12 +785,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Import routes (Admin only)
   app.post('/api/admin/import/tutoring-providers', isAuthenticated, csvUpload.single('csvFile'), async (req, res) => {
     try {
+      console.log('Import request received for tutoring providers');
+      
       if (!req.file) {
+        console.log('No file uploaded in request');
         return res.status(400).json({ message: "No file uploaded" });
       }
 
+      console.log('File received:', {
+        fieldname: req.file.fieldname,
+        originalname: req.file.originalname,
+        encoding: req.file.encoding,
+        mimetype: req.file.mimetype,
+        size: req.file.size
+      });
+
       const csvData = req.file.buffer.toString('utf-8');
+      console.log('CSV data converted from buffer, length:', csvData.length);
+      
       const result = await importService.importTutoringProviders(csvData);
+      console.log('Import result:', result);
 
       res.json({
         message: `Import completed: ${result.success} successful, ${result.errors.length} errors`,
@@ -799,7 +813,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error importing tutoring providers:", error);
-      res.status(500).json({ message: "Failed to import tutoring providers" });
+      console.error("Error stack:", error.stack);
+      res.status(500).json({ message: "Failed to import tutoring providers", error: error.message });
     }
   });
 

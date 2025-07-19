@@ -1,5 +1,5 @@
-import { storage } from './storage.js';
-import type { InsertTutoringProvider, InsertSummerCamp, InsertInternship, InsertJob } from '../shared/schema.js';
+import { storage } from './storage';
+import type { InsertTutoringProvider, InsertSummerCamp, InsertInternship, InsertJob } from '../shared/schema';
 
 interface ImportRow {
   [key: string]: string;
@@ -40,13 +40,20 @@ export class ImportService {
   private parseCSV(csvData: string): Promise<ImportRow[]> {
     return new Promise((resolve, reject) => {
       try {
+        console.log('Starting CSV parse, data length:', csvData.length);
+        
         const lines = csvData.split('\n').filter(line => line.trim() !== '');
+        console.log('CSV lines found:', lines.length);
+        
         if (lines.length < 2) {
+          console.log('Error: Insufficient CSV lines');
           reject(new Error('CSV must have at least a header row and one data row'));
           return;
         }
 
         const headers = this.parseCSVRow(lines[0]);
+        console.log('CSV headers:', headers);
+        
         const results: ImportRow[] = [];
 
         for (let i = 1; i < lines.length; i++) {
@@ -60,8 +67,10 @@ export class ImportService {
           results.push(row);
         }
 
+        console.log('CSV parsing completed, rows:', results.length);
         resolve(results);
       } catch (error) {
+        console.error('CSV parsing error:', error);
         reject(error);
       }
     });
@@ -96,11 +105,19 @@ export class ImportService {
     let success = 0;
 
     try {
+      console.log('Starting tutoring providers import...');
       const rows = await this.parseCSV(csvData);
+      console.log('Parsed rows:', rows.length);
 
       for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
         try {
+          // Parse delivery mode array
+          let deliveryModeArray: string[] = [];
+          if (row.deliveryMode) {
+            deliveryModeArray = this.parseArrayField(row.deliveryMode);
+          }
+
           const provider: InsertTutoringProvider = {
             name: row.name || '',
             type: row.type as 'private_tutor' | 'business' || 'business',
@@ -109,14 +126,15 @@ export class ImportService {
             subjects: this.parseArrayField(row.subjects),
             city: row.city || '',
             state: row.state || '',
-            deliveryMode: row.deliveryMode as 'In-person' | 'Remote' | 'Hybrid' || undefined,
+            zipcode: row.zipcode || undefined,
+            deliveryMode: deliveryModeArray,
             website: row.website || undefined,
             phone: row.phone || undefined,
             email: row.email || undefined,
             address: row.address || undefined,
             photoUrl: row.photoUrl || undefined,
-            isApproved: false,
-            isActive: true,
+            isApproved: this.parseBoolean(row.isApproved) !== undefined ? this.parseBoolean(row.isApproved)! : false,
+            isActive: this.parseBoolean(row.isActive) !== undefined ? this.parseBoolean(row.isActive)! : true,
           };
 
           // Validate required fields
@@ -125,16 +143,20 @@ export class ImportService {
             continue;
           }
 
+          console.log(`Creating provider ${i + 1}:`, provider.name);
           await storage.createTutoringProvider(provider);
           success++;
         } catch (error) {
+          console.error(`Error on row ${i + 2}:`, error);
           errors.push(`Row ${i + 2}: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
       }
     } catch (error) {
+      console.error('CSV parsing error:', error);
       errors.push(`CSV parsing error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 
+    console.log('Import completed. Success:', success, 'Errors:', errors.length);
     return { success, errors };
   }
 
