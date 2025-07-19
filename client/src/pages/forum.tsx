@@ -564,8 +564,6 @@ export function Forum() {
           onClose={() => setSelectedPostId(null)} 
         />
       )}
-
-      <Footer />
     </div>
   );
 }
