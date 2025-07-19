@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, MessageSquare, Users, Heart, Shield, Star, CheckCircle } from "lucide-react";
 import SimpleHeader from "@/components/layout/simple-header";
+import Footer from "@/components/layout/footer";
 
 export default function LearnMore() {
   return (
@@ -147,6 +148,8 @@ export default function LearnMore() {
           </Button>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 }
