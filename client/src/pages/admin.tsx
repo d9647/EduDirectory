@@ -273,30 +273,44 @@ export default function Admin() {
 
   // Import function
   const handleImport = async () => {
-    if (!importType || !importData[importType as keyof ImportData].length) {
+    // Validate importType exists and is valid
+    if (!importType) {
       setImportStatus({
         success: false,
-        message: "Please select a file and import type"
+        message: "Please select an import type"
       });
       return;
     }
 
+    // Validate importData exists for the selected type
+    const dataForType = importData[importType as keyof ImportData];
+    if (!dataForType || !Array.isArray(dataForType) || dataForType.length === 0) {
+      setImportStatus({
+        success: false,
+        message: "Please select a file and ensure it contains data"
+      });
+      return;
+    }
+
+    // Convert camelCase to kebab-case for API endpoint
+    const endpointType = importType.replace(/([A-Z])/g, '-$1').toLowerCase();
+
     setIsImporting(true);
     try {
-      const response = await fetch(`/api/admin/import/${importType}`, {
+      const response = await fetch(`/api/admin/import/${endpointType}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          data: importData[importType as keyof ImportData]
+          data: dataForType
         }),
       });
 
       if (response.ok) {
         setImportStatus({
           success: true,
-          message: `Successfully imported ${importData[importType as keyof ImportData].length} ${importType}`
+          message: `Successfully imported ${dataForType.length} ${importType}`
         });
         setImportData(prev => ({
           ...prev,
@@ -947,7 +961,7 @@ export default function Admin() {
                           const file = e.target.files?.[0];
                           if (file) {
                             setSelectedFile(file);
-                            setImportType("tutoring-providers");
+                            setImportType("tutoringProviders");
                             parseCSV(file);
                           }
                         }}
@@ -985,7 +999,7 @@ export default function Admin() {
                           const file = e.target.files?.[0];
                           if (file) {
                             setSelectedFile(file);
-                            setImportType("summer-camps");
+                            setImportType("summerCamps");
                             parseCSV(file);
                           }
                         }}
