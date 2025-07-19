@@ -1,6 +1,5 @@
-import csv from 'csv-parser';
-import { storage } from './storage.js';
-import type { InsertTutoringProvider, InsertSummerCamp, InsertInternship, InsertJob } from '../shared/schema.js';
+import { storage } from './storage';
+import type { InsertTutoringProvider, InsertSummerCamp, InsertInternship, InsertJob } from '../shared/schema';
 
 interface ImportRow {
   [key: string]: string;
@@ -40,18 +39,64 @@ export class ImportService {
   // Parse CSV data into array of objects
   private parseCSV(csvData: string): Promise<ImportRow[]> {
     return new Promise((resolve, reject) => {
-      const results: ImportRow[] = [];
-      const { Readable } = require('stream');
-      const readableStream = new Readable();
-      readableStream.push(csvData);
-      readableStream.push(null);
+      try {
+        console.log('Starting CSV parse, data length:', csvData.length);
+        
+        const lines = csvData.split('\n').filter(line => line.trim() !== '');
+        console.log('CSV lines found:', lines.length);
+        
+        if (lines.length < 2) {
+          console.log('Error: Insufficient CSV lines');
+          reject(new Error('CSV must have at least a header row and one data row'));
+          return;
+        }
 
-      readableStream
-        .pipe(csv())
-        .on('data', (data: ImportRow) => results.push(data))
-        .on('end', () => resolve(results))
-        .on('error', (error: Error) => reject(error));
+        const headers = this.parseCSVRow(lines[0]);
+        console.log('CSV headers:', headers);
+        
+        const results: ImportRow[] = [];
+
+        for (let i = 1; i < lines.length; i++) {
+          const values = this.parseCSVRow(lines[i]);
+          const row: ImportRow = {};
+          
+          headers.forEach((header, index) => {
+            row[header] = values[index] || '';
+          });
+          
+          results.push(row);
+        }
+
+        console.log('CSV parsing completed, rows:', results.length);
+        resolve(results);
+      } catch (error) {
+        console.error('CSV parsing error:', error);
+        reject(error);
+      }
     });
+  }
+
+  // Helper method to parse a single CSV row, handling quoted fields
+  private parseCSVRow(line: string): string[] {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === ',' && !inQuotes) {
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    
+    result.push(current.trim());
+    return result;
   }
 
   // Import tutoring providers
@@ -60,11 +105,19 @@ export class ImportService {
     let success = 0;
 
     try {
+      console.log('Starting tutoring providers import...');
       const rows = await this.parseCSV(csvData);
+      console.log('Parsed rows:', rows.length);
 
       for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
         try {
+          // Parse delivery mode array
+          let deliveryModeArray: string[] = [];
+          if (row.deliveryMode) {
+            deliveryModeArray = this.parseArrayField(row.deliveryMode);
+          }
+
           const provider: InsertTutoringProvider = {
             name: row.name || '',
             type: row.type as 'private_tutor' | 'business' || 'business',
@@ -73,14 +126,15 @@ export class ImportService {
             subjects: this.parseArrayField(row.subjects),
             city: row.city || '',
             state: row.state || '',
-            deliveryMode: row.deliveryMode as 'In-person' | 'Remote' | 'Hybrid' || undefined,
+            zipcode: row.zipcode || undefined,
+            deliveryMode: deliveryModeArray,
             website: row.website || undefined,
             phone: row.phone || undefined,
             email: row.email || undefined,
             address: row.address || undefined,
             photoUrl: row.photoUrl || undefined,
-            isApproved: false,
-            isActive: true,
+            isApproved: this.parseBoolean(row.isApproved) !== undefined ? this.parseBoolean(row.isApproved)! : false,
+            isActive: this.parseBoolean(row.isActive) !== undefined ? this.parseBoolean(row.isActive)! : true,
           };
 
           // Validate required fields
@@ -89,16 +143,20 @@ export class ImportService {
             continue;
           }
 
+          console.log(`Creating provider ${i + 1}:`, provider.name);
           await storage.createTutoringProvider(provider);
           success++;
         } catch (error) {
+          console.error(`Error on row ${i + 2}:`, error);
           errors.push(`Row ${i + 2}: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
       }
     } catch (error) {
+      console.error('CSV parsing error:', error);
       errors.push(`CSV parsing error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 
+    console.log('Import completed. Success:', success, 'Errors:', errors.length);
     return { success, errors };
   }
 

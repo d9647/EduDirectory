@@ -237,9 +237,9 @@ export default function ListingDetailModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto mx-2 sm:mx-auto">
+        <DialogContent className="max-w-3xl max-h-[85vh] sm:max-h-[80vh] overflow-y-auto mt-8 sm:mt-12 mb-4 sm:mb-8">
           {/* Modal Header */}
-          <DialogHeader className="pb-3 sm:pb-4">
+          <DialogHeader className="pb-3 sm:pb-4 px-4 sm:px-8">
             <div className="flex items-center">
               <Avatar className="h-12 w-12 sm:h-16 sm:w-16 mr-3 sm:mr-4 flex-shrink-0">
                 <AvatarImage 
@@ -347,7 +347,7 @@ export default function ListingDetailModal({
                         href={listing.website} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-primary hover:text-primary/80"
+                        className="text-primary hover:text-primary/80 allow-select"
                       >
                         {listing.website}
                       </a>
@@ -356,19 +356,27 @@ export default function ListingDetailModal({
                   {listing.phone && (
                     <div className="flex items-center">
                       <Phone className="h-4 w-4 text-gray-400 mr-3" />
-                      <span className="text-gray-700">{listing.phone}</span>
+                      <span className="text-gray-700 allow-select">{listing.phone}</span>
                     </div>
                   )}
                   {listing.email && (
                     <div className="flex items-center">
                       <Mail className="h-4 w-4 text-gray-400 mr-3" />
-                      <span className="text-gray-700">{listing.email}</span>
+                      <span className="text-gray-700 allow-select">{listing.email}</span>
                     </div>
                   )}
                   {(listing.city || listing.location || listing.address) && (
                     <div className="flex items-center">
-                      <MapPin className="h-4 w-4 text-gray-400 mr-3" />
-                      <span className="text-gray-700">
+                      <a 
+                        href={`https://maps.google.com/?q=${encodeURIComponent([listing.address, listing.location || listing.city, listing.state, listing.zipcode].filter(Boolean).join(", "))}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                        title="Open in Maps"
+                      >
+                        <MapPin className="h-4 w-4 mr-3" />
+                      </a>
+                      <span className="text-gray-700 allow-select">
                         {/* Only show "Remote" if it's ONLY remote delivery, otherwise show full address */}
                         {(Array.isArray(listing.deliveryMode) && listing.deliveryMode.length === 1 && listing.deliveryMode.includes("Remote")) || listing.isRemote ? "Remote" : 
                          [listing.address, listing.location || listing.city, listing.state, listing.zipcode].filter(Boolean).join(", ")}
