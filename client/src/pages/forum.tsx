@@ -76,7 +76,27 @@ export function Forum() {
 
   // Fetch forum posts
   const { data: postsData, isLoading } = useQuery({
-    queryKey: ["/api/forum/posts", { search, category: selectedCategory, sortBy, sortOrder, page }],
+    queryKey: ["/api/forum/posts", search, selectedCategory, sortBy, sortOrder, page],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        search: search || "",
+        category: selectedCategory || "",
+        sortBy,
+        sortOrder,
+        page: page.toString(),
+        limit: "20"
+      });
+      
+      const response = await fetch(`/api/forum/posts?${params}`, {
+        credentials: "include"
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch posts');
+      }
+      
+      return response.json();
+    },
     enabled: !!user,
   });
 

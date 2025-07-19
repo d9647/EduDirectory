@@ -25,10 +25,10 @@ type CreateReplyForm = z.infer<typeof createReplySchema>;
 
 interface ForumPostDetailProps {
   postId: number;
-  onBack: () => void;
+  onClose: () => void;
 }
 
-export function ForumPostDetail({ postId, onBack }: ForumPostDetailProps) {
+export function ForumPostDetail({ postId, onClose }: ForumPostDetailProps) {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -57,10 +57,7 @@ export function ForumPostDetail({ postId, onBack }: ForumPostDetailProps) {
   // Create reply mutation
   const createReplyMutation = useMutation({
     mutationFn: async (data: CreateReplyForm) => {
-      return apiRequest(`/api/forum/posts/${postId}/replies`, {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+      return apiRequest("POST", `/api/forum/posts/${postId}/replies`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/forum/posts/${postId}/replies`] });
