@@ -340,7 +340,7 @@ export default function Admin() {
     document.body.removeChild(link);
   };
 
-  const parseCSV = (file: File) => {
+  const parseCSV = (file: File, type: string) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result as string;
@@ -358,7 +358,7 @@ export default function Admin() {
       setPreviewData(data.slice(0, 5)); // Show first 5 rows
       setImportData(prev => ({
         ...prev,
-        [importType]: data
+        [type]: data
       }));
     };
     reader.readAsText(file);
@@ -962,7 +962,7 @@ export default function Admin() {
                           if (file) {
                             setSelectedFile(file);
                             setImportType("tutoringProviders");
-                            parseCSV(file);
+                            parseCSV(file, "tutoringProviders");
                           }
                         }}
                         className="mt-1"
@@ -1000,7 +1000,7 @@ export default function Admin() {
                           if (file) {
                             setSelectedFile(file);
                             setImportType("summerCamps");
-                            parseCSV(file);
+                            parseCSV(file, "summerCamps");
                           }
                         }}
                         className="mt-1"
@@ -1038,7 +1038,7 @@ export default function Admin() {
                           if (file) {
                             setSelectedFile(file);
                             setImportType("internships");
-                            parseCSV(file);
+                            parseCSV(file, "internships");
                           }
                         }}
                         className="mt-1"
@@ -1076,7 +1076,7 @@ export default function Admin() {
                           if (file) {
                             setSelectedFile(file);
                             setImportType("jobs");
-                            parseCSV(file);
+                            parseCSV(file, "jobs");
                           }
                         }}
                         className="mt-1"
