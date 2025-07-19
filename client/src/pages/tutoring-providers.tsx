@@ -47,7 +47,7 @@ export default function TutoringProviders() {
     categories: TUTORING_CATEGORIES,
     subjects: TUTORING_SUBJECTS,
     types: [
-      { value: "", label: "All Types" },
+      { value: "all", label: "All Types" },
       { value: "private_tutor", label: "Private Tutors" },
       { value: "business", label: "Business/Agencies" },
     ],

@@ -49,14 +49,14 @@ export default function Jobs() {
     categories: JOB_CATEGORIES,
     compensation: JOB_COMPENSATION_TYPES,
     remoteOptions: [
-      { value: undefined, label: "All" },
-      { value: true, label: "Remote" },
-      { value: false, label: "In-Person" },
+      { value: "all", label: "All" },
+      { value: "true", label: "Remote" },
+      { value: "false", label: "In-Person" },
     ],
     trainingOptions: [
-      { value: undefined, label: "All" },
-      { value: true, label: "Training Provided" },
-      { value: false, label: "No Training" },
+      { value: "all", label: "All" },
+      { value: "true", label: "Training Provided" },
+      { value: "false", label: "No Training" },
     ],
   };
 
