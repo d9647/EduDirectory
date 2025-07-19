@@ -364,9 +364,9 @@ export default function Admin() {
         return;
       }
 
-      const headers = lines[0].split(",").map(h => h.replace(/"/g, ""));
+      const headers = parseCSVRow(lines[0]);
       const data = lines.slice(1).map(line => {
-        const values = line.split(",").map(v => v.replace(/"/g, ""));
+        const values = parseCSVRow(line);
         const row: any = {};
         headers.forEach((header, index) => {
           row[header] = values[index] || "";
@@ -384,6 +384,29 @@ export default function Admin() {
       }));
     };
     reader.readAsText(file);
+  };
+
+  // Helper function to parse CSV row with proper quote handling
+  const parseCSVRow = (line: string): string[] => {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === ',' && !inQuotes) {
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    
+    result.push(current.trim());
+    return result;
   };
 
   if (isLoading) {
