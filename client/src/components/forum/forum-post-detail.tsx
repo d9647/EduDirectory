@@ -45,13 +45,13 @@ export function ForumPostDetail({ postId, onBack }: ForumPostDetailProps) {
   // Fetch post details
   const { data: post, isLoading: postLoading } = useQuery({
     queryKey: [`/api/forum/posts/${postId}`],
-    enabled: !!postId,
+    enabled: !!postId && !isNaN(postId),
   });
 
   // Fetch replies
   const { data: replies, isLoading: repliesLoading } = useQuery({
     queryKey: [`/api/forum/posts/${postId}/replies`],
-    enabled: !!postId,
+    enabled: !!postId && !isNaN(postId),
   });
 
   // Create reply mutation
