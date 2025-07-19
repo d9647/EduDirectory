@@ -31,6 +31,7 @@ export default function TermsOfUse() {
                 </section>
                 <section>
                   <h2 className="text-xl font-semibold text-gray-900 mb-3">3. Acceptable Use</h2>
+                  <p className="text-gray-700 leading-relaxed">Unless we grant written permission, you agree <b>not to:</b></p>
                   <ul className="list-disc list-inside text-gray-700 space-y-2">
                     <li>Deploy bots, scrapers, or similar tools to harvest data, create accounts, or post content.</li>
                     <li>Circumvent or interfere with our moderation, security, or rate‑limiting mechanisms.</li>
