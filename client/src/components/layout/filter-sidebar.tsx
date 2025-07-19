@@ -26,25 +26,37 @@ export default function FilterSidebar({
 }: FilterSidebarProps) {
   
   const updateFilter = (key: string, value: any) => {
-    setFilters({
-      ...filters,
+    setFilters(prev => ({
+      ...prev,
       [key]: value,
       offset: 0, // Reset to first page when filters change
-    });
+    }));
   };
 
   const toggleArrayFilter = (key: string, value: string | number) => {
-    const currentArray = (filters as any)[key] || [];
-    const newArray = currentArray.includes(value)
-      ? currentArray.filter((item: any) => item !== value)
-      : [...currentArray, value];
-    updateFilter(key, newArray);
+    setFilters(prev => {
+      const currentArray = (prev as any)[key] || [];
+      const newArray = currentArray.includes(value)
+        ? currentArray.filter((item: any) => item !== value)
+        : [...currentArray, value];
+      return {
+        ...prev,
+        [key]: newArray,
+        offset: 0,
+      };
+    });
   };
 
   const removeArrayFilterItem = (key: string, value: string | number) => {
-    const currentArray = (filters as any)[key] || [];
-    const newArray = currentArray.filter((item: any) => item !== value);
-    updateFilter(key, newArray);
+    setFilters(prev => {
+      const currentArray = (prev as any)[key] || [];
+      const newArray = currentArray.filter((item: any) => item !== value);
+      return {
+        ...prev,
+        [key]: newArray,
+        offset: 0,
+      };
+    });
   };
 
   const clearAllFilters = () => {
