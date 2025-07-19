@@ -171,13 +171,16 @@ Preferred UI design style: Clean, minimal layouts without redundant headers.
 - Updated application to focus purely on core yellow pages functionality
 - Streamlined navigation header and application routing without forum links
 
-**Mobile Filter Fix Rollback (Latest Update - January 19, 2025)**
-- Rolled back mobile search filter changes per user request due to accuracy issues
+**Complete Mobile UI Rollback (Latest Update - January 19, 2025)**
+- Completely rolled back all mobile responsive improvements per user request
+- Removed mobile collapsible filter sidebar and simplified card layouts 
+- Restored original desktop-only filter sidebar without mobile components
+- Removed mobile card layout from listing tables, restored table-only display
+- Reverted page layouts to original desktop-focused design without responsive classes
 - Restored original filter value handling with empty strings and undefined values
-- Reverted backend routes to handle original filter structure
-- Maintained DialogDescription additions for accessibility compliance
-- Fixed Select component errors while preserving original filtering functionality
-- Mobile filter drawer remains functional with proper accessibility support
+- Removed mobile-specific imports and components (filter-sidebar-mobile.tsx)
+- Platform now focuses on desktop experience as originally designed
+- Maintained accessibility improvements (DialogDescription components) where applicable
 
 **Enhanced Mobile Responsiveness Implementation (Latest Update - January 19, 2025)**
 - Created new mobile-first FilterSidebarMobile component with collapsible design
