@@ -137,12 +137,12 @@ export default function FilterSidebar({
             <Label htmlFor="state" className="text-sm font-medium text-gray-700">
               State
             </Label>
-            <Select value={filters.state} onValueChange={(value) => updateFilter("state", value)}>
+            <Select value={filters.state || "all"} onValueChange={(value) => updateFilter("state", value === "all" ? "" : value)}>
               <SelectTrigger className="text-sm">
                 <SelectValue placeholder="State" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All States</SelectItem>
+                <SelectItem value="all">All States</SelectItem>
                 {US_STATES.map((state) => (
                   <SelectItem key={state.value} value={state.value}>
                     {state.label}
