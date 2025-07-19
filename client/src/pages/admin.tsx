@@ -118,7 +118,7 @@ export default function Admin() {
 
   // User management pagination and search state
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(10);
+  const [usersPerPage] = useState(5);
   const [userSearchQuery, setUserSearchQuery] = useState('');
   const [debouncedUserSearch, setDebouncedUserSearch] = useState('');
 
