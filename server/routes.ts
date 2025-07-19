@@ -11,7 +11,6 @@ import {
   insertJobSchema,
   insertReviewSchema,
   insertReportSchema,
-
 } from "@shared/schema";
 import { z } from "zod";
 import multer from "multer";
@@ -39,14 +38,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!req.user) {
         return res.status(401).json({ message: "Authentication required" });
       }
-      
+
       const userId = req.user.claims.sub;
       const userRole = await storage.getUserRole(userId);
-      
+
       if (userRole !== "admin") {
         return res.status(403).json({ message: "Admin access required" });
       }
-      
+
       next();
     } catch (error) {
       console.error("Error checking admin status:", error);
@@ -59,11 +58,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { userId } = req.params;
       const { role } = req.body;
-      
+
       if (!["admin", "user"].includes(role)) {
         return res.status(400).json({ message: "Invalid role. Must be 'admin' or 'user'" });
       }
-      
+
       const updatedUser = await storage.updateUserRole(userId, role);
       res.json(updatedUser);
     } catch (error) {
@@ -91,11 +90,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put('/api/auth/profile', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      
+
       // Use the updateUserProfileSchema for validation
       const { updateUserProfileSchema } = await import("../shared/schema.js");
       const profileData = updateUserProfileSchema.parse(req.body);
-      
+
       const updatedUser = await storage.updateUserProfile(userId, profileData);
       res.json(updatedUser);
     } catch (error) {
@@ -372,18 +371,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const id = parseInt(req.params.id);
-      
+
       // Check if the review belongs to the user or if user is admin
       const existingReview = await storage.getReviewById(id);
       if (!existingReview) {
         return res.status(404).json({ message: "Review not found" });
       }
-      
+
       const userRole = await storage.getUserRole(userId);
       if (existingReview.userId !== userId && userRole !== 'admin') {
         return res.status(403).json({ message: "Not authorized to edit this review" });
       }
-      
+
       const validatedData = insertReviewSchema.partial().parse(req.body);
       const review = await storage.updateReview(id, validatedData);
       res.json(review);
@@ -400,18 +399,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = req.user.claims.sub;
       const id = parseInt(req.params.id);
-      
+
       // Check if the review belongs to the user or if user is admin
       const existingReview = await storage.getReviewById(id);
       if (!existingReview) {
         return res.status(404).json({ message: "Review not found" });
       }
-      
+
       const userRole = await storage.getUserRole(userId);
       if (existingReview.userId !== userId && userRole !== 'admin') {
         return res.status(403).json({ message: "Not authorized to delete this review" });
       }
-      
+
       await storage.deleteReview(id, userId);
       res.status(204).send();
     } catch (error) {
@@ -474,7 +473,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
       const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
-      
+
       const result = await storage.getUserBookmarks(userId, { limit, offset });
       res.json(result);
     } catch (error) {
@@ -539,11 +538,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // TODO: Add admin role check
       const { type } = req.params;
       const { query } = req.query;
-      
+
       if (!query) {
         return res.json([]);
       }
-      
+
       const results = await storage.searchListings(type, query);
       res.json(results);
     } catch (error) {
@@ -654,7 +653,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Convert date strings to Date objects for database compatibility (these are date fields, not timestamp)
       const dateFields = ['applicationOpen', 'applicationDeadline', 'applicationDueDate', 'openingDate', 'closingDate'];
-      
+
       for (const field of dateFields) {
         if (updateData[field] !== undefined) {
           if (typeof updateData[field] === 'string' && updateData[field].trim()) {
@@ -674,7 +673,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Convert string arrays back to arrays if they were serialized
       const arrayFields = ['categories', 'subjects', 'types', 'tags', 'duration', 'jobType', 'schedule'];
-      
+
       for (const field of arrayFields) {
         if (updateData[field] && typeof updateData[field] === 'string') {
           updateData[field] = updateData[field].split(',').map(item => item.trim()).filter(Boolean);
@@ -688,7 +687,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (updateData.minimumAge !== undefined) {
         updateData.minimumAge = parseInt(updateData.minimumAge) || null;
       }
-      
+
       // Convert decimal fields for salary ranges
       if (updateData.salaryMin !== undefined) {
         updateData.salaryMin = parseFloat(updateData.salaryMin) || null;
@@ -696,7 +695,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (updateData.salaryMax !== undefined) {
         updateData.salaryMax = parseFloat(updateData.salaryMax) || null;
       }
-      
+
       // Convert boolean fields
       const booleanFields = ['isRemote', 'hasScholarship', 'applicationAvailable', 'hasMentorship', 'hasTraining', 'hasAdvancement', 'requiresTransportation', 'requiresResume', 'isOngoing'];
       booleanFields.forEach(field => {
@@ -766,7 +765,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // For now, return a static URL. In a real app, you'd upload to a cloud service
       const photoUrl = `/uploads/${req.file.filename}`;
-      
+
       res.json({ url: photoUrl });
     } catch (error) {
       console.error('Error uploading photo:', error);
@@ -792,7 +791,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const csvData = req.file.buffer.toString('utf-8');
       const result = await importService.importTutoringProviders(csvData);
-      
+
       res.json({
         message: `Import completed: ${result.success} successful, ${result.errors.length} errors`,
         success: result.success,
@@ -812,7 +811,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const csvData = req.file.buffer.toString('utf-8');
       const result = await importService.importSummerCamps(csvData);
-      
+
       res.json({
         message: `Import completed: ${result.success} successful, ${result.errors.length} errors`,
         success: result.success,
@@ -832,7 +831,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const csvData = req.file.buffer.toString('utf-8');
       const result = await importService.importInternships(csvData);
-      
+
       res.json({
         message: `Import completed: ${result.success} successful, ${result.errors.length} errors`,
         success: result.success,
@@ -852,7 +851,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const csvData = req.file.buffer.toString('utf-8');
       const result = await importService.importJobs(csvData);
-      
+
       res.json({
         message: `Import completed: ${result.success} successful, ${result.errors.length} errors`,
         success: result.success,
@@ -863,8 +862,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to import jobs" });
     }
   });
-
-
 
   const httpServer = createServer(app);
   return httpServer;
