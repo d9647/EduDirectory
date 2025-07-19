@@ -17,19 +17,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { MessageSquare, Plus, Pin, Lock, User, Calendar, Search, Filter } from "lucide-react";
+import { MessageSquare, Plus, Pin, Lock, User, Calendar, Search, Filter, Edit, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
-const createPostSchema = z.object({
+const postSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title must be 200 characters or less"),
   content: z.string().min(1, "Content is required").max(5000, "Content must be 5000 characters or less"),
   category: z.string().min(1, "Category is required"),
 });
 
-type CreatePostForm = z.infer<typeof createPostSchema>;
+type PostForm = z.infer<typeof postSchema>;
 
 const FORUM_CATEGORIES = [
   "General Discussion",
@@ -43,7 +43,7 @@ const FORUM_CATEGORIES = [
 ];
 
 export function Forum() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -54,9 +54,19 @@ export function Forum() {
   const [page, setPage] = useState(1);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+  const [editingPost, setEditingPost] = useState<any>(null);
 
-  const createPostForm = useForm<CreatePostForm>({
-    resolver: zodResolver(createPostSchema),
+  const createPostForm = useForm<PostForm>({
+    resolver: zodResolver(postSchema),
+    defaultValues: {
+      title: "",
+      content: "",
+      category: "",
+    },
+  });
+
+  const editPostForm = useForm<PostForm>({
+    resolver: zodResolver(postSchema),
     defaultValues: {
       title: "",
       content: "",
@@ -72,7 +82,7 @@ export function Forum() {
 
   // Create post mutation
   const createPostMutation = useMutation({
-    mutationFn: async (data: CreatePostForm) => {
+    mutationFn: async (data: PostForm) => {
       return apiRequest("/api/forum/posts", {
         method: "POST",
         body: JSON.stringify(data),
@@ -96,8 +106,78 @@ export function Forum() {
     },
   });
 
-  const handleCreatePost = async (data: CreatePostForm) => {
+  // Edit post mutation
+  const editPostMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: number; data: PostForm }) => {
+      return apiRequest(`/api/forum/posts/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/forum/posts"] });
+      setEditingPost(null);
+      editPostForm.reset();
+      toast({
+        title: "Success",
+        description: "Your post has been updated successfully!",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update post",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Delete post mutation
+  const deletePostMutation = useMutation({
+    mutationFn: async (id: number) => {
+      return apiRequest(`/api/forum/posts/${id}`, {
+        method: "DELETE",
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/forum/posts"] });
+      toast({
+        title: "Success",
+        description: "Post has been deleted.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to delete post",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleCreatePost = async (data: PostForm) => {
     createPostMutation.mutate(data);
+  };
+
+  const handleEditPost = async (data: PostForm) => {
+    if (editingPost) {
+      editPostMutation.mutate({ id: editingPost.id, data });
+    }
+  };
+
+  const handleDeletePost = (post: any) => {
+    if (confirm("Are you sure you want to delete this post? This action cannot be undone.")) {
+      deletePostMutation.mutate(post.id);
+    }
+  };
+
+  const startEditingPost = (post: any) => {
+    setEditingPost(post);
+    editPostForm.reset({
+      title: post.title,
+      content: post.content,
+      category: post.category,
+    });
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -341,9 +421,33 @@ export function Forum() {
                       </div>
                     </div>
                     
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <MessageSquare className="h-4 w-4" />
-                      <span>{post.replyCount} replies</span>
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <MessageSquare className="h-4 w-4" />
+                        <span>{post.replyCount} replies</span>
+                      </div>
+                      {(user?.id === post.userId || isAdmin) && (
+                        <div className="flex items-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => startEditingPost(post)}
+                            className="h-6 px-2 text-xs"
+                          >
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeletePost(post)}
+                            className="h-6 px-2 text-xs text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-3 w-3 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </CardContent>
@@ -375,6 +479,90 @@ export function Forum() {
           </div>
         )}
       </div>
+
+      {/* Edit Post Dialog */}
+      <Dialog open={!!editingPost} onOpenChange={() => setEditingPost(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Post</DialogTitle>
+            <DialogDescription>Make changes to your forum post</DialogDescription>
+          </DialogHeader>
+          <Form {...editPostForm}>
+            <form onSubmit={editPostForm.handleSubmit(handleEditPost)} className="space-y-4">
+              <FormField
+                control={editPostForm.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {FORUM_CATEGORIES.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={editPostForm.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter post title..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={editPostForm.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Content</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Share your thoughts..." 
+                        className="min-h-[150px]" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-end gap-3 pt-4">
+                <Button type="button" variant="outline" onClick={() => setEditingPost(null)}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={editPostMutation.isPending}>
+                  {editPostMutation.isPending ? "Updating..." : "Update Post"}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Post Detail Modal */}
+      {selectedPostId && (
+        <ForumPostDetail 
+          postId={selectedPostId} 
+          onClose={() => setSelectedPostId(null)} 
+        />
+      )}
 
       <Footer />
     </div>

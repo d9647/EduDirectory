@@ -890,6 +890,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/forum/posts/:id', isAuthenticated, async (req, res) => {
     try {
       const postId = parseInt(req.params.id);
+      
+      // Check if postId is valid
+      if (isNaN(postId)) {
+        return res.status(400).json({ message: "Invalid post ID" });
+      }
+      
       const post = await storage.getForumPost(postId);
       
       if (!post) {
