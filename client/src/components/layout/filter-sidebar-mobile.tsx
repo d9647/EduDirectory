@@ -150,11 +150,12 @@ export default function FilterSidebar({
       {listingType === "tutoring" && filterOptions.types && (
         <div className="space-y-2">
           <Label className="text-sm font-medium">Type</Label>
-          <Select value={filters.type || ""} onValueChange={(value) => updateFilter("type", value)}>
+          <Select value={filters.type || "all"} onValueChange={(value) => updateFilter("type", value === "all" ? "" : value)}>
             <SelectTrigger>
               <SelectValue placeholder="Select Type" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="all">All Types</SelectItem>
               {filterOptions.types.map((type) => (
                 <SelectItem key={type.value} value={type.value}>
                   {type.label}
@@ -231,9 +232,15 @@ export default function FilterSidebar({
           <div className="space-y-3">
             <Label className="text-sm font-medium">Business Type</Label>
             <RadioGroup
-              value={filters.type || ""}
-              onValueChange={(value) => updateFilter("type", value)}
+              value={filters.type || "all"}
+              onValueChange={(value) => updateFilter("type", value === "all" ? "" : value)}
             >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="all" id="all-types" />
+                <Label htmlFor="all-types" className="text-sm">
+                  All Types
+                </Label>
+              </div>
               {filterOptions.types.map((type) => (
                 <div key={type.value} className="flex items-center space-x-2">
                   <RadioGroupItem value={type.value} id={type.value} />
