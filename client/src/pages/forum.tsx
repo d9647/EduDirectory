@@ -32,14 +32,38 @@ const postSchema = z.object({
 type PostForm = z.infer<typeof postSchema>;
 
 const FORUM_CATEGORIES = [
-  "General Discussion",
-  "Educational Resources",
-  "Career Advice",
-  "Study Tips",
-  "Success Stories",
-  "Questions & Help",
-  "Announcements",
-  "Off Topic"
+  {
+    name: "General Discussion",
+    description: "General educational discussions and community chat"
+  },
+  {
+    name: "Educational Resources",
+    description: "Share and discover learning materials and resources"
+  },
+  {
+    name: "Career Advice",
+    description: "Professional guidance and career development"
+  },
+  {
+    name: "Study Tips",
+    description: "Learning strategies and academic advice"
+  },
+  {
+    name: "Success Stories",
+    description: "Share your achievements and inspire others"
+  },
+  {
+    name: "Questions & Help",
+    description: "Get help with academic and professional questions"
+  },
+  {
+    name: "Tutoring & Mentorship",
+    description: "Connect with tutors and mentors"
+  },
+  {
+    name: "Announcements",
+    description: "Important updates and community news"
+  }
 ];
 
 export function Forum() {
@@ -74,7 +98,24 @@ export function Forum() {
     },
   });
 
-  // Fetch forum posts
+  // Fetch forum category stats when not viewing specific category
+  const { data: categoryStats, isLoading: statsLoading } = useQuery({
+    queryKey: ["/api/forum/category-stats"],
+    queryFn: async () => {
+      const response = await fetch("/api/forum/category-stats", {
+        credentials: "include"
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch category stats');
+      }
+      
+      return response.json();
+    },
+    enabled: !!user && !selectedCategory,
+  });
+
+  // Fetch forum posts when viewing specific category
   const { data: postsData, isLoading } = useQuery({
     queryKey: ["/api/forum/posts", search, selectedCategory, sortBy, sortOrder, page],
     queryFn: async () => {
@@ -97,7 +138,7 @@ export function Forum() {
       
       return response.json();
     },
-    enabled: !!user,
+    enabled: !!user && !!selectedCategory,
   });
 
   // Create post mutation
@@ -201,6 +242,187 @@ export function Forum() {
   const totalPosts = postsData?.total || 0;
   const totalPages = Math.ceil(totalPosts / 20);
 
+  // Show category overview when no specific category is selected
+  if (!selectedCategory) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+        <Header />
+        
+        <div className="container mx-auto px-4 py-8">
+          {/* Page Header */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Community Forum</h1>
+                <p className="text-muted-foreground">Connect with fellow learners and educators</p>
+              </div>
+              <Dialog open={showCreatePost} onOpenChange={setShowCreatePost}>
+                <DialogTrigger asChild>
+                  <Button className="flex items-center gap-2">
+                    <Plus className="h-4 w-4" />
+                    New Post
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>Create New Post</DialogTitle>
+                    <DialogDescription>
+                      Share your thoughts, questions, or knowledge with the community.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <Form {...createPostForm}>
+                    <form onSubmit={createPostForm.handleSubmit(handleCreatePost)} className="space-y-4">
+                      <FormField
+                        control={createPostForm.control}
+                        name="category"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Category</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select a category" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {FORUM_CATEGORIES.map((category) => (
+                                  <SelectItem key={category.name} value={category.name}>
+                                    {category.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={createPostForm.control}
+                        name="title"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Title</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Enter post title..." {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={createPostForm.control}
+                        name="content"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Content</FormLabel>
+                            <FormControl>
+                              <Textarea 
+                                placeholder="Share your thoughts..." 
+                                className="min-h-[150px]" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="flex justify-end gap-3 pt-4">
+                        <Button type="button" variant="outline" onClick={() => setShowCreatePost(false)}>
+                          Cancel
+                        </Button>
+                        <Button type="submit" disabled={createPostMutation.isPending}>
+                          {createPostMutation.isPending ? "Creating..." : "Create Post"}
+                        </Button>
+                      </div>
+                    </form>
+                  </Form>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
+
+          {/* BBS-Style Category List */}
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            {/* Header */}
+            <div className="bg-gray-50 border-b border-gray-200 px-6 py-3">
+              <div className="grid grid-cols-12 gap-4 text-sm font-medium text-gray-700">
+                <div className="col-span-6">Forum Category</div>
+                <div className="col-span-2 text-center">Topics</div>
+                <div className="col-span-2 text-center">Replies</div>
+                <div className="col-span-2 text-center">Latest Activity</div>
+              </div>
+            </div>
+            
+            {/* Category List */}
+            <div className="divide-y divide-gray-100">
+              {FORUM_CATEGORIES.map((category) => {
+                const stats = categoryStats?.find((stat: any) => stat.category === category.name) || 
+                  { topicCount: 0, replyCount: 0, latestPost: null };
+                
+                return (
+                  <div 
+                    key={category.name}
+                    className="px-6 py-4 hover:bg-gray-50 cursor-pointer transition-colors"
+                    onClick={() => setSelectedCategory(category.name)}
+                  >
+                    <div className="grid grid-cols-12 gap-4">
+                      {/* Category Info */}
+                      <div className="col-span-6">
+                        <h3 className="font-medium text-gray-900 hover:text-blue-600 transition-colors">
+                          {category.name}
+                        </h3>
+                        <p className="text-sm text-gray-500 mt-1">
+                          {category.description}
+                        </p>
+                      </div>
+                      
+                      {/* Topic Count */}
+                      <div className="col-span-2 text-center">
+                        <div className="text-lg font-semibold text-gray-900">
+                          {stats.topicCount}
+                        </div>
+                        <div className="text-xs text-gray-500">topics</div>
+                      </div>
+                      
+                      {/* Reply Count */}
+                      <div className="col-span-2 text-center">
+                        <div className="text-lg font-semibold text-gray-900">
+                          {stats.replyCount}
+                        </div>
+                        <div className="text-xs text-gray-500">replies</div>
+                      </div>
+                      
+                      {/* Latest Activity */}
+                      <div className="col-span-2 text-center">
+                        {stats.latestPost ? (
+                          <div className="text-sm">
+                            <div className="font-medium text-gray-900 truncate">
+                              {stats.latestPost.title}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              by {stats.latestPost.authorFirstName} {stats.latestPost.authorLastName}
+                            </div>
+                            <div className="text-xs text-gray-400">
+                              {formatDistanceToNow(new Date(stats.latestPost.createdAt), { addSuffix: true })}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-sm text-gray-400">No posts yet</div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        
+        <Footer />
+      </div>
+    );
+  }
+
   // Show post detail view
   if (selectedPostId) {
     return (
@@ -239,10 +461,29 @@ export function Forum() {
       <div className="container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
+          {/* Back to Categories Button */}
+          {selectedCategory && (
+            <Button 
+              variant="ghost" 
+              onClick={() => setSelectedCategory("")} 
+              className="flex items-center gap-2 mb-4"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Categories
+            </Button>
+          )}
+          
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Community Forum</h1>
-              <p className="text-muted-foreground">Connect with fellow learners and educators</p>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                {selectedCategory ? selectedCategory : "Community Forum"}
+              </h1>
+              <p className="text-muted-foreground">
+                {selectedCategory 
+                  ? `Discussions in ${selectedCategory}` 
+                  : "Connect with fellow learners and educators"
+                }
+              </p>
             </div>
             <Dialog open={showCreatePost} onOpenChange={setShowCreatePost}>
               <DialogTrigger asChild>
@@ -274,8 +515,8 @@ export function Forum() {
                             </FormControl>
                             <SelectContent>
                               {FORUM_CATEGORIES.map((category) => (
-                                <SelectItem key={category} value={category}>
-                                  {category}
+                                <SelectItem key={category.name} value={category.name}>
+                                  {category.name}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -350,8 +591,8 @@ export function Forum() {
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
                   {FORUM_CATEGORIES.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
+                    <SelectItem key={category.name} value={category.name}>
+                      {category.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -504,8 +745,8 @@ export function Forum() {
                       </FormControl>
                       <SelectContent>
                         {FORUM_CATEGORIES.map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {category}
+                          <SelectItem key={category.name} value={category.name}>
+                            {category.name}
                           </SelectItem>
                         ))}
                       </SelectContent>

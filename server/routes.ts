@@ -975,6 +975,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get forum category statistics
+  app.get('/api/forum/category-stats', isAuthenticated, async (req, res) => {
+    try {
+      const stats = await storage.getForumCategoryStats();
+      res.json(stats);
+    } catch (error) {
+      console.error("Error fetching forum category stats:", error);
+      res.status(500).json({ message: "Failed to fetch forum category stats" });
+    }
+  });
+
   app.post('/api/forum/posts/:id/replies', isAuthenticated, async (req, res) => {
     try {
       const postId = parseInt(req.params.id);
