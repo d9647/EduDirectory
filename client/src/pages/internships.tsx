@@ -23,6 +23,8 @@ export default function Internships() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["/api/internships", filters],
+    enabled: true,
+    staleTime: 1000, // Add stale time to reduce unnecessary requests
     queryFn: async () => {
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
