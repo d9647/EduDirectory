@@ -50,14 +50,14 @@ export default function Internships() {
     selectivityLevels: SELECTIVITY_LEVELS,
     compensation: COMPENSATION_TYPES,
     remoteOptions: [
-      { value: "all", label: "All" },
-      { value: "true", label: "Remote" },
-      { value: "false", label: "In-Person" },
+      { value: undefined, label: "All" },
+      { value: true, label: "Remote" },
+      { value: false, label: "In-Person" },
     ],
     mentorshipOptions: [
-      { value: "all", label: "All" },
-      { value: "true", label: "Mentorship Available" },
-      { value: "false", label: "No Mentorship" },
+      { value: undefined, label: "All" },
+      { value: true, label: "Mentorship Available" },
+      { value: false, label: "No Mentorship" },
     ],
   };
 
