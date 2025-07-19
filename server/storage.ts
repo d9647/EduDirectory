@@ -8,6 +8,8 @@ import {
   thumbsUp,
   bookmarks,
   reports,
+  forumPosts,
+  forumReplies,
   type User,
   type UpsertUser,
   type TutoringProvider,
@@ -24,6 +26,10 @@ import {
   type Bookmark,
   type Report,
   type InsertReport,
+  type ForumPost,
+  type ForumReply,
+  type InsertForumPost,
+  type InsertForumReply,
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, or, sql, count, desc, asc, ilike } from "drizzle-orm";
@@ -140,6 +146,24 @@ export interface IStorage {
   createReport(report: InsertReport): Promise<Report>;
   getReports(): Promise<Report[]>;
   resolveReport(id: number): Promise<void>;
+
+  // Forum
+  getForumPosts(filters?: {
+    search?: string;
+    category?: string;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+    limit?: number;
+    offset?: number;
+  }): Promise<{ posts: any[]; total: number }>;
+  getForumPost(id: number): Promise<any | undefined>;
+  createForumPost(post: InsertForumPost): Promise<ForumPost>;
+  updateForumPost(id: number, post: Partial<InsertForumPost>): Promise<ForumPost>;
+  deleteForumPost(id: number, userId: string): Promise<void>;
+  getForumReplies(postId: number): Promise<any[]>;
+  createForumReply(reply: InsertForumReply): Promise<ForumReply>;
+  updateForumReply(id: number, reply: Partial<InsertForumReply>): Promise<ForumReply>;
+  deleteForumReply(id: number, userId: string): Promise<void>;
 
   // Admin
   getPendingApprovals(): Promise<{
@@ -1253,6 +1277,213 @@ export class DatabaseStorage implements IStorage {
       .update(reports)
       .set({ isResolved: true })
       .where(eq(reports.id, id));
+  }
+
+  // Forum Methods
+  async getForumPosts(filters?: {
+    search?: string;
+    category?: string;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+    limit?: number;
+    offset?: number;
+  }): Promise<{ posts: any[]; total: number }> {
+    const limit = filters?.limit || 20;
+    const offset = filters?.offset || 0;
+    
+    try {
+      // Build query with joins to get user information and reply count
+      let queryConditions = [];
+      let params: any[] = [];
+      let paramIndex = 1;
+
+      if (filters?.search) {
+        queryConditions.push(`(fp.title ILIKE $${paramIndex} OR fp.content ILIKE $${paramIndex})`);
+        params.push(`%${filters.search}%`);
+        paramIndex++;
+      }
+
+      if (filters?.category) {
+        queryConditions.push(`fp.category = $${paramIndex}`);
+        params.push(filters.category);
+        paramIndex++;
+      }
+
+      const whereClause = queryConditions.length > 0 ? `WHERE ${queryConditions.join(' AND ')}` : '';
+      
+      // Order by
+      let orderBy = 'fp.created_at DESC';
+      if (filters?.sortBy === 'title') {
+        orderBy = `fp.title ${filters.sortOrder === 'asc' ? 'ASC' : 'DESC'}`;
+      } else if (filters?.sortBy === 'replies') {
+        orderBy = `reply_count ${filters.sortOrder === 'asc' ? 'ASC' : 'DESC'}`;
+      }
+
+      const postsQuery = `
+        SELECT 
+          fp.id,
+          fp.title,
+          fp.content,
+          fp.category,
+          fp.user_id as "userId",
+          fp.is_sticky as "isSticky",
+          fp.is_locked as "isLocked",
+          fp.created_at as "createdAt",
+          fp.updated_at as "updatedAt",
+          u.first_name as "authorFirstName",
+          u.last_name as "authorLastName",
+          u.email as "authorEmail",
+          u.profile_image_url as "authorProfileImageUrl",
+          COALESCE(reply_counts.reply_count, 0) as "replyCount"
+        FROM forum_posts fp
+        LEFT JOIN users u ON fp.user_id = u.id
+        LEFT JOIN (
+          SELECT post_id, COUNT(*) as reply_count
+          FROM forum_replies
+          GROUP BY post_id
+        ) reply_counts ON fp.id = reply_counts.post_id
+        ${whereClause}
+        ORDER BY fp.is_sticky DESC, ${orderBy}
+        LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
+      `;
+
+      params.push(limit, offset);
+      
+      const posts = await db.execute(sql.raw(postsQuery, params));
+
+      // Get total count
+      const countQuery = `
+        SELECT COUNT(*) as total
+        FROM forum_posts fp
+        ${whereClause}
+      `;
+      
+      const countParams = params.slice(0, -2); // Remove limit and offset
+      const totalResult = await db.execute(sql.raw(countQuery, countParams));
+      const total = parseInt(totalResult.rows[0]?.total || '0');
+
+      return {
+        posts: posts.rows || [],
+        total
+      };
+    } catch (error) {
+      console.error("Error in getForumPosts:", error);
+      throw error;
+    }
+  }
+
+  async getForumPost(id: number): Promise<any | undefined> {
+    try {
+      const result = await db.execute(sql`
+        SELECT 
+          fp.id,
+          fp.title,
+          fp.content,
+          fp.category,
+          fp.user_id as "userId",
+          fp.is_sticky as "isSticky",
+          fp.is_locked as "isLocked",
+          fp.created_at as "createdAt",
+          fp.updated_at as "updatedAt",
+          u.first_name as "authorFirstName",
+          u.last_name as "authorLastName",
+          u.email as "authorEmail",
+          u.profile_image_url as "authorProfileImageUrl"
+        FROM forum_posts fp
+        LEFT JOIN users u ON fp.user_id = u.id
+        WHERE fp.id = ${id}
+      `);
+
+      return result.rows[0];
+    } catch (error) {
+      console.error("Error in getForumPost:", error);
+      throw error;
+    }
+  }
+
+  async createForumPost(post: InsertForumPost): Promise<ForumPost> {
+    const [newPost] = await db.insert(forumPosts).values(post).returning();
+    return newPost;
+  }
+
+  async updateForumPost(id: number, post: Partial<InsertForumPost>): Promise<ForumPost> {
+    const [updatedPost] = await db
+      .update(forumPosts)
+      .set({ ...post, updatedAt: new Date() })
+      .where(eq(forumPosts.id, id))
+      .returning();
+    return updatedPost;
+  }
+
+  async deleteForumPost(id: number, userId: string): Promise<void> {
+    // Check if user is admin
+    const userRole = await this.getUserRole(userId);
+    
+    if (userRole === 'admin') {
+      // Admin can delete any post
+      await db.delete(forumPosts).where(eq(forumPosts.id, id));
+    } else {
+      // Regular users can only delete their own posts
+      await db
+        .delete(forumPosts)
+        .where(and(eq(forumPosts.id, id), eq(forumPosts.userId, userId)));
+    }
+  }
+
+  async getForumReplies(postId: number): Promise<any[]> {
+    try {
+      const result = await db.execute(sql`
+        SELECT 
+          fr.id,
+          fr.content,
+          fr.post_id as "postId",
+          fr.user_id as "userId",
+          fr.created_at as "createdAt",
+          fr.updated_at as "updatedAt",
+          u.first_name as "authorFirstName",
+          u.last_name as "authorLastName",
+          u.email as "authorEmail",
+          u.profile_image_url as "authorProfileImageUrl"
+        FROM forum_replies fr
+        LEFT JOIN users u ON fr.user_id = u.id
+        WHERE fr.post_id = ${postId}
+        ORDER BY fr.created_at ASC
+      `);
+
+      return result.rows || [];
+    } catch (error) {
+      console.error("Error in getForumReplies:", error);
+      throw error;
+    }
+  }
+
+  async createForumReply(reply: InsertForumReply): Promise<ForumReply> {
+    const [newReply] = await db.insert(forumReplies).values(reply).returning();
+    return newReply;
+  }
+
+  async updateForumReply(id: number, reply: Partial<InsertForumReply>): Promise<ForumReply> {
+    const [updatedReply] = await db
+      .update(forumReplies)
+      .set({ ...reply, updatedAt: new Date() })
+      .where(eq(forumReplies.id, id))
+      .returning();
+    return updatedReply;
+  }
+
+  async deleteForumReply(id: number, userId: string): Promise<void> {
+    // Check if user is admin
+    const userRole = await this.getUserRole(userId);
+    
+    if (userRole === 'admin') {
+      // Admin can delete any reply
+      await db.delete(forumReplies).where(eq(forumReplies.id, id));
+    } else {
+      // Regular users can only delete their own replies
+      await db
+        .delete(forumReplies)
+        .where(and(eq(forumReplies.id, id), eq(forumReplies.userId, userId)));
+    }
   }
 
   // Admin
