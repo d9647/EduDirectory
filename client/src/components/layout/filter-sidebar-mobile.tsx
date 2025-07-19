@@ -7,7 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { Search, X, SlidersHorizontal } from "lucide-react";
 import { US_STATES } from "@/lib/constants";
 import type { FilterState, FilterOptions } from "@/lib/types";
@@ -322,6 +322,9 @@ export default function FilterSidebar({
             <SheetContent side="right" className="w-[85vw] sm:w-[400px] p-0">
               <SheetHeader className="p-4 border-b">
                 <SheetTitle className="text-left">Search & Filter</SheetTitle>
+                <SheetDescription className="text-left">
+                  Filter and search through listings
+                </SheetDescription>
               </SheetHeader>
               <div className="p-4">
                 <MobileFilterContent />
