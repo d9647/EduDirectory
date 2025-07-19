@@ -192,7 +192,7 @@ export default function PrivacyPolicy() {
                 <section>
                   <h2 className="text-2xl font-semibold text-gray-900 mb-4">6. Contact</h2>
                   <p className="text-gray-700 text-sm leading-relaxed">
-                    If you have any questions or concerns about our privacy policy and practices please email <a href="mailto:privacy@eduyellowpages.org" className="text-primary hover:text-primary/80 underline allow-select">privacy@edu-yellowpages.org</a>.
+                    If you have any questions or concerns about our privacy policy and practices please email <a href="mailto:privacy@eduyellowpages.org" className="text-primary hover:text-primary/80 underline allow-select">privacy@eduyellowpages.org</a>.
                   </p>
                 </section>
 
