@@ -41,7 +41,10 @@ function Router() {
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/learn-more" component={LearnMore} />
       {!isAuthenticated ? (
-        <Route path="/" component={Landing} />
+        <Switch>
+          <Route path="/" component={Landing} />
+          <Route component={NotFound} />
+        </Switch>
       ) : (
         <div className="min-h-screen flex flex-col">
           <div className="flex-1">
@@ -61,7 +64,6 @@ function Router() {
           <Footer />
         </div>
       )}
-      {!isAuthenticated && <Route component={NotFound} />}
     </Switch>
   );
 }
