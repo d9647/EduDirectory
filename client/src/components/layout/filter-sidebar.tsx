@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, X } from "lucide-react";
 import { US_STATES } from "@/lib/constants";
 import type { FilterState, FilterOptions } from "@/lib/types";
+import { useState } from "react";
 
 interface FilterSidebarProps {
   filters: FilterState;
@@ -67,7 +68,7 @@ export default function FilterSidebar({
       cost: [],
       sortBy: "createdAt",
       sortOrder: "desc",
-      limit: 10,
+      limit: 5,
       offset: 0,
     });
   };
