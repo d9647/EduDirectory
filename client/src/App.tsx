@@ -18,6 +18,7 @@ import TermsOfUse from "./pages/terms-of-use";
 import PrivacyPolicy from "./pages/privacy-policy";
 import LearnMore from "./pages/learn-more";
 import Bookmarks from "@/pages/bookmarks";
+import { Forum } from "@/pages/forum";
 import Footer from "@/components/layout/footer";
 
 function Router() {
@@ -54,6 +55,7 @@ function Router() {
               <Route path="/summer-camps" component={SummerCamps} />
               <Route path="/internships" component={Internships} />
               <Route path="/jobs" component={Jobs} />
+              <Route path="/forum" component={Forum} />
               <Route path="/submit-listing" component={BusinessSubmission} />
               <Route path="/bookmarks" component={Bookmarks} />
               <Route path="/settings" component={Settings} />
