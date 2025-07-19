@@ -237,7 +237,7 @@ export default function ListingDetailModal({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto mx-2 sm:mx-auto my-4 sm:my-8">
+        <DialogContent className="max-w-4xl max-h-[90vh] sm:max-h-[85vh] overflow-y-auto mx-4 sm:mx-auto my-4 sm:my-8">
           {/* Modal Header */}
           <DialogHeader className="pb-3 sm:pb-4">
             <div className="flex items-center">
