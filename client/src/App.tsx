@@ -20,6 +20,7 @@ import LearnMore from "./pages/learn-more";
 import Bookmarks from "@/pages/bookmarks";
 
 import Footer from "@/components/layout/footer";
+import { useEffect } from "react";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -71,6 +72,31 @@ function Router() {
 }
 
 function App() {
+  useEffect(() => {
+    // Prevent right-click context menu
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+
+    // Prevent keyboard shortcuts for copy/cut/select all
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        (e.ctrlKey || e.metaKey) && 
+        (e.key === 'c' || e.key === 'x' || e.key === 'a' || e.key === 'u')
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
