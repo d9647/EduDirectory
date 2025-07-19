@@ -159,7 +159,7 @@ export default function PrivacyPolicy() {
                   </div>
 
                   <p className="text-gray-700 text-sm leading-relaxed mt-3">
-                    You may submit a request to know or delete via ccpa@eduyellowpages.org. Please note that we may ask you to verify your identity before processing your request.
+                    You may submit a request to know or delete via <a href="mailto:ccpa@eduyellowpages.org" className="text-primary hover:text-primary/80 underline allow-select">ccpa@eduyellowpages.org</a>. Please note that we may ask you to verify your identity before processing your request.
                   </p>
 
                   <p className="text-gray-700 text-sm leading-relaxed">
@@ -185,14 +185,14 @@ export default function PrivacyPolicy() {
                   <p className="text-gray-700 text-sm leading-relaxed">
                     By accessing our platform or providing us data, you agree we may use and disclose data we collect as described here 
                     or as communicated to you, transmit it outside your resident jurisdiction, and store it on servers in the United States. 
-                    For more information please contact our privacy officer at privacy@eduyellowpages.org.
+                    For more information please contact our privacy officer at <a href="mailto:privacy@eduyellowpages.org" className="text-primary hover:text-primary/80 underline allow-select">privacy@eduyellowpages.org</a>.
                   </p>
                 </section>
 
                 <section>
                   <h2 className="text-2xl font-semibold text-gray-900 mb-4">6. Contact</h2>
                   <p className="text-gray-700 text-sm leading-relaxed">
-                    If you have any questions or concerns about our privacy policy and practices please email privacy@edu-yellowpages.org.
+                    If you have any questions or concerns about our privacy policy and practices please email <a href="mailto:privacy@edu-yellowpages.org" className="text-primary hover:text-primary/80 underline allow-select">privacy@edu-yellowpages.org</a>.
                   </p>
                 </section>
 

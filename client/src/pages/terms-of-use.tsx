@@ -87,7 +87,7 @@ export default function TermsOfUse() {
                 <section>
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">7. Contact Information</h3>
                   <p className="text-gray-700 text-sm leading-relaxed">
-                    If you have any questions about these Terms of Use, please contact us at legal@eduyellowpages.org.
+                    If you have any questions about these Terms of Use, please contact us at <a href="mailto:legal@eduyellowpages.org" className="text-primary hover:text-primary/80 underline allow-select">legal@eduyellowpages.org</a>.
                   </p>
                 </section>
               </div>
