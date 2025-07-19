@@ -147,7 +147,7 @@ export default function PrivacyPolicy() {
                 <section>
                   <h2 className="text-2xl font-semibold text-gray-900 mb-4">4. California Users</h2>
                   <p className="text-gray-700 leading-relaxed mb-3">
-                    To learn more about the California Consumer Privacy Act and how it applies to you, please visit the California Attorney-General's website.
+                    To learn more about the California Consumer Privacy Act and how it applies to you, please visit the <a href="https://oag.ca.gov/privacy/ccpa">California Attorney-General's website</a>.
                   </p>
                   
                   <div className="space-y-3">
@@ -159,7 +159,7 @@ export default function PrivacyPolicy() {
                   </div>
 
                   <p className="text-gray-700 leading-relaxed mt-4">
-                    You may submit a request to know or delete via our contact email or through your account settings.
+                    You may submit a request to know or delete via ccpa@eduyellowpages.org. Please note that we may ask you to verify your identity before processing your request.
                   </p>
 
                   <p className="text-gray-700 leading-relaxed">
@@ -185,7 +185,7 @@ export default function PrivacyPolicy() {
                   <p className="text-gray-700 leading-relaxed">
                     By accessing our platform or providing us data, you agree we may use and disclose data we collect as described here 
                     or as communicated to you, transmit it outside your resident jurisdiction, and store it on servers in the United States. 
-                    For more information please contact our privacy officer at privacy@edu-yellowpages.org.
+                    For more information please contact our privacy officer at privacy@eduyellowpages.org.
                   </p>
                 </section>
 
