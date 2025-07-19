@@ -39,6 +39,7 @@ export interface IStorage {
   updateUserRole(id: string, role: "admin" | "user"): Promise<User>;
   getUserRole(id: string): Promise<string | undefined>;
   getAllUsers(): Promise<User[]>;
+  getUsersWithPagination(page: number, limit: number, search?: string): Promise<{ users: User[]; total: number; totalPages: number; currentPage: number }>;
 
   // Tutoring Providers
   getTutoringProviders(filters?: {
@@ -229,6 +230,47 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(users.createdAt));
 
     return allUsers;
+  }
+
+  async getUsersWithPagination(page: number, limit: number, search?: string): Promise<{ users: User[]; total: number; totalPages: number; currentPage: number }> {
+    const offset = (page - 1) * limit;
+    
+    // Build base query with search conditions
+    let query = db.select().from(users);
+    let countQuery = db.select({ count: sql<number>`count(*)` }).from(users);
+    
+    if (search && search.trim()) {
+      const searchTerm = `%${search.trim().toLowerCase()}%`;
+      const searchCondition = or(
+        ilike(users.email, searchTerm),
+        ilike(users.firstName, searchTerm),
+        ilike(users.lastName, searchTerm),
+        ilike(users.location, searchTerm),
+        ilike(users.schoolName, searchTerm)
+      );
+      
+      query = query.where(searchCondition);
+      countQuery = countQuery.where(searchCondition);
+    }
+    
+    // Execute queries
+    const [userResults, countResults] = await Promise.all([
+      query
+        .orderBy(desc(users.createdAt))
+        .limit(limit)
+        .offset(offset),
+      countQuery
+    ]);
+    
+    const total = countResults[0]?.count || 0;
+    const totalPages = Math.ceil(total / limit);
+    
+    return {
+      users: userResults,
+      total,
+      totalPages,
+      currentPage: page
+    };
   }
 
   async updateUserProfile(id: string, profileData: Partial<User>): Promise<User> {

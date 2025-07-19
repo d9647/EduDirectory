@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Header from "@/components/layout/header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -100,13 +100,7 @@ export default function Admin() {
     enabled: false, // Don't load automatically
   });
 
-  // User management queries
-  const { data: users, refetch: refetchUsers } = useQuery({
-    queryKey: ["/api/admin/users"],
-    refetchOnMount: true,
-  });
-
-  // Search states
+  // Search states - moved before queries
   const [searchQueries, setSearchQueries] = useState({
     'tutoring-providers': '',
     'summer-camps': '',
@@ -120,6 +114,30 @@ export default function Admin() {
     'summer-camps': [],
     'internships': [],
     'jobs': []
+  });
+
+  // User management pagination and search state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [usersPerPage] = useState(10);
+  const [userSearchQuery, setUserSearchQuery] = useState('');
+  const [debouncedUserSearch, setDebouncedUserSearch] = useState('');
+
+  // User management queries with pagination and search
+  const { data: usersData, isLoading: usersLoading, refetch: refetchUsers } = useQuery({
+    queryKey: ["/api/admin/users", currentPage, usersPerPage, debouncedUserSearch],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        limit: usersPerPage.toString(),
+        ...(debouncedUserSearch && { search: debouncedUserSearch })
+      });
+      const response = await fetch(`/api/admin/users?${params}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch users');
+      }
+      return response.json();
+    },
+    refetchOnMount: true,
   });
 
   // Loading states
@@ -182,11 +200,25 @@ export default function Admin() {
     }
   };
 
-  // Debounced search
+  // Debounced search for listings
   const debounceSearch = (type: string, query: string) => {
     setSearchQueries(prev => ({ ...prev, [type]: query }));
     setTimeout(() => searchListings(type, query), 300);
   };
+
+  // Debounced search for users
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedUserSearch(userSearchQuery);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [userSearchQuery]);
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedUserSearch]);
 
   // Deactivation mutations
   const deactivateMutation = useMutation({
@@ -1339,11 +1371,26 @@ export default function Admin() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {isLoading ? (
+                  {/* Search Input */}
+                  <div className="flex items-center gap-4">
+                    <div className="relative flex-1">
+                      <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <Input
+                        placeholder="Search users by name, email, location, or school..."
+                        value={userSearchQuery}
+                        onChange={(e) => setUserSearchQuery(e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {usersData?.total ? `${usersData.total} users` : ''}
+                    </div>
+                  </div>
+                  {usersLoading ? (
                     <div className="text-center py-8">Loading users...</div>
-                  ) : users && users.length > 0 ? (
+                  ) : usersData?.users && usersData.users.length > 0 ? (
                     <div className="space-y-2">
-                      {users.map((user: any) => (
+                      {usersData.users.map((user: any) => (
                         <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div className="flex items-center gap-4 flex-1">
                             <Avatar className="h-12 w-12">
@@ -1542,7 +1589,54 @@ export default function Admin() {
                     </div>
                   ) : (
                     <div className="text-center py-8 text-gray-500">
-                      No users found
+                      {userSearchQuery ? 'No users found matching your search' : 'No users found'}
+                    </div>
+                  )}
+
+                  {/* Pagination Controls */}
+                  {usersData && usersData.totalPages > 1 && (
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm text-gray-500">
+                        Showing {usersData.users.length} of {usersData.total} users
+                        (Page {usersData.currentPage} of {usersData.totalPages})
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(1)}
+                          disabled={currentPage === 1}
+                        >
+                          First
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(currentPage - 1)}
+                          disabled={currentPage === 1}
+                        >
+                          Previous
+                        </Button>
+                        <span className="text-sm text-gray-600 px-3">
+                          Page {currentPage} of {usersData.totalPages}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(currentPage + 1)}
+                          disabled={currentPage === usersData.totalPages}
+                        >
+                          Next
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setCurrentPage(usersData.totalPages)}
+                          disabled={currentPage === usersData.totalPages}
+                        >
+                          Last
+                        </Button>
+                      </div>
                     </div>
                   )}
                 </div>
