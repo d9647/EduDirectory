@@ -16,6 +16,7 @@ import Admin from "@/pages/admin";
 import Settings from "@/pages/settings";
 import TermsOfUse from "./pages/terms-of-use";
 import PrivacyPolicy from "./pages/privacy-policy";
+import LearnMore from "./pages/learn-more";
 import Bookmarks from "@/pages/bookmarks";
 import Footer from "@/components/layout/footer";
 
@@ -38,6 +39,7 @@ function Router() {
     <Switch>
       <Route path="/terms-of-use" component={TermsOfUse} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
+      <Route path="/learn-more" component={LearnMore} />
       {!isAuthenticated ? (
         <Route path="/" component={Landing} />
       ) : (
