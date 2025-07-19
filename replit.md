@@ -216,6 +216,16 @@ Preferred UI design style: Clean, minimal layouts without redundant headers.
 - Admin can now successfully search and edit live published listings through the dashboard
 - Resolved TypeError: storage.searchListings is not a function that was breaking admin search
 
+**Privacy Policy Update with Craigslist-Based Content (Latest Update - January 19, 2025)**
+- Completely updated privacy policy content based on Craigslist's comprehensive privacy policy template
+- Implemented detailed data collection table showing data types, sources, purposes, and disclosure recipients
+- Added specific privacy protections: no marketing ads, no third-party data sharing, no tracking devices for marketing
+- Enhanced California Users section with detailed CCPA rights: right to know, delete, and non-discrimination
+- Added comprehensive data categories: personal info, device data, usage patterns, geographic location, and user content
+- Structured policy with clear sections: Privacy Protection, Data Collection, Data Storage, California Rights, International Users
+- Updated contact information with privacy-specific email address for user inquiries and requests
+- Maintained educational focus while providing robust privacy protections aligned with industry standards
+
 **Comprehensive Admin Edit Fixes (Latest Update - January 14, 2025)**
 - Fixed date conversion issues in admin edit routes: properly convert HTML date input strings to Date objects for database compatibility
 - Removed redundant address and photoUrl fields from tutoring provider edit section to eliminate field duplication

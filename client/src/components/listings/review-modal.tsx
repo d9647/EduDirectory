@@ -219,9 +219,6 @@ export default function ReviewModal({
             <DialogTitle>
               {review ? "Edit Review" : "Write a Review"}
             </DialogTitle>
-            <Button variant="ghost" size="sm" onClick={handleClose}>
-              <X className="h-4 w-4" />
-            </Button>
           </div>
           <DialogDescription>
             {review ? "Update your review and rating" : "Share your experience and rate this listing"}
