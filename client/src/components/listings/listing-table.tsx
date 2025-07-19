@@ -480,76 +480,7 @@ export default function ListingTable({
   const totalPages = data ? Math.ceil(data.total / filters.limit) : 0;
   const currentPage = Math.floor(filters.offset / filters.limit) + 1;
 
-  // Mobile Card Component for each listing
-  const MobileListingCard = ({ listing }: { listing: any }) => {
-    return (
-      <Card className="mb-3 cursor-pointer hover:shadow-md transition-shadow" onClick={() => handleViewDetails(listing)}>
-        <CardContent className="p-4">
-          <div className="flex items-start space-x-3">
-            {listing.photoUrl && (
-              <Avatar className="h-12 w-12 flex-shrink-0">
-                <AvatarImage src={listing.photoUrl} alt={listing.name || listing.title} />
-                <AvatarFallback>
-                  {(listing.name || listing.title)?.charAt(0) || "?"}
-                </AvatarFallback>
-              </Avatar>
-            )}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-start justify-between">
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-semibold text-gray-900 truncate">
-                    {listing.name || listing.title}
-                  </h3>
-                  <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-                    {listing.description || "No description available"}
-                  </p>
-                  
-                  {/* Location & Key Info */}
-                  <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-                    {(Array.isArray(listing.deliveryMode) && listing.deliveryMode.length === 1 && listing.deliveryMode.includes("Remote")) || listing.isRemote
-                      ? <Badge variant="outline" className="text-xs">Remote</Badge>
-                      : listing.location && <span>{listing.location}</span>
-                    }
-                    {listing.rating && (
-                      <span className="flex items-center">
-                        ⭐ {listing.rating}
-                      </span>
-                    )}
-                    {listing.thumbsUp > 0 && (
-                      <span className="flex items-center">
-                        👍 {listing.thumbsUp}
-                      </span>
-                    )}
-                  </div>
 
-                  {/* Categories/Tags - Mobile optimized */}
-                  {(listing.categories || listing.subjects || listing.types) && (
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {(listing.categories || listing.subjects || listing.types)?.slice(0, 2).map((item: string, index: number) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {item}
-                        </Badge>
-                      ))}
-                      {((listing.categories || listing.subjects || listing.types)?.length || 0) > 2 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{((listing.categories || listing.subjects || listing.types)?.length || 0) - 2}
-                        </Badge>
-                      )}
-                    </div>
-                  )}
-                </div>
-                
-                {/* Action buttons - Mobile optimized */}
-                <div className="flex items-center gap-1 flex-shrink-0 ml-2">
-                  <RowActions listing={listing} />
-                </div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
 
   return (
     <main className="flex-1 min-w-0">
@@ -614,42 +545,7 @@ export default function ListingTable({
         </CardContent>
       </Card>
 
-      {/* Mobile Card Layout */}
-      <div className="block lg:hidden">
-        {isLoading ? (
-          // Mobile Loading skeleton
-          Array.from({ length: filters.limit }).map((_, index) => (
-            <Card key={index} className="mb-3">
-              <CardContent className="p-4">
-                <div className="flex items-start space-x-3">
-                  <Skeleton className="h-12 w-12 rounded-full flex-shrink-0" />
-                  <div className="flex-1">
-                    <Skeleton className="h-5 w-3/4 mb-2" />
-                    <Skeleton className="h-4 w-full mb-2" />
-                    <Skeleton className="h-3 w-1/2" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        ) : listings.length === 0 ? (
-          <Card>
-            <CardContent className="text-center py-8">
-              <div className="text-gray-500">No results found</div>
-              <p className="text-sm text-gray-400 mt-1">
-                Try adjusting your filters or search terms
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          listings.map((listing: any) => (
-            <MobileListingCard key={listing.id} listing={listing} />
-          ))
-        )}
-      </div>
-
-      {/* Desktop Table Layout */}
-      <Card className="hidden lg:block">
+      <Card>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>

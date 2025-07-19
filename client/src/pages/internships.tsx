@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/layout/header";
-import FilterSidebar from "@/components/layout/filter-sidebar-mobile";
+import FilterSidebar from "@/components/layout/filter-sidebar";
 import ListingTable from "@/components/listings/listing-table";
 import { INTERNSHIP_TYPES, COMPENSATION_TYPES, SELECTIVITY_LEVELS } from "@/lib/constants";
 
@@ -65,8 +65,8 @@ export default function Internships() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-3 sm:py-6">
-        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6">
+        <div className="flex gap-6">
           <FilterSidebar
             filters={filters}
             setFilters={setFilters}
