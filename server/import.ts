@@ -133,8 +133,8 @@ export class ImportService {
             email: row.email || undefined,
             address: row.address || undefined,
             photoUrl: row.photoUrl || undefined,
-            isApproved: this.parseBoolean(row.isApproved) !== undefined ? this.parseBoolean(row.isApproved)! : false,
-            isActive: this.parseBoolean(row.isActive) !== undefined ? this.parseBoolean(row.isActive)! : true,
+            isApproved: false, // Always false for imported data - requires manual approval
+            isActive: true, // Always true for imported data
           };
 
           // Validate required fields
@@ -205,9 +205,9 @@ export class ImportService {
             address: row.address || undefined,
             location: row.location || undefined,
             photoUrl: row.photoUrl || undefined,
-            isApproved: this.parseBoolean(row.isApproved) !== undefined ? this.parseBoolean(row.isApproved)! : false,
-            isActive: this.parseBoolean(row.isActive) !== undefined ? this.parseBoolean(row.isActive)! : true,
-            applicationAvailable: this.parseBoolean(row.applicationAvailable) !== undefined ? this.parseBoolean(row.applicationAvailable)! : true,
+            isApproved: false, // Always false for imported data - requires manual approval
+            isActive: true, // Always true for imported data
+            applicationAvailable: true, // Always true for imported data
           };
 
           // Validate required fields
@@ -278,8 +278,8 @@ export class ImportService {
             address: row.address || undefined,
             location: row.location || undefined,
             photoUrl: row.photoUrl || undefined,
-            isApproved: this.parseBoolean(row.isApproved) !== undefined ? this.parseBoolean(row.isApproved)! : false,
-            isActive: this.parseBoolean(row.isActive) !== undefined ? this.parseBoolean(row.isActive)! : true,
+            isApproved: false, // Always false for imported data - requires manual approval
+            isActive: true, // Always true for imported data
           };
 
           // Validate required fields
@@ -350,8 +350,8 @@ export class ImportService {
             address: row.address || undefined,
             location: row.location || undefined,
             photoUrl: row.photoUrl || undefined,
-            isApproved: this.parseBoolean(row.isApproved) !== undefined ? this.parseBoolean(row.isApproved)! : false,
-            isActive: this.parseBoolean(row.isActive) !== undefined ? this.parseBoolean(row.isActive)! : true,
+            isApproved: false, // Always false for imported data - requires manual approval
+            isActive: true, // Always true for imported data
           };
 
           // Validate required fields

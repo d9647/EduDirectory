@@ -17,7 +17,7 @@ export default function Bookmarks() {
   const { toast } = useToast();
   const { isAuthenticated, isLoading } = useAuth();
   const queryClient = useQueryClient();
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(5);
   const [offset, setOffset] = useState(0);
   const [selectedListing, setSelectedListing] = useState<any>(null);
   const [detailModalOpen, setDetailModalOpen] = useState(false);

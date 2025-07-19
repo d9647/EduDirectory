@@ -9,7 +9,23 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
-import { CheckCircle, XCircle, AlertTriangle, Search, Eye, EyeOff, Upload, Shield, RefreshCw, Download, AlertCircle } from "lucide-react";
+import {
+  CheckCircle,
+  XCircle,
+  RefreshCw,
+  Upload,
+  Download,
+  Trash2,
+  Search,
+  Edit,
+  Eye,
+  EyeOff,
+  ThumbsUp,
+  Flag,
+  User,
+  Shield,
+  AlertTriangle,
+} from "lucide-react";
 import AdminEditModal from "@/components/admin/admin-edit-modal";
 import SimpleHeader from "@/components/layout/simple-header";
 import Footer from "@/components/layout/footer";
@@ -234,19 +250,51 @@ export default function Admin() {
 
   const approveMutation = useMutation({
     mutationFn: async ({ type, id }: { type: string; id: number }) => {
-      await apiRequest("POST", `/api/admin/approve/${type}/${id}`);
+      const response = await fetch(`/api/admin/approve/${type}/${id}`, {
+        method: "POST",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to approve listing");
+      }
+      return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/pending-approvals"] });
+      refetchPendingApprovals();
       toast({
         title: "Success",
         description: "Listing approved successfully",
       });
     },
-    onError: (error) => {
+    onError: () => {
       toast({
         title: "Error",
         description: "Failed to approve listing",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async ({ type, id }: { type: string; id: number }) => {
+      const response = await fetch(`/api/admin/delete/${type}/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete listing");
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      refetchPendingApprovals();
+      toast({
+        title: "Success",
+        description: "Listing deleted successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete listing",
         variant: "destructive",
       });
     },
@@ -508,6 +556,15 @@ export default function Admin() {
                               <CheckCircle className="h-4 w-4 mr-2" />
                               Approve
                             </Button>
+                            <Button
+                              onClick={() => deleteMutation.mutate({ type: "tutoring-provider", id: provider.id })}
+                              disabled={deleteMutation.isPending}
+                              variant="outline"
+                              size="sm"
+                            >
+                              <XCircle className="h-4 w-4 mr-2" />
+                              Delete
+                            </Button>
                           </div>
                         </div>
                       ))}
@@ -542,6 +599,15 @@ export default function Admin() {
                             >
                               <CheckCircle className="h-4 w-4 mr-2" />
                               Approve
+                            </Button>
+                            <Button
+                              onClick={() => deleteMutation.mutate({ type: "summer-camp", id: camp.id })}
+                              disabled={deleteMutation.isPending}
+                              variant="outline"
+                              size="sm"
+                            >
+                              <XCircle className="h-4 w-4 mr-2" />
+                              Delete
                             </Button>
                           </div>
                         </div>
@@ -578,6 +644,15 @@ export default function Admin() {
                               <CheckCircle className="h-4 w-4 mr-2" />
                               Approve
                             </Button>
+                            <Button
+                              onClick={() => deleteMutation.mutate({ type: "internship", id: internship.id })}
+                              disabled={deleteMutation.isPending}
+                              variant="outline"
+                              size="sm"
+                            >
+                              <XCircle className="h-4 w-4 mr-2" />
+                              Delete
+                            </Button>
                           </div>
                         </div>
                       ))}
@@ -612,6 +687,15 @@ export default function Admin() {
                             >
                               <CheckCircle className="h-4 w-4 mr-2" />
                               Approve
+                            </Button>
+                            <Button
+                              onClick={() => deleteMutation.mutate({ type: "job", id: job.id })}
+                              disabled={deleteMutation.isPending}
+                              variant="outline"
+                              size="sm"
+                            >
+                              <XCircle className="h-4 w-4 mr-2" />
+                              Delete
                             </Button>
                           </div>
                         </div>
@@ -699,6 +783,15 @@ export default function Admin() {
                                   Activate
                                 </Button>
                               )}
+                              <Button
+                                onClick={() => deleteMutation.mutate({ type: "tutoring-provider", id: provider.id })}
+                                disabled={deleteMutation.isPending}
+                                variant="destructive"
+                                size="sm"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                              </Button>
                             </div>
                           </div>
                         ))}
@@ -767,6 +860,15 @@ export default function Admin() {
                                   Activate
                                 </Button>
                               )}
+                              <Button
+                                onClick={() => deleteMutation.mutate({ type: "summer-camp", id: camp.id })}
+                                disabled={deleteMutation.isPending}
+                                variant="destructive"
+                                size="sm"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                              </Button>
                             </div>
                           </div>
                         ))}
@@ -835,6 +937,15 @@ export default function Admin() {
                                   Activate
                                 </Button>
                               )}
+                              <Button
+                                onClick={() => deleteMutation.mutate({ type: "internship", id: internship.id })}
+                                disabled={deleteMutation.isPending}
+                                variant="destructive"
+                                size="sm"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                              </Button>
                             </div>
                           </div>
                         ))}
@@ -903,6 +1014,15 @@ export default function Admin() {
                                   Activate
                                 </Button>
                               )}
+                              <Button
+                                onClick={() => deleteMutation.mutate({ type: "job", id: job.id })}
+                                disabled={deleteMutation.isPending}
+                                variant="destructive"
+                                size="sm"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                              </Button>
                             </div>
                           </div>
                         ))}

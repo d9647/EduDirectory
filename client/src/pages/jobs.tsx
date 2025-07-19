@@ -17,7 +17,7 @@ export default function Jobs() {
     hasTraining: undefined as boolean | undefined,
     sortBy: "createdAt",
     sortOrder: "desc" as "asc" | "desc",
-    limit: 10,
+    limit: 5,
     offset: 0,
   });
 

@@ -15,9 +15,11 @@ export default function SummerCamps() {
     city: "",
     state: "",
     hasScholarship: undefined as boolean | undefined,
+    applicationAvailable: undefined as boolean | undefined,
+    minimumAge: undefined as number | undefined,
     sortBy: "createdAt",
     sortOrder: "desc" as "asc" | "desc",
-    limit: 10,
+    limit: 5,
     offset: 0,
   });
 

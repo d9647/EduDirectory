@@ -57,6 +57,7 @@ export interface IStorage {
   createTutoringProvider(provider: InsertTutoringProvider): Promise<TutoringProvider>;
   updateTutoringProvider(id: number, provider: Partial<InsertTutoringProvider>): Promise<TutoringProvider>;
   approveTutoringProvider(id: number): Promise<void>;
+  deleteTutoringProvider(id: number): Promise<void>;
 
   // Summer Camps
   getSummerCamps(filters?: {
@@ -79,6 +80,7 @@ export interface IStorage {
   createSummerCamp(camp: InsertSummerCamp): Promise<SummerCamp>;
   updateSummerCamp(id: number, camp: Partial<InsertSummerCamp>): Promise<SummerCamp>;
   approveSummerCamp(id: number): Promise<void>;
+  deleteSummerCamp(id: number): Promise<void>;
 
   // Internships
   getInternships(filters?: {
@@ -98,6 +100,7 @@ export interface IStorage {
   createInternship(internship: InsertInternship): Promise<Internship>;
   updateInternship(id: number, internship: Partial<InsertInternship>): Promise<Internship>;
   approveInternship(id: number): Promise<void>;
+  deleteInternship(id: number): Promise<void>;
 
   // Jobs
   getJobs(filters?: {
@@ -118,6 +121,7 @@ export interface IStorage {
   createJob(job: InsertJob): Promise<Job>;
   updateJob(id: number, job: Partial<InsertJob>): Promise<Job>;
   approveJob(id: number): Promise<void>;
+  deleteJob(id: number): Promise<void>;
 
   // Reviews
   getReviews(listingType: string, listingId: number): Promise<Review[]>;
@@ -372,7 +376,7 @@ export class DatabaseStorage implements IStorage {
 
     const providers = await providersQuery
       .orderBy(orderBy)
-      .limit(filters.limit || 10)
+      .limit(filters.limit || 5)
       .offset(filters.offset || 0);
 
     // Execute count query
@@ -412,6 +416,12 @@ export class DatabaseStorage implements IStorage {
     await db
       .update(tutoringProviders)
       .set({ isApproved: true, approvedAt: new Date() })
+      .where(eq(tutoringProviders.id, id));
+  }
+
+  async deleteTutoringProvider(id: number): Promise<void> {
+    await db
+      .delete(tutoringProviders)
       .where(eq(tutoringProviders.id, id));
   }
 
@@ -577,7 +587,7 @@ export class DatabaseStorage implements IStorage {
 
     const camps = await campsQuery
       .orderBy(orderBy)
-      .limit(filters.limit || 10)
+      .limit(filters.limit || 5)
       .offset(filters.offset || 0);
 
     // Execute count query
@@ -617,6 +627,12 @@ export class DatabaseStorage implements IStorage {
     await db
       .update(summerCamps)
       .set({ isApproved: true, approvedAt: new Date() })
+      .where(eq(summerCamps.id, id));
+  }
+
+  async deleteSummerCamp(id: number): Promise<void> {
+    await db
+      .delete(summerCamps)
       .where(eq(summerCamps.id, id));
   }
 
@@ -752,7 +768,7 @@ export class DatabaseStorage implements IStorage {
 
     const internshipList = await internshipsQuery
       .orderBy(orderBy)
-      .limit(filters.limit || 10)
+      .limit(filters.limit || 5)
       .offset(filters.offset || 0);
 
     // Execute count query
@@ -792,6 +808,12 @@ export class DatabaseStorage implements IStorage {
     await db
       .update(internships)
       .set({ isApproved: true, approvedAt: new Date() })
+      .where(eq(internships.id, id));
+  }
+
+  async deleteInternship(id: number): Promise<void> {
+    await db
+      .delete(internships)
       .where(eq(internships.id, id));
   }
 
@@ -931,7 +953,7 @@ export class DatabaseStorage implements IStorage {
 
     const jobsList = await jobsQuery
       .orderBy(orderBy)
-      .limit(filters.limit || 10)
+      .limit(filters.limit || 5)
       .offset(filters.offset || 0);
 
     // Execute count query
@@ -971,6 +993,12 @@ export class DatabaseStorage implements IStorage {
     await db
       .update(jobs)
       .set({ isApproved: true, approvedAt: new Date() })
+      .where(eq(jobs.id, id));
+  }
+
+  async deleteJob(id: number): Promise<void> {
+    await db
+      .delete(jobs)
       .where(eq(jobs.id, id));
   }
 
@@ -1160,7 +1188,7 @@ export class DatabaseStorage implements IStorage {
     limit?: number;
     offset?: number;
   } = {}): Promise<{ bookmarks: any[]; total: number }> {
-    const limit = options.limit || 10;
+    const limit = options.limit || 5;
     const offset = options.offset || 0;
 
     // Get total count first

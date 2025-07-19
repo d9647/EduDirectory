@@ -15,7 +15,7 @@ export default function TutoringProviders() {
     state: "",
     sortBy: "createdAt",
     sortOrder: "desc" as "asc" | "desc",
-    limit: 10,
+    limit: 5,
     offset: 0,
   });
 

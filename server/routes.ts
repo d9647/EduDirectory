@@ -121,7 +121,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         state: req.query.state as string,
         sortBy: req.query.sortBy as string,
         sortOrder: (req.query.sortOrder as "asc" | "desc") || "desc",
-        limit: req.query.limit ? parseInt(req.query.limit as string) : 10,
+        limit: req.query.limit ? parseInt(req.query.limit as string) : 5,
         offset: req.query.offset ? parseInt(req.query.offset as string) : 0,
       };
 
@@ -177,7 +177,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         minimumAge: req.query.minimumAge ? parseInt(req.query.minimumAge as string) : undefined,
         sortBy: req.query.sortBy as string,
         sortOrder: (req.query.sortOrder as "asc" | "desc") || "desc",
-        limit: req.query.limit ? parseInt(req.query.limit as string) : 10,
+        limit: req.query.limit ? parseInt(req.query.limit as string) : 5,
         offset: req.query.offset ? parseInt(req.query.offset as string) : 0,
       };
 
@@ -231,7 +231,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         hasMentorship: req.query.hasMentorship === 'true' ? true : req.query.hasMentorship === 'false' ? false : undefined,
         sortBy: req.query.sortBy as string,
         sortOrder: (req.query.sortOrder as "asc" | "desc") || "desc",
-        limit: req.query.limit ? parseInt(req.query.limit as string) : 10,
+        limit: req.query.limit ? parseInt(req.query.limit as string) : 5,
         offset: req.query.offset ? parseInt(req.query.offset as string) : 0,
       };
 
@@ -285,7 +285,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         hasTraining: req.query.hasTraining === 'true' ? true : req.query.hasTraining === 'false' ? false : undefined,
         sortBy: req.query.sortBy as string,
         sortOrder: (req.query.sortOrder as "asc" | "desc") || "desc",
-        limit: req.query.limit ? parseInt(req.query.limit as string) : 10,
+        limit: req.query.limit ? parseInt(req.query.limit as string) : 5,
         offset: req.query.offset ? parseInt(req.query.offset as string) : 0,
       };
 
@@ -471,7 +471,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/bookmarks', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 5;
       const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
 
       const result = await storage.getUserBookmarks(userId, { limit, offset });
@@ -920,6 +920,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error importing jobs:", error);
       console.error("Error stack:", error.stack);
       res.status(500).json({ message: "Failed to import jobs", error: error.message });
+    }
+  });
+
+  // Delete routes (Admin only)
+  app.delete('/api/admin/delete/tutoring-provider/:id', isAuthenticated, requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      console.log(`Deleting tutoring provider with ID: ${id}`);
+      await storage.deleteTutoringProvider(id);
+      console.log(`Successfully deleted tutoring provider ${id}`);
+      res.json({ message: "Tutoring provider deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting tutoring provider:", error);
+      res.status(500).json({ message: "Failed to delete tutoring provider" });
+    }
+  });
+
+  app.delete('/api/admin/delete/summer-camp/:id', isAuthenticated, requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      console.log(`Deleting summer camp with ID: ${id}`);
+      await storage.deleteSummerCamp(id);
+      console.log(`Successfully deleted summer camp ${id}`);
+      res.json({ message: "Summer camp deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting summer camp:", error);
+      res.status(500).json({ message: "Failed to delete summer camp" });
+    }
+  });
+
+  app.delete('/api/admin/delete/internship/:id', isAuthenticated, requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      console.log(`Deleting internship with ID: ${id}`);
+      await storage.deleteInternship(id);
+      console.log(`Successfully deleted internship ${id}`);
+      res.json({ message: "Internship deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting internship:", error);
+      res.status(500).json({ message: "Failed to delete internship" });
+    }
+  });
+
+  app.delete('/api/admin/delete/job/:id', isAuthenticated, requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      console.log(`Deleting job with ID: ${id}`);
+      await storage.deleteJob(id);
+      console.log(`Successfully deleted job ${id}`);
+      res.json({ message: "Job deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting job:", error);
+      res.status(500).json({ message: "Failed to delete job" });
     }
   });
 
