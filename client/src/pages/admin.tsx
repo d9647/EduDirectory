@@ -9,8 +9,19 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
-import { CheckCircle, XCircle, AlertTriangle, Search, Eye, EyeOff, Upload, Shield, RefreshCw } from "lucide-react";
+import { CheckCircle, XCircle, AlertTriangle, Search, Eye, EyeOff, Upload, Shield, RefreshCw, Download, AlertCircle } from "lucide-react";
 import AdminEditModal from "@/components/admin/admin-edit-modal";
+import SimpleHeader from "@/components/layout/simple-header";
+import Footer from "@/components/layout/footer";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
+interface ImportData {
+  tutoringProviders: any[];
+  summerCamps: any[];
+  internships: any[];
+  jobs: any[];
+}
 
 export default function Admin() {
   const { toast } = useToast();
@@ -109,6 +120,21 @@ export default function Admin() {
     'internships': null as File | null,
     'jobs': null as File | null
   });
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [importData, setImportData] = useState<ImportData>({
+    tutoringProviders: [],
+    summerCamps: [],
+    internships: [],
+    jobs: [],
+  });
+  const [previewData, setPreviewData] = useState<any[]>([]);
+  const [importType, setImportType] = useState<string>("");
+  const [isImporting, setIsImporting] = useState(false);
+  const [importStatus, setImportStatus] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
 
   // Search function
   const searchListings = async (type: string, query: string) => {
@@ -298,6 +324,92 @@ export default function Admin() {
     } finally {
       setImportLoading(prev => ({ ...prev, [type]: false }));
     }
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file && file.type === "text/csv") {
+      setSelectedFile(file);
+      parseCSV(file);
+    }
+  };
+
+  const parseCSV = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result as string;
+      const lines = text.split("\n");
+      const headers = lines[0].split(",").map(h => h.replace(/"/g, ""));
+      const data = lines.slice(1).filter(line => line.trim()).map(line => {
+        const values = line.split(",").map(v => v.replace(/"/g, ""));
+        const row: any = {};
+        headers.forEach((header, index) => {
+          row[header] = values[index] || "";
+        });
+        return row;
+      });
+      
+      setPreviewData(data.slice(0, 5)); // Show first 5 rows
+      setImportData(prev => ({
+        ...prev,
+        [importType]: data
+      }));
+    };
+    reader.readAsText(file);
+  };
+
+  const handleImport = async () => {
+    if (!importType || !importData[importType as keyof ImportData].length) {
+      setImportStatus({
+        success: false,
+        message: "Please select a file and import type"
+      });
+      return;
+    }
+
+    setIsImporting(true);
+    try {
+      const response = await fetch(`/api/admin/import/${importType}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          data: importData[importType as keyof ImportData]
+        }),
+      });
+
+      if (response.ok) {
+        setImportStatus({
+          success: true,
+          message: `Successfully imported ${importData[importType as keyof ImportData].length} ${importType}`
+        });
+        setImportData(prev => ({
+          ...prev,
+          [importType]: []
+        }));
+        setPreviewData([]);
+        setSelectedFile(null);
+      } else {
+        throw new Error("Import failed");
+      }
+    } catch (error) {
+      setImportStatus({
+        success: false,
+        message: "Import failed. Please check your data format."
+      });
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
+  const downloadTemplate = (type: string) => {
+    const link = document.createElement("a");
+    link.href = `/csv-templates/${type}-template.csv`;
+    link.download = `${type}-template.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   if (isLoading) {
@@ -888,20 +1000,18 @@ export default function Admin() {
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <input
+                      <Label htmlFor="tutoring-providers-file">CSV File</Label>
+                      <Input
                         id="tutoring-providers-file"
                         type="file"
                         accept=".csv"
-                        onChange={(e) => setSelectedFiles(prev => ({ 
-                          ...prev, 
-                          'tutoring-providers': e.target.files?.[0] || null 
-                        }))}
-                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        onChange={handleFileSelect}
+                        className="mt-1"
                       />
                     </div>
                     <Button
                       onClick={() => handleImport('tutoring-providers')}
-                      disabled={!selectedFiles['tutoring-providers'] || importLoading['tutoring-providers']}
+                      disabled={!selectedFile || importLoading['tutoring-providers']}
                     >
                       <Upload className="h-4 w-4 mr-2" />
                       {importLoading['tutoring-providers'] ? 'Importing...' : 'Import Tutoring Providers'}
@@ -921,20 +1031,18 @@ export default function Admin() {
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <input
+                      <Label htmlFor="summer-camps-file">CSV File</Label>
+                      <Input
                         id="summer-camps-file"
                         type="file"
                         accept=".csv"
-                        onChange={(e) => setSelectedFiles(prev => ({ 
-                          ...prev, 
-                          'summer-camps': e.target.files?.[0] || null 
-                        }))}
-                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        onChange={handleFileSelect}
+                        className="mt-1"
                       />
                     </div>
                     <Button
                       onClick={() => handleImport('summer-camps')}
-                      disabled={!selectedFiles['summer-camps'] || importLoading['summer-camps']}
+                      disabled={!selectedFile || importLoading['summer-camps']}
                     >
                       <Upload className="h-4 w-4 mr-2" />
                       {importLoading['summer-camps'] ? 'Importing...' : 'Import Summer Camps'}
@@ -954,20 +1062,18 @@ export default function Admin() {
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <input
+                      <Label htmlFor="internships-file">CSV File</Label>
+                      <Input
                         id="internships-file"
                         type="file"
                         accept=".csv"
-                        onChange={(e) => setSelectedFiles(prev => ({ 
-                          ...prev, 
-                          'internships': e.target.files?.[0] || null 
-                        }))}
-                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        onChange={handleFileSelect}
+                        className="mt-1"
                       />
                     </div>
                     <Button
                       onClick={() => handleImport('internships')}
-                      disabled={!selectedFiles['internships'] || importLoading['internships']}
+                      disabled={!selectedFile || importLoading['internships']}
                     >
                       <Upload className="h-4 w-4 mr-2" />
                       {importLoading['internships'] ? 'Importing...' : 'Import Internships'}
@@ -987,20 +1093,18 @@ export default function Admin() {
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <input
+                      <Label htmlFor="jobs-file">CSV File</Label>
+                      <Input
                         id="jobs-file"
                         type="file"
                         accept=".csv"
-                        onChange={(e) => setSelectedFiles(prev => ({ 
-                          ...prev, 
-                          'jobs': e.target.files?.[0] || null 
-                        }))}
-                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        onChange={handleFileSelect}
+                        className="mt-1"
                       />
                     </div>
                     <Button
                       onClick={() => handleImport('jobs')}
-                      disabled={!selectedFiles['jobs'] || importLoading['jobs']}
+                      disabled={!selectedFile || importLoading['jobs']}
                     >
                       <Upload className="h-4 w-4 mr-2" />
                       {importLoading['jobs'] ? 'Importing...' : 'Import Job Opportunities'}
@@ -1008,6 +1112,55 @@ export default function Admin() {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* CSV Import Preview */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Import Preview</CardTitle>
+                  <CardDescription>
+                    Preview the data you are about to import.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div>
+                    <Label>Preview (First 5 rows)</Label>
+                    <div className="mt-2 max-h-40 overflow-y-auto border rounded-md p-2 text-sm">
+                      <table className="w-full">
+                        <thead>
+                          <tr>
+                            {Object.keys(previewData[0] || {}).map(key => (
+                              <th key={key} className="text-left p-1">{key}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {previewData.map((row, index) => (
+                            <tr key={index}>
+                              {Object.values(row).map((value: any, i) => (
+                                <td key={i} className="p-1 text-xs">{value}</td>
+                              ))}
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Import Status */}
+              {importStatus && (
+                <Alert className={importStatus.success ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"}>
+                  {importStatus.success ? (
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <AlertCircle className="h-4 w-4 text-red-600" />
+                  )}
+                  <AlertDescription className={importStatus.success ? "text-green-800" : "text-red-800"}>
+                    {importStatus.message}
+                  </AlertDescription>
+                </Alert>
+              )}
             </div>
           </TabsContent>
 
