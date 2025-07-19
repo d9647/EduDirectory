@@ -281,7 +281,16 @@ export class DatabaseStorage implements IStorage {
 
     if (filters.search) {
       conditions.push(
-        sql`(${tutoringProviders.name} ILIKE ${`%${filters.search}%`} OR ${tutoringProviders.description} ILIKE ${`%${filters.search}%`})`
+        sql`(${tutoringProviders.name} ILIKE ${`%${filters.search}%`} 
+            OR ${tutoringProviders.description} ILIKE ${`%${filters.search}%`}
+            OR EXISTS (
+              SELECT 1 FROM unnest(${tutoringProviders.categories}) AS cat
+              WHERE LOWER(cat) LIKE '%' || LOWER(${filters.search}) || '%'
+            )
+            OR EXISTS (
+              SELECT 1 FROM unnest(${tutoringProviders.subjects}) AS subj
+              WHERE LOWER(subj) LIKE '%' || LOWER(${filters.search}) || '%'
+            ))`
       );
     }
 
@@ -441,7 +450,16 @@ export class DatabaseStorage implements IStorage {
 
     if (filters.search) {
       conditions.push(
-        sql`(${summerCamps.name} ILIKE ${`%${filters.search}%`} OR ${summerCamps.description} ILIKE ${`%${filters.search}%`})`
+        sql`(${summerCamps.name} ILIKE ${`%${filters.search}%`} 
+            OR ${summerCamps.description} ILIKE ${`%${filters.search}%`}
+            OR EXISTS (
+              SELECT 1 FROM unnest(${summerCamps.categories}) AS cat
+              WHERE LOWER(cat) LIKE '%' || LOWER(${filters.search}) || '%'
+            )
+            OR EXISTS (
+              SELECT 1 FROM unnest(${summerCamps.tags}) AS tag
+              WHERE LOWER(tag) LIKE '%' || LOWER(${filters.search}) || '%'
+            ))`
       );
     }
 
@@ -644,7 +662,13 @@ export class DatabaseStorage implements IStorage {
 
     if (filters.search) {
       conditions.push(
-        sql`(${internships.title} ILIKE ${`%${filters.search}%`} OR ${internships.description} ILIKE ${`%${filters.search}%`} OR ${internships.companyName} ILIKE ${`%${filters.search}%`})`
+        sql`(${internships.title} ILIKE ${`%${filters.search}%`} 
+            OR ${internships.description} ILIKE ${`%${filters.search}%`} 
+            OR ${internships.companyName} ILIKE ${`%${filters.search}%`}
+            OR EXISTS (
+              SELECT 1 FROM unnest(${internships.types}) AS type
+              WHERE LOWER(type) LIKE '%' || LOWER(${filters.search}) || '%'
+            ))`
       );
     }
 
@@ -819,7 +843,13 @@ export class DatabaseStorage implements IStorage {
 
     if (filters.search) {
       conditions.push(
-        sql`(${jobs.title} ILIKE ${`%${filters.search}%`} OR ${jobs.description} ILIKE ${`%${filters.search}%`} OR ${jobs.companyName} ILIKE ${`%${filters.search}%`})`
+        sql`(${jobs.title} ILIKE ${`%${filters.search}%`} 
+            OR ${jobs.description} ILIKE ${`%${filters.search}%`} 
+            OR ${jobs.companyName} ILIKE ${`%${filters.search}%`}
+            OR EXISTS (
+              SELECT 1 FROM unnest(${jobs.categories}) AS cat
+              WHERE LOWER(cat) LIKE '%' || LOWER(${filters.search}) || '%'
+            ))`
       );
     }
 
