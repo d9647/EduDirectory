@@ -872,7 +872,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const filters = {
         search: search as string,
-        category: category as string,
+        category: (category as string) === "all" ? "" : (category as string),
         sortBy: sortBy as string,
         sortOrder: (sortOrder as string) === "asc" ? "asc" : "desc",
         limit: parseInt(limit as string) || 20,

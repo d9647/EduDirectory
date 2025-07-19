@@ -1292,78 +1292,89 @@ export class DatabaseStorage implements IStorage {
     const offset = filters?.offset || 0;
     
     try {
-      // Build query with joins to get user information and reply count
-      let queryConditions = [];
-      let params: any[] = [];
-      let paramIndex = 1;
 
+      // Use Drizzle ORM instead of raw SQL for better type safety
+      let query = db
+        .select({
+          id: forumPosts.id,
+          title: forumPosts.title,
+          content: forumPosts.content,
+          category: forumPosts.category,
+          userId: forumPosts.userId,
+          isSticky: forumPosts.isSticky,
+          isLocked: forumPosts.isLocked,
+          createdAt: forumPosts.createdAt,
+          updatedAt: forumPosts.updatedAt,
+          authorFirstName: users.firstName,
+          authorLastName: users.lastName,
+          authorEmail: users.email,
+          authorProfileImageUrl: users.profileImageUrl,
+        })
+        .from(forumPosts)
+        .leftJoin(users, eq(forumPosts.userId, users.id));
+
+      // Apply filters
+      let conditions = [];
       if (filters?.search) {
-        queryConditions.push(`(fp.title ILIKE $${paramIndex} OR fp.content ILIKE $${paramIndex})`);
-        params.push(`%${filters.search}%`);
-        paramIndex++;
+        conditions.push(
+          or(
+            ilike(forumPosts.title, `%${filters.search}%`),
+            ilike(forumPosts.content, `%${filters.search}%`)
+          )
+        );
       }
-
       if (filters?.category) {
-        queryConditions.push(`fp.category = $${paramIndex}`);
-        params.push(filters.category);
-        paramIndex++;
+        conditions.push(eq(forumPosts.category, filters.category));
       }
 
-      const whereClause = queryConditions.length > 0 ? `WHERE ${queryConditions.join(' AND ')}` : '';
-      
-      // Order by
-      let orderBy = 'fp.created_at DESC';
+      if (conditions.length > 0) {
+        query = query.where(and(...conditions));
+      }
+
+      // Apply ordering
       if (filters?.sortBy === 'title') {
-        orderBy = `fp.title ${filters.sortOrder === 'asc' ? 'ASC' : 'DESC'}`;
-      } else if (filters?.sortBy === 'replies') {
-        orderBy = `reply_count ${filters.sortOrder === 'asc' ? 'ASC' : 'DESC'}`;
+        query = query.orderBy(
+          desc(forumPosts.isSticky),
+          filters.sortOrder === 'asc' ? asc(forumPosts.title) : desc(forumPosts.title)
+        );
+      } else {
+        query = query.orderBy(
+          desc(forumPosts.isSticky),
+          filters.sortOrder === 'asc' ? asc(forumPosts.createdAt) : desc(forumPosts.createdAt)
+        );
       }
 
-      const postsQuery = `
-        SELECT 
-          fp.id,
-          fp.title,
-          fp.content,
-          fp.category,
-          fp.user_id as "userId",
-          fp.is_sticky as "isSticky",
-          fp.is_locked as "isLocked",
-          fp.created_at as "createdAt",
-          fp.updated_at as "updatedAt",
-          u.first_name as "authorFirstName",
-          u.last_name as "authorLastName",
-          u.email as "authorEmail",
-          u.profile_image_url as "authorProfileImageUrl",
-          COALESCE(reply_counts.reply_count, 0) as "replyCount"
-        FROM forum_posts fp
-        LEFT JOIN users u ON fp.user_id = u.id
-        LEFT JOIN (
-          SELECT post_id, COUNT(*) as reply_count
-          FROM forum_replies
-          GROUP BY post_id
-        ) reply_counts ON fp.id = reply_counts.post_id
-        ${whereClause}
-        ORDER BY fp.is_sticky DESC, ${orderBy}
-        LIMIT $${paramIndex} OFFSET $${paramIndex + 1}
-      `;
+      const posts = await query.limit(limit).offset(offset);
 
-      params.push(limit, offset);
-      
-      const posts = await db.execute(sql.raw(postsQuery, params));
+      // Get total count with same conditions
+      let countQuery = db
+        .select({ count: count() })
+        .from(forumPosts);
 
-      // Get total count
-      const countQuery = `
-        SELECT COUNT(*) as total
-        FROM forum_posts fp
-        ${whereClause}
-      `;
-      
-      const countParams = params.slice(0, -2); // Remove limit and offset
-      const totalResult = await db.execute(sql.raw(countQuery, countParams));
-      const total = parseInt(totalResult.rows[0]?.total || '0');
+      if (conditions.length > 0) {
+        countQuery = countQuery.where(and(...conditions));
+      }
+
+      const totalResult = await countQuery;
+      const total = totalResult[0]?.count || 0;
+
+      // Add reply counts manually for each post
+      const postsWithReplyCounts = await Promise.all(
+        posts.map(async (post) => {
+          const replyCountResult = await db
+            .select({ count: count() })
+            .from(forumReplies)
+            .where(eq(forumReplies.postId, post.id));
+          
+          return {
+            ...post,
+            replyCount: replyCountResult[0]?.count || 0
+          };
+        })
+      );
 
       return {
-        posts: posts.rows || [],
+        posts: postsWithReplyCounts,
         total
       };
     } catch (error) {
@@ -1374,27 +1385,28 @@ export class DatabaseStorage implements IStorage {
 
   async getForumPost(id: number): Promise<any | undefined> {
     try {
-      const result = await db.execute(sql`
-        SELECT 
-          fp.id,
-          fp.title,
-          fp.content,
-          fp.category,
-          fp.user_id as "userId",
-          fp.is_sticky as "isSticky",
-          fp.is_locked as "isLocked",
-          fp.created_at as "createdAt",
-          fp.updated_at as "updatedAt",
-          u.first_name as "authorFirstName",
-          u.last_name as "authorLastName",
-          u.email as "authorEmail",
-          u.profile_image_url as "authorProfileImageUrl"
-        FROM forum_posts fp
-        LEFT JOIN users u ON fp.user_id = u.id
-        WHERE fp.id = ${id}
-      `);
+      const result = await db
+        .select({
+          id: forumPosts.id,
+          title: forumPosts.title,
+          content: forumPosts.content,
+          category: forumPosts.category,
+          userId: forumPosts.userId,
+          isSticky: forumPosts.isSticky,
+          isLocked: forumPosts.isLocked,
+          createdAt: forumPosts.createdAt,
+          updatedAt: forumPosts.updatedAt,
+          authorFirstName: users.firstName,
+          authorLastName: users.lastName,
+          authorEmail: users.email,
+          authorProfileImageUrl: users.profileImageUrl,
+        })
+        .from(forumPosts)
+        .leftJoin(users, eq(forumPosts.userId, users.id))
+        .where(eq(forumPosts.id, id))
+        .limit(1);
 
-      return result.rows[0];
+      return result[0];
     } catch (error) {
       console.error("Error in getForumPost:", error);
       throw error;
@@ -1432,25 +1444,25 @@ export class DatabaseStorage implements IStorage {
 
   async getForumReplies(postId: number): Promise<any[]> {
     try {
-      const result = await db.execute(sql`
-        SELECT 
-          fr.id,
-          fr.content,
-          fr.post_id as "postId",
-          fr.user_id as "userId",
-          fr.created_at as "createdAt",
-          fr.updated_at as "updatedAt",
-          u.first_name as "authorFirstName",
-          u.last_name as "authorLastName",
-          u.email as "authorEmail",
-          u.profile_image_url as "authorProfileImageUrl"
-        FROM forum_replies fr
-        LEFT JOIN users u ON fr.user_id = u.id
-        WHERE fr.post_id = ${postId}
-        ORDER BY fr.created_at ASC
-      `);
+      const result = await db
+        .select({
+          id: forumReplies.id,
+          content: forumReplies.content,
+          postId: forumReplies.postId,
+          userId: forumReplies.userId,
+          createdAt: forumReplies.createdAt,
+          updatedAt: forumReplies.updatedAt,
+          authorFirstName: users.firstName,
+          authorLastName: users.lastName,
+          authorEmail: users.email,
+          authorProfileImageUrl: users.profileImageUrl,
+        })
+        .from(forumReplies)
+        .leftJoin(users, eq(forumReplies.userId, users.id))
+        .where(eq(forumReplies.postId, postId))
+        .orderBy(asc(forumReplies.createdAt));
 
-      return result.rows || [];
+      return result;
     } catch (error) {
       console.error("Error in getForumReplies:", error);
       throw error;
