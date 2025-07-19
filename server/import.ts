@@ -1,4 +1,3 @@
-import csv from 'csv-parser';
 import { storage } from './storage.js';
 import type { InsertTutoringProvider, InsertSummerCamp, InsertInternship, InsertJob } from '../shared/schema.js';
 
@@ -40,18 +39,55 @@ export class ImportService {
   // Parse CSV data into array of objects
   private parseCSV(csvData: string): Promise<ImportRow[]> {
     return new Promise((resolve, reject) => {
-      const results: ImportRow[] = [];
-      const { Readable } = require('stream');
-      const readableStream = new Readable();
-      readableStream.push(csvData);
-      readableStream.push(null);
+      try {
+        const lines = csvData.split('\n').filter(line => line.trim() !== '');
+        if (lines.length < 2) {
+          reject(new Error('CSV must have at least a header row and one data row'));
+          return;
+        }
 
-      readableStream
-        .pipe(csv())
-        .on('data', (data: ImportRow) => results.push(data))
-        .on('end', () => resolve(results))
-        .on('error', (error: Error) => reject(error));
+        const headers = this.parseCSVRow(lines[0]);
+        const results: ImportRow[] = [];
+
+        for (let i = 1; i < lines.length; i++) {
+          const values = this.parseCSVRow(lines[i]);
+          const row: ImportRow = {};
+          
+          headers.forEach((header, index) => {
+            row[header] = values[index] || '';
+          });
+          
+          results.push(row);
+        }
+
+        resolve(results);
+      } catch (error) {
+        reject(error);
+      }
     });
+  }
+
+  // Helper method to parse a single CSV row, handling quoted fields
+  private parseCSVRow(line: string): string[] {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === ',' && !inQuotes) {
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    
+    result.push(current.trim());
+    return result;
   }
 
   // Import tutoring providers
