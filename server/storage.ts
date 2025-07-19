@@ -164,6 +164,7 @@ export interface IStorage {
   createForumReply(reply: InsertForumReply): Promise<ForumReply>;
   updateForumReply(id: number, reply: Partial<InsertForumReply>): Promise<ForumReply>;
   deleteForumReply(id: number, userId: string): Promise<void>;
+  getForumCategoryStats(): Promise<any[]>;
 
   // Admin
   getPendingApprovals(): Promise<{
@@ -1495,6 +1496,58 @@ export class DatabaseStorage implements IStorage {
       await db
         .delete(forumReplies)
         .where(and(eq(forumReplies.id, id), eq(forumReplies.userId, userId)));
+    }
+  }
+
+  async getForumCategoryStats(): Promise<any[]> {
+    try {
+      // Get all categories with topic counts, reply counts, and latest posts
+      const statsQuery = await db
+        .select({
+          category: forumPosts.category,
+          topicCount: count(forumPosts.id),
+        })
+        .from(forumPosts)
+        .groupBy(forumPosts.category);
+
+      // Get reply counts for each category
+      const stats = await Promise.all(
+        statsQuery.map(async (categoryStat) => {
+          // Get total reply count for this category
+          const replyCountResult = await db
+            .select({ count: count() })
+            .from(forumReplies)
+            .leftJoin(forumPosts, eq(forumReplies.postId, forumPosts.id))
+            .where(eq(forumPosts.category, categoryStat.category));
+
+          // Get latest post for this category
+          const latestPostResult = await db
+            .select({
+              id: forumPosts.id,
+              title: forumPosts.title,
+              createdAt: forumPosts.createdAt,
+              authorFirstName: users.firstName,
+              authorLastName: users.lastName,
+            })
+            .from(forumPosts)
+            .leftJoin(users, eq(forumPosts.userId, users.id))
+            .where(eq(forumPosts.category, categoryStat.category))
+            .orderBy(desc(forumPosts.createdAt))
+            .limit(1);
+
+          return {
+            category: categoryStat.category,
+            topicCount: Number(categoryStat.topicCount) || 0,
+            replyCount: Number(replyCountResult[0]?.count) || 0,
+            latestPost: latestPostResult[0] || null,
+          };
+        })
+      );
+
+      return stats;
+    } catch (error) {
+      console.error("Error in getForumCategoryStats:", error);
+      throw error;
     }
   }
 
