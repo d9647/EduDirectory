@@ -48,6 +48,7 @@ export default function Landing() {
                     <Button 
                       variant="outline" 
                       size="lg"
+                      onClick={() => window.location.href = "/learn-more"}
                       className="w-full flex items-center justify-center px-6 sm:px-8 py-3 text-sm sm:text-base font-medium"
                     >
                       Learn More
