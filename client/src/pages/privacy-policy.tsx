@@ -196,9 +196,6 @@ export default function PrivacyPolicy() {
                   </p>
                 </section>
 
-                <div className="text-center text-sm text-gray-500 mt-8 pt-4 border-t border-gray-200">
-                  © 2025 Educational Yellow Pages
-                </div>
               </div>
             </CardContent>
           </Card>
