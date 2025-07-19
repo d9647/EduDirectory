@@ -820,12 +820,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/admin/import/summer-camps', isAuthenticated, csvUpload.single('csvFile'), async (req, res) => {
     try {
+      console.log('Import request received for summer camps');
+      
       if (!req.file) {
+        console.log('No file uploaded in request');
         return res.status(400).json({ message: "No file uploaded" });
       }
 
+      console.log('File received:', {
+        fieldname: req.file.fieldname,
+        originalname: req.file.originalname,
+        encoding: req.file.encoding,
+        mimetype: req.file.mimetype,
+        size: req.file.size
+      });
+
       const csvData = req.file.buffer.toString('utf-8');
+      console.log('CSV data converted from buffer, length:', csvData.length);
+      
       const result = await importService.importSummerCamps(csvData);
+      console.log('Import result:', result);
 
       res.json({
         message: `Import completed: ${result.success} successful, ${result.errors.length} errors`,
@@ -834,18 +848,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error importing summer camps:", error);
-      res.status(500).json({ message: "Failed to import summer camps" });
+      console.error("Error stack:", error.stack);
+      res.status(500).json({ message: "Failed to import summer camps", error: error.message });
     }
   });
 
   app.post('/api/admin/import/internships', isAuthenticated, csvUpload.single('csvFile'), async (req, res) => {
     try {
+      console.log('Import request received for internships');
+      
       if (!req.file) {
+        console.log('No file uploaded in request');
         return res.status(400).json({ message: "No file uploaded" });
       }
 
+      console.log('File received:', {
+        fieldname: req.file.fieldname,
+        originalname: req.file.originalname,
+        encoding: req.file.encoding,
+        mimetype: req.file.mimetype,
+        size: req.file.size
+      });
+
       const csvData = req.file.buffer.toString('utf-8');
+      console.log('CSV data converted from buffer, length:', csvData.length);
+      
       const result = await importService.importInternships(csvData);
+      console.log('Import result:', result);
 
       res.json({
         message: `Import completed: ${result.success} successful, ${result.errors.length} errors`,
@@ -854,18 +883,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error importing internships:", error);
-      res.status(500).json({ message: "Failed to import internships" });
+      console.error("Error stack:", error.stack);
+      res.status(500).json({ message: "Failed to import internships", error: error.message });
     }
   });
 
   app.post('/api/admin/import/jobs', isAuthenticated, csvUpload.single('csvFile'), async (req, res) => {
     try {
+      console.log('Import request received for jobs');
+      
       if (!req.file) {
+        console.log('No file uploaded in request');
         return res.status(400).json({ message: "No file uploaded" });
       }
 
+      console.log('File received:', {
+        fieldname: req.file.fieldname,
+        originalname: req.file.originalname,
+        encoding: req.file.encoding,
+        mimetype: req.file.mimetype,
+        size: req.file.size
+      });
+
       const csvData = req.file.buffer.toString('utf-8');
+      console.log('CSV data converted from buffer, length:', csvData.length);
+      
       const result = await importService.importJobs(csvData);
+      console.log('Import result:', result);
 
       res.json({
         message: `Import completed: ${result.success} successful, ${result.errors.length} errors`,
@@ -874,7 +918,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Error importing jobs:", error);
-      res.status(500).json({ message: "Failed to import jobs" });
+      console.error("Error stack:", error.stack);
+      res.status(500).json({ message: "Failed to import jobs", error: error.message });
     }
   });
 
