@@ -223,28 +223,8 @@ export const reports = pgTable("reports", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// Forum Posts
-export const forumPosts = pgTable("forum_posts", {
-  id: serial("id").primaryKey(),
-  title: varchar("title", { length: 255 }).notNull(),
-  content: text("content").notNull(),
-  userId: varchar("user_id").references(() => users.id).notNull(),
-  category: varchar("category", { length: 100 }), // General, Questions, Resources, etc.
-  isSticky: boolean("is_sticky").default(false),
-  isLocked: boolean("is_locked").default(false),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
 
-// Forum Replies
-export const forumReplies = pgTable("forum_replies", {
-  id: serial("id").primaryKey(),
-  postId: integer("post_id").references(() => forumPosts.id, { onDelete: "cascade" }).notNull(),
-  content: text("content").notNull(),
-  userId: varchar("user_id").references(() => users.id).notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
+
 
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
@@ -333,19 +313,7 @@ export const insertReportSchema = createInsertSchema(reports).omit({
   createdAt: true,
 });
 
-export const insertForumPostSchema = createInsertSchema(forumPosts).omit({
-  id: true,
-  isSticky: true,
-  isLocked: true,
-  createdAt: true,
-  updatedAt: true,
-});
 
-export const insertForumReplySchema = createInsertSchema(forumReplies).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
 
 export const upsertUserSchema = createInsertSchema(users).omit({
   createdAt: true,
@@ -371,8 +339,7 @@ export type Review = typeof reviews.$inferSelect;
 export type ThumbsUp = typeof thumbsUp.$inferSelect;
 export type Bookmark = typeof bookmarks.$inferSelect;
 export type Report = typeof reports.$inferSelect;
-export type ForumPost = typeof forumPosts.$inferSelect;
-export type ForumReply = typeof forumReplies.$inferSelect;
+
 
 export type InsertTutoringProvider = z.infer<typeof insertTutoringProviderSchema>;
 export type InsertSummerCamp = z.infer<typeof insertSummerCampSchema>;
@@ -380,5 +347,4 @@ export type InsertInternship = z.infer<typeof insertInternshipSchema>;
 export type InsertJob = z.infer<typeof insertJobSchema>;
 export type InsertReview = z.infer<typeof insertReviewSchema>;
 export type InsertReport = z.infer<typeof insertReportSchema>;
-export type InsertForumPost = z.infer<typeof insertForumPostSchema>;
-export type InsertForumReply = z.infer<typeof insertForumReplySchema>;
+

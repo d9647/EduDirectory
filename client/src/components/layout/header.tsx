@@ -15,7 +15,7 @@ export default function Header() {
     { href: "/summer-camps", label: "Camps" },
     { href: "/internships", label: "Internships" },
     { href: "/jobs", label: "Jobs" },
-    ...(isAuthenticated ? [{ href: "/forum", label: "Forum" }] : []),
+
   ];
 
   const isActiveRoute = (href: string) => location === href;
