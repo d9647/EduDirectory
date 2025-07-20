@@ -758,8 +758,8 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="cost">Cost Range</Label>
-                <Select value={formData.cost || ""} onValueChange={(value) => handleChange("cost", value)}>
+                <Label htmlFor="costRange">Cost Range</Label>
+                <Select value={formData.costRange || ""} onValueChange={(value) => handleChange("costRange", value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select cost range" />
                   </SelectTrigger>
