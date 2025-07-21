@@ -802,7 +802,7 @@ export default function Admin() {
                     {searchResults['tutoring-providers'].length > 0 && (
                       <div className="space-y-2">
                         {searchResults['tutoring-providers'].map((provider: any) => (
-                          <div key={provider.id} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div key={provider.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-2">
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
                                 <h3 className="font-medium">{provider.name}</h3>
@@ -813,7 +813,7 @@ export default function Admin() {
                               <p className="text-sm text-gray-600">{provider.type} • {provider.city}, {provider.state}</p>
                               <p className="text-sm text-gray-500 mt-1">{provider.description?.substring(0, 100)}...</p>
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                               <AdminEditModal type="tutoring-provider" listing={provider} />
                               {provider.isActive ? (
                                 <Button
