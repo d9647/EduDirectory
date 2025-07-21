@@ -362,6 +362,7 @@ export class ImportService {
           }
 
           console.log(`Creating job ${i + 1}:`, job.title);
+          console.log(`Application link for job ${i + 1}:`, job.applicationLink);
           await storage.createJob(job);
           success++;
         } catch (error) {
