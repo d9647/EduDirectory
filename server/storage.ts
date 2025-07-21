@@ -974,7 +974,7 @@ export class DatabaseStorage implements IStorage {
       isOngoing: jobs.isOngoing,
       applicationDeadline: jobs.applicationDeadline,
       eligibility: jobs.eligibility,
-      applicationLink: jobs.applicationLink,
+      website: jobs.website,
       photoUrl: jobs.photoUrl,
       hasTraining: jobs.hasTraining,
       hasAdvancement: jobs.hasAdvancement,

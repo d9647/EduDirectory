@@ -475,11 +475,11 @@ export default function ListingDetailModal({
                       <span className="text-gray-700">Duration: {listing.length}</span>
                     </div>
                   )}
-                  {listing.applicationLink && (
+                  {listing.website && (
                     <div className="flex items-center">
                       <Globe className="h-4 w-4 text-gray-400 mr-3" />
                       <a 
-                        href={listing.applicationLink} 
+                        href={listing.website} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="text-primary hover:text-primary/80"
