@@ -84,7 +84,6 @@ export const summerCamps = pgTable("summer_camps", {
   length: varchar("length", { length: 100 }),
   costRange: varchar("cost_range", { length: 50 }), // Cost range dropdown values
   applicationOpen: date("application_open"),
-  applicationDueDate: date("application_due_date"),
   applicationDeadline: date("application_deadline"),
   applicationAvailable: boolean("application_available").default(true),
   minimumAge: integer("minimum_age"),
@@ -165,7 +164,7 @@ export const jobs = pgTable("jobs", {
   isOngoing: boolean("is_ongoing").default(false),
   applicationDeadline: date("application_deadline"),
   eligibility: text("eligibility"),
-  applicationLink: varchar("application_link"),
+  website: varchar("website"),
   hasTraining: boolean("has_training").default(false),
   hasAdvancement: boolean("has_advancement").default(false),
   requiresTransportation: boolean("requires_transportation").default(false),
