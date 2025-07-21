@@ -84,6 +84,11 @@ Preferred UI design style: Clean, minimal layouts without redundant headers.
 - Comprehensive edit coverage: pending submissions, approved listings, and live content
 - Resolves post-publication error correction without requiring new submissions
 
+**Database Schema Cleanup (Latest Update - January 21, 2025)**
+- Removed redundant `application_due_date` column from summer_camps table as it duplicated `application_deadline` functionality
+- Updated schema.ts to reflect the cleaned database structure with single application deadline field
+- Database now has consistent deadline field naming across all listing types
+
 **Complete Admin Edit Form Restructure (Latest Update - January 15, 2025)**
 - Completely rebuilt all Admin Edit forms to exactly match their corresponding submission form structures
 - Implemented proper checkbox selections for categories, subjects, tags, job types, schedules, and duration across all forms
