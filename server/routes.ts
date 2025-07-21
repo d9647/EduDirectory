@@ -656,7 +656,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       // Convert date strings to Date objects for database compatibility (these are date fields, not timestamp)
-      const dateFields = ['applicationOpen', 'applicationDeadline', 'applicationDueDate', 'openingDate', 'closingDate'];
+      const dateFields = ['applicationOpen', 'applicationDeadline', 'openingDate', 'closingDate'];
 
       for (const field of dateFields) {
         if (updateData[field] !== undefined) {

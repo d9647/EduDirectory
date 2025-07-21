@@ -40,7 +40,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
   const [formData, setFormData] = useState(() => {
     // Format date fields for HTML date inputs
     const formatted = { ...listing };
-    const dateFields = ['applicationOpen', 'applicationDeadline', 'applicationDueDate', 'openingDate', 'closingDate', 'startDate', 'endDate'];
+    const dateFields = ['applicationOpen', 'applicationDeadline', 'openingDate', 'closingDate', 'startDate', 'endDate'];
     
     dateFields.forEach(field => {
       if (formatted[field]) {

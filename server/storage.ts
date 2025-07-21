@@ -604,7 +604,6 @@ export class DatabaseStorage implements IStorage {
       length: summerCamps.length,
       costRange: summerCamps.costRange,
       applicationOpen: summerCamps.applicationOpen,
-      applicationDueDate: summerCamps.applicationDueDate,
       applicationDeadline: summerCamps.applicationDeadline,
       applicationAvailable: summerCamps.applicationAvailable,
       minimumAge: summerCamps.minimumAge,

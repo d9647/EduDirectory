@@ -427,7 +427,6 @@ export default function ListingTable({
           </div>
         );
 
-      case "applicationDueDate":
       case "applicationDeadline":
       case "closingDate":
       case "openingDate":

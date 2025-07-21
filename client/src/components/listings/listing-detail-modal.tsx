@@ -453,11 +453,11 @@ export default function ListingDetailModal({
                       </span>
                     </div>
                   )}
-                  {(listing.applicationDueDate || listing.applicationDeadline || listing.closingDate) && (
+                  {(listing.applicationDeadline || listing.closingDate) && (
                     <div className="flex items-center">
                       <Calendar className="h-4 w-4 text-gray-400 mr-3" />
                       <span className="text-gray-700">
-                        Due: {formatDate(listing.applicationDueDate || listing.applicationDeadline || listing.closingDate)}
+                        Due: {formatDate(listing.applicationDeadline || listing.closingDate)}
                       </span>
                     </div>
                   )}
