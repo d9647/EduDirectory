@@ -512,20 +512,20 @@ export default function Admin() {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-          <p className="text-gray-600">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 py-4 sm:py-8">
+        <div className="mb-4 sm:mb-8">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Admin Dashboard</h1>
+          <p className="text-sm sm:text-base text-gray-600">
             Manage pending approvals and review reports from the community.
           </p>
         </div>
 
         <Tabs defaultValue="approvals" className="w-full">
-          <TabsList>
-            <TabsTrigger value="approvals">
-              Pending Approvals
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 gap-1 text-xs sm:text-sm">
+            <TabsTrigger value="approvals" className="px-2 sm:px-3">
+              <span className="hidden sm:inline">Pending </span>Approvals
               {pendingApprovals && (
-                <Badge variant="secondary" className="ml-2">
+                <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
                   {(pendingApprovals.tutoringProviders?.length || 0) +
                    (pendingApprovals.summerCamps?.length || 0) +
                    (pendingApprovals.internships?.length || 0) +
@@ -533,36 +533,37 @@ export default function Admin() {
                 </Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="reports">
+            <TabsTrigger value="reports" className="px-2 sm:px-3">
               Reports
               {reports && (
-                <Badge variant="secondary" className="ml-2">
+                <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
                   {reports.filter((r: any) => !r.isResolved).length}
                 </Badge>
               )}
             </TabsTrigger>
-            <TabsTrigger value="edit-listings">
-              Edit Live Listings
+            <TabsTrigger value="edit-listings" className="px-2 sm:px-3">
+              <span className="hidden sm:inline">Edit </span>Listings
             </TabsTrigger>
-            <TabsTrigger value="import">
-              Import Data
+            <TabsTrigger value="import" className="px-2 sm:px-3">
+              Import
             </TabsTrigger>
-            <TabsTrigger value="users">
-              User Management
+            <TabsTrigger value="users" className="px-2 sm:px-3">
+              Users
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="approvals" className="mt-6">
-            <div className="flex justify-between items-center mb-6">
+          <TabsContent value="approvals" className="mt-4 sm:mt-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
               <div>
-                <h2 className="text-xl font-semibold">Pending Approvals</h2>
-                <p className="text-sm text-gray-600">Review and approve new business submissions</p>
+                <h2 className="text-lg sm:text-xl font-semibold">Pending Approvals</h2>
+                <p className="text-xs sm:text-sm text-gray-600">Review and approve new business submissions</p>
               </div>
               <Button
                 onClick={() => refetchPendingApprovals()}
                 variant="outline"
                 size="sm"
                 disabled={isLoading}
+                className="w-full sm:w-auto"
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
                 Refresh
@@ -579,19 +580,21 @@ export default function Admin() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {pendingApprovals.tutoringProviders.map((provider: any) => (
-                        <div key={provider.id} className="flex items-center justify-between p-4 border rounded-lg">
-                          <div>
-                            <h3 className="font-medium">{provider.name}</h3>
-                            <p className="text-sm text-gray-600">{provider.type} • {provider.city}, {provider.state}</p>
-                            <p className="text-sm text-gray-500 mt-1">{provider.description}</p>
+                        <div key={provider.id} className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-medium text-sm sm:text-base truncate">{provider.name}</h3>
+                            <p className="text-xs sm:text-sm text-gray-600">{provider.type} • {provider.city}, {provider.state}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">{provider.description}</p>
                           </div>
-                          <div className="flex gap-2">
+                          <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 w-full sm:w-auto">
                             <AdminEditModal type="tutoring-provider" listing={provider} />
                             <Button
                               onClick={() => approveMutation.mutate({ type: "tutoring-provider", id: provider.id })}
                               disabled={approveMutation.isPending}
+                              size="sm"
+                              className="w-full sm:w-auto"
                             >
                               <CheckCircle className="h-4 w-4 mr-2" />
                               Approve
@@ -601,6 +604,7 @@ export default function Admin() {
                               disabled={deleteMutation.isPending}
                               variant="outline"
                               size="sm"
+                              className="w-full sm:w-auto"
                             >
                               <XCircle className="h-4 w-4 mr-2" />
                               Delete
@@ -623,19 +627,21 @@ export default function Admin() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {pendingApprovals.summerCamps.map((camp: any) => (
-                        <div key={camp.id} className="flex items-center justify-between p-4 border rounded-lg">
-                          <div>
-                            <h3 className="font-medium">{camp.name}</h3>
-                            <p className="text-sm text-gray-600">{camp.city}, {camp.state}</p>
-                            <p className="text-sm text-gray-500 mt-1">{camp.description}</p>
+                        <div key={camp.id} className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-medium text-sm sm:text-base truncate">{camp.name}</h3>
+                            <p className="text-xs sm:text-sm text-gray-600">{camp.city}, {camp.state}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">{camp.description}</p>
                           </div>
-                          <div className="flex gap-2">
+                          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                             <AdminEditModal type="summer-camp" listing={camp} />
                             <Button
                               onClick={() => approveMutation.mutate({ type: "summer-camp", id: camp.id })}
                               disabled={approveMutation.isPending}
+                              size="sm"
+                              className="w-full sm:w-auto"
                             >
                               <CheckCircle className="h-4 w-4 mr-2" />
                               Approve
@@ -645,6 +651,7 @@ export default function Admin() {
                               disabled={deleteMutation.isPending}
                               variant="outline"
                               size="sm"
+                              className="w-full sm:w-auto"
                             >
                               <XCircle className="h-4 w-4 mr-2" />
                               Delete
@@ -667,19 +674,21 @@ export default function Admin() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {pendingApprovals.internships.map((internship: any) => (
-                        <div key={internship.id} className="flex items-center justify-between p-4 border rounded-lg">
-                          <div>
-                            <h3 className="font-medium">{internship.title}</h3>
-                            <p className="text-sm text-gray-600">{internship.companyName} • {internship.city}, {internship.state}</p>
-                            <p className="text-sm text-gray-500 mt-1">{internship.description}</p>
+                        <div key={internship.id} className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-medium text-sm sm:text-base truncate">{internship.title}</h3>
+                            <p className="text-xs sm:text-sm text-gray-600">{internship.companyName} • {internship.city}, {internship.state}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">{internship.description}</p>
                           </div>
-                          <div className="flex gap-2">
+                          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                             <AdminEditModal type="internship" listing={internship} />
                             <Button
                               onClick={() => approveMutation.mutate({ type: "internship", id: internship.id })}
                               disabled={approveMutation.isPending}
+                              size="sm"
+                              className="w-full sm:w-auto"
                             >
                               <CheckCircle className="h-4 w-4 mr-2" />
                               Approve
@@ -689,6 +698,7 @@ export default function Admin() {
                               disabled={deleteMutation.isPending}
                               variant="outline"
                               size="sm"
+                              className="w-full sm:w-auto"
                             >
                               <XCircle className="h-4 w-4 mr-2" />
                               Delete
@@ -711,19 +721,21 @@ export default function Admin() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       {pendingApprovals.jobs.map((job: any) => (
-                        <div key={job.id} className="flex items-center justify-between p-4 border rounded-lg">
-                          <div>
-                            <h3 className="font-medium">{job.title}</h3>
-                            <p className="text-sm text-gray-600">{job.companyName} • {job.city}, {job.state}</p>
-                            <p className="text-sm text-gray-500 mt-1">{job.description}</p>
+                        <div key={job.id} className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-medium text-sm sm:text-base truncate">{job.title}</h3>
+                            <p className="text-xs sm:text-sm text-gray-600">{job.companyName} • {job.city}, {job.state}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">{job.description}</p>
                           </div>
-                          <div className="flex gap-2">
+                          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                             <AdminEditModal type="job" listing={job} />
                             <Button
                               onClick={() => approveMutation.mutate({ type: "job", id: job.id })}
                               disabled={approveMutation.isPending}
+                              size="sm"
+                              className="w-full sm:w-auto"
                             >
                               <CheckCircle className="h-4 w-4 mr-2" />
                               Approve
@@ -733,6 +745,7 @@ export default function Admin() {
                               disabled={deleteMutation.isPending}
                               variant="outline"
                               size="sm"
+                              className="w-full sm:w-auto"
                             >
                               <XCircle className="h-4 w-4 mr-2" />
                               Delete
