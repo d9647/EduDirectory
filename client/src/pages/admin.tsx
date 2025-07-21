@@ -1404,7 +1404,7 @@ export default function Admin() {
                   ) : usersData?.users && usersData.users.length > 0 ? (
                     <div className="space-y-2">
                       {usersData.users.map((user: any) => (
-                        <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
+                        <div key={user.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-2">
                           <div className="flex items-center gap-4 flex-1">
                             <Avatar className="h-12 w-12">
                               <AvatarImage src={user.profileImageUrl} alt={user.firstName || user.email} />
@@ -1444,7 +1444,7 @@ export default function Admin() {
                             </div>
                           </div>
                           
-                          <div className="flex gap-2">
+                          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                             <Dialog>
                               <DialogTrigger asChild>
                                 <Button variant="outline" size="sm">
