@@ -344,6 +344,7 @@ export class ImportService {
             openingDate: this.parseDate(row.openingDate),
             closingDate: this.parseDate(row.closingDate),
             isOngoing: this.parseBoolean(row.isOngoing),
+            applicationLink: row.applicationLink || undefined,
             website: row.website || undefined,
             phone: row.phone || undefined,
             email: row.email || undefined,
@@ -361,6 +362,7 @@ export class ImportService {
           }
 
           console.log(`Creating job ${i + 1}:`, job.title);
+          console.log(`Application link for job ${i + 1}:`, job.applicationLink);
           await storage.createJob(job);
           success++;
         } catch (error) {

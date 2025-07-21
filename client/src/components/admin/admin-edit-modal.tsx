@@ -758,8 +758,8 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="cost">Cost Range</Label>
-                <Select value={formData.cost || ""} onValueChange={(value) => handleChange("cost", value)}>
+                <Label htmlFor="costRange">Cost Range</Label>
+                <Select value={formData.costRange || ""} onValueChange={(value) => handleChange("costRange", value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select cost range" />
                   </SelectTrigger>
@@ -778,7 +778,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
             <div className="space-y-4">
               <h3 className="text-lg font-medium text-gray-900">Important Dates</h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="applicationOpen">Application Open Date</Label>
                   <Input
@@ -786,15 +786,6 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
                     type="date"
                     value={formData.applicationOpen || ""}
                     onChange={(e) => handleChange("applicationOpen", e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="applicationDueDate">Application Due Date</Label>
-                  <Input
-                    id="applicationDueDate"
-                    type="date"
-                    value={formData.applicationDueDate || ""}
-                    onChange={(e) => handleChange("applicationDueDate", e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
