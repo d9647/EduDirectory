@@ -802,7 +802,7 @@ export default function Admin() {
                     {searchResults['tutoring-providers'].length > 0 && (
                       <div className="space-y-2">
                         {searchResults['tutoring-providers'].map((provider: any) => (
-                          <div key={provider.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-2">
+                          <div key={provider.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-2 w-full max-w-full" style={{ overflowX: 'auto' }}>
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
                                 <h3 className="font-medium">{provider.name}</h3>
@@ -879,7 +879,7 @@ export default function Admin() {
                     {searchResults['summer-camps'].length > 0 && (
                       <div className="space-y-2">
                         {searchResults['summer-camps'].map((camp: any) => (
-                          <div key={camp.id} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div key={camp.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-2 w-full max-w-full" style={{ overflowX: 'auto' }}>
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
                                 <h3 className="font-medium">{camp.name}</h3>
@@ -956,7 +956,7 @@ export default function Admin() {
                     {searchResults['internships'].length > 0 && (
                       <div className="space-y-2">
                         {searchResults['internships'].map((internship: any) => (
-                          <div key={internship.id} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div key={internship.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-2 w-full max-w-full" style={{ overflowX: 'auto' }}>
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
                                 <h3 className="font-medium">{internship.title}</h3>
@@ -1033,7 +1033,7 @@ export default function Admin() {
                     {searchResults['jobs'].length > 0 && (
                       <div className="space-y-2">
                         {searchResults['jobs'].map((job: any) => (
-                          <div key={job.id} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div key={job.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-2 w-full max-w-full" style={{ overflowX: 'auto' }}>
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
                                 <h3 className="font-medium">{job.title}</h3>
