@@ -195,7 +195,6 @@ export class ImportService {
             dates: row.dates || undefined,
             length: row.length || undefined,
             applicationOpen: this.parseDate(row.applicationOpen),
-            applicationDueDate: this.parseDate(row.applicationDueDate),
             applicationDeadline: this.parseDate(row.applicationDeadline),
             eligibility: row.eligibility || undefined,
             deliveryMode: deliveryModeArray,

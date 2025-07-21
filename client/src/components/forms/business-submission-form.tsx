@@ -149,7 +149,7 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
       };
 
       // Clean up empty date fields by converting empty strings to null
-      const dateFields = ['openingDate', 'closingDate', 'applicationOpen', 'applicationDeadline', 'applicationDueDate'];
+      const dateFields = ['openingDate', 'closingDate', 'applicationOpen', 'applicationDeadline'];
       dateFields.forEach(field => {
         if (submitData[field] === '') {
           delete submitData[field];

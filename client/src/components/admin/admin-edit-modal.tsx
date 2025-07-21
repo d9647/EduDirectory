@@ -40,7 +40,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
   const [formData, setFormData] = useState(() => {
     // Format date fields for HTML date inputs
     const formatted = { ...listing };
-    const dateFields = ['applicationOpen', 'applicationDeadline', 'applicationDueDate', 'openingDate', 'closingDate', 'startDate', 'endDate'];
+    const dateFields = ['applicationOpen', 'applicationDeadline', 'openingDate', 'closingDate', 'startDate', 'endDate'];
     
     dateFields.forEach(field => {
       if (formatted[field]) {
@@ -296,8 +296,8 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
     const commonFields = (
       <>
         {/* Basic Information */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900">Basic Information</h3>
+        <div className="space-y-3 sm:space-y-4">
+          <h3 className="text-sm sm:text-lg font-medium text-gray-900">Basic Information</h3>
           
           <div className="space-y-2">
             <Label htmlFor="name">
@@ -352,17 +352,18 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             <div className="space-y-2">
-              <Label htmlFor="city">City *</Label>
+              <Label htmlFor="city" className="text-sm">City *</Label>
               <Input
                 id="city"
                 value={formData.city || ""}
                 onChange={(e) => handleChange("city", e.target.value)}
+                className="text-sm"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="state">State *</Label>
+              <Label htmlFor="state" className="text-sm">State *</Label>
               <Select value={formData.state || ""} onValueChange={(value) => handleChange("state", value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select state" />
@@ -1340,15 +1341,15 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" className="w-full sm:w-auto">
           <Edit className="h-4 w-4 mr-1" />
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto mx-2 sm:mx-auto w-[calc(100vw-1rem)] sm:w-full">
         <DialogHeader>
-          <DialogTitle>Edit {type.replace('-', ' ')} Listing</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-base sm:text-lg">Edit {type.replace('-', ' ')} Listing</DialogTitle>
+          <DialogDescription className="text-sm">
             Update the details for this listing
           </DialogDescription>
         </DialogHeader>
@@ -1356,17 +1357,19 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
         <form onSubmit={handleSubmit} className="space-y-4">
           {renderFormFields()}
           
-          <div className="flex justify-end gap-2 pt-4">
+          <div className="flex flex-col sm:flex-row justify-end gap-2 pt-4">
             <Button
               type="button"
               variant="outline"
               onClick={() => setOpen(false)}
+              className="w-full sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={editMutation.isPending}
+              className="w-full sm:w-auto"
             >
               {editMutation.isPending ? "Saving..." : "Save Changes"}
             </Button>
