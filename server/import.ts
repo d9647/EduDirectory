@@ -344,6 +344,7 @@ export class ImportService {
             openingDate: this.parseDate(row.openingDate),
             closingDate: this.parseDate(row.closingDate),
             isOngoing: this.parseBoolean(row.isOngoing),
+            applicationLink: row.applicationLink || undefined,
             website: row.website || undefined,
             phone: row.phone || undefined,
             email: row.email || undefined,
