@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, ChevronRight, Calendar, Target, BookOpen } from "lucide-react";
@@ -422,28 +422,26 @@ export default function Guides() {
                         </ul>
                       </div>
                     </div>
-
-                    {/* Extra Notes Section with Title - now a new section below the grid */}
-                    {item.extraNotes && item.extraNotes.length > 0 && (
-                      <div className="mt-10 bg-blue-50">
-                        <CardDescription className="text-blue-700 mb-4">
-                          Key focus areas on different timelines
-                        </CardDescription>
-                        <div className="text-sm text-gray-700 leading-relaxed">
-                          {item.extraNotes.map((note, idx) => (
-                            <div key={idx} className="mb-4">
-                              <div className="font-bold mb-2">{note.subheader}</div>
-                              <ul className="list-disc list-inside space-y-1">
-                                {note.bullets.map((bullet, i) => (
-                                  <li key={i}>{bullet}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </CardContent>
+                  {item.extraNotes && item.extraNotes.length > 0 && (
+                    <CardFooter className="bg-blue-50 flex flex-col items-start px-6 py-8">
+                      <CardDescription className="text-blue-700 mb-4">
+                        Key focus areas on different timelines
+                      </CardDescription>
+                      <div className="text-sm text-gray-700 leading-relaxed w-full">
+                        {item.extraNotes.map((note, idx) => (
+                          <div key={idx} className="mb-4">
+                            <div className="font-bold mb-2">{note.subheader}</div>
+                            <ul className="list-disc list-inside space-y-1">
+                              {note.bullets.map((bullet, i) => (
+                                <li key={i}>{bullet}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </CardFooter>
+                  )}
                 </Card>
               ))}
           </div>
