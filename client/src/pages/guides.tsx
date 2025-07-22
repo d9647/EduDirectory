@@ -421,27 +421,28 @@ export default function Guides() {
                           ))}
                         </ul>
                       </div>
-                      {/* Extra Notes Section with Title */}
-                      {item.extraNotes && item.extraNotes.length > 0 && (
-                        <>
-                          <CardDescription className="text-blue-700 mt-8 mb-4">
-                            Key focus areas on different timelines
-                          </CardDescription>
-                          <div className="text-sm text-gray-700 leading-relaxed">
-                            {item.extraNotes.map((note, idx) => (
-                              <div key={idx} className="mb-4">
-                                <div className="font-bold mb-2">{note.subheader}</div>
-                                <ul className="list-disc list-inside space-y-1">
-                                  {note.bullets.map((bullet, i) => (
-                                    <li key={i}>{bullet}</li>
-                                  ))}
-                                </ul>
-                              </div>
-                            ))}
-                          </div>
-                        </>
-                      )}
                     </div>
+
+                    {/* Extra Notes Section with Title - now a new section below the grid */}
+                    {item.extraNotes && item.extraNotes.length > 0 && (
+                      <div className="mt-10">
+                        <CardDescription className="text-blue-700 mb-4">
+                          Key focus areas on different timelines
+                        </CardDescription>
+                        <div className="text-sm text-gray-700 leading-relaxed">
+                          {item.extraNotes.map((note, idx) => (
+                            <div key={idx} className="mb-4">
+                              <div className="font-bold mb-2">{note.subheader}</div>
+                              <ul className="list-disc list-inside space-y-1">
+                                {note.bullets.map((bullet, i) => (
+                                  <li key={i}>{bullet}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               ))}
