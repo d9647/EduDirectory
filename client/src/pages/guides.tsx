@@ -20,7 +20,7 @@ const timelineData: TimelineItem[] = [
     id: "9th",
     title: "9th Grade",
     period: "Freshman Year",
-    description: "As a first-year, you have one job when it comes to the college process: don't think about it! Instead, get to know your high school and let yourself fall in love with the place you will call \"home\" for the next four years. Your first year is about exploring your horizons and creating a solid foundation to build the story of your life. Join a club or two, play a sport, participate in a theatre production—not because doing so will someday look \"good\" on a college resume—but because the more you engage with your school community, the more fulfilling your high school experience will be. So spend this year getting acclimated, strengthening your study skills, making friends, and trying new things. Rest assured, through exploring and embracing what Miramonte has to offer, you have already begun your college journey.",
+    description: "As a first-year, you have one job when it comes to the college process: don't think about it! Instead, get to know your high school and let yourself fall in love with the place you will call \"home\" for the next four years. Your first year is about exploring your horizons and creating a solid foundation to build the story of your life. Join a club or two, play a sport, participate in a theatre production—not because doing so will someday look \"good\" on a college resume—but because the more you engage with your school community, the more fulfilling your high school experience will be. So spend this year getting acclimated, strengthening your study skills, making friends, and trying new things. Rest assured, through exploring and embracing what your high school has to offer, you have already begun your college journey.",
     goals: [
       "Establish strong study habits and time management skills",
       "Explore extracurricular activities and find your passions",
@@ -68,7 +68,7 @@ const timelineData: TimelineItem[] = [
     id: "10th",
     title: "10th Grade",
     period: "Sophomore Year",
-    description: "",
+    description: "From a college perspective, sophomore year is about expanding your understanding of what makes you \"you,\" and then starting to take steps to put that understanding into action. <br><br>How do you do this? Ask yourself: what gets you excited, makes you happy, intrigues you? Once you have uncovered the answers, start to notice the \"threads\" that weave throughout your life. These \"threads\" represent your authentic values, skills, and interests. <br><br>Be mindful and take the initiative to align your values, skills, and interests with the classes you take, clubs you join, and how you spend your time outside of your high school. Then, deepen your involvement where you can. Pay particular attention to the subjects that inspire you and embrace opportunities to learn more (one of these subjects may someday become your college major). ",
     goals: [
       "Take challenging courses including honors classes",
       "Deepen involvement in extracurricular activities",
@@ -283,6 +283,7 @@ export default function Guides() {
                         {item.description}
                       </div>
                     )}
+
                     <CardDescription className="text-blue-700">
                       Key focus areas and achievements for this period
                     </CardDescription>
