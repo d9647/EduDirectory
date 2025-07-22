@@ -279,12 +279,13 @@ export default function Guides() {
                       {item.title} - {item.period}
                     </CardTitle>
                     {item.description && (
-                      <div className="mt-4 text-base text-gray-700 leading-relaxed">
-                        {item.description}
-                      </div>
+                      <div
+                        className="mt-4 text-base text-gray-700 leading-relaxed"
+                        dangerouslySetInnerHTML={{ __html: item.description }}
+                      />
                     )}
 
-                    <CardDescription className="text-blue-700">
+                    <CardDescription className="text-blue-700 mt-6">
                       Key focus areas and achievements for this period
                     </CardDescription>
                   </CardHeader>
