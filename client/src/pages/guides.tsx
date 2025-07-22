@@ -9,6 +9,7 @@ interface TimelineItem {
   id: string;
   title: string;
   period: string;
+  description?: string; // New field for a wordy paragraph
   goals: string[];
   milestones: string[];
   resources: string[];
@@ -19,6 +20,7 @@ const timelineData: TimelineItem[] = [
     id: "9th",
     title: "9th Grade",
     period: "Freshman Year",
+    description: "As a first-year, you have one job when it comes to the college process: don't think about it! Instead, get to know your high school and let yourself fall in love with the place you will call \"home\" for the next four years. Your first year is about exploring your horizons and creating a solid foundation to build the story of your life. Join a club or two, play a sport, participate in a theatre production—not because doing so will someday look \"good\" on a college resume—but because the more you engage with your school community, the more fulfilling your high school experience will be. So spend this year getting acclimated, strengthening your study skills, making friends, and trying new things. Rest assured, through exploring and embracing what Miramonte has to offer, you have already begun your college journey.",
     goals: [
       "Establish strong study habits and time management skills",
       "Explore extracurricular activities and find your passions",
@@ -42,6 +44,7 @@ const timelineData: TimelineItem[] = [
     id: "summer-9",
     title: "Summer",
     period: "First Summer",
+    description: "",
     goals: [
       "Continue learning through summer programs or courses",
       "Explore career interests through volunteering",
@@ -65,6 +68,7 @@ const timelineData: TimelineItem[] = [
     id: "10th",
     title: "10th Grade",
     period: "Sophomore Year",
+    description: "",
     goals: [
       "Take challenging courses including honors classes",
       "Deepen involvement in extracurricular activities",
@@ -88,6 +92,7 @@ const timelineData: TimelineItem[] = [
     id: "summer-10",
     title: "Summer",
     period: "Second Summer",
+    description: "",
     goals: [
       "Gain work experience through jobs or internships",
       "Continue community service and leadership development",
@@ -111,6 +116,7 @@ const timelineData: TimelineItem[] = [
     id: "11th",
     title: "11th Grade",
     period: "Junior Year",
+    description: "",
     goals: [
       "Take most challenging course load including AP classes",
       "Prepare for and take SAT/ACT tests",
@@ -134,6 +140,7 @@ const timelineData: TimelineItem[] = [
     id: "summer-11",
     title: "Summer",
     period: "Third Summer",
+    description: "",
     goals: [
       "Focus on college applications and essays",
       "Gain meaningful work or internship experience",
@@ -157,6 +164,7 @@ const timelineData: TimelineItem[] = [
     id: "12th",
     title: "12th Grade",
     period: "Senior Year",
+    description: "",
     goals: [
       "Submit college applications and financial aid forms",
       "Maintain strong academic performance",
@@ -180,6 +188,7 @@ const timelineData: TimelineItem[] = [
     id: "summer-12",
     title: "Summer",
     period: "Final Summer",
+    description: "",
     goals: [
       "Prepare for college transition",
       "Complete college orientation requirements",
@@ -272,6 +281,11 @@ export default function Guides() {
                     <CardDescription className="text-blue-700">
                       Key focus areas and achievements for this period
                     </CardDescription>
+                    {item.description && (
+                      <div className="mt-4 text-base text-gray-700 leading-relaxed">
+                        {item.description}
+                      </div>
+                    )}
                   </CardHeader>
                   <CardContent className="p-6">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
