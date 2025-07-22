@@ -718,7 +718,7 @@ export default function Guides() {
                                     className="flex items-start gap-2 text-blue-700 hover:underline text-sm"
                                   >
                                     <Send className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                                    <span className="flex flex-wrap items-center gap-1 text-sm text-gray-700 font-normal">
+                                    <span className="flex flex-wrap items-center gap-1 text-xs text-gray-700 font-normal leading-tight">
                                       <span className="underline">{link.label}</span>
                                       {link.description && (
                                         <span>- {link.description}</span>
@@ -751,7 +751,7 @@ export default function Guides() {
                                       className="flex items-start gap-2 text-blue-700 hover:underline text-sm"
                                     >
                                       <Send className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                                      <span className="flex flex-wrap items-center gap-1 text-sm text-gray-700 font-normal">
+                                      <span className="flex flex-wrap items-center gap-1 text-xs text-gray-700 font-normal leading-tight">
                                         <span className="underline">{link.label}</span>
                                         {link.description && (
                                           <span>- {link.description}</span>
