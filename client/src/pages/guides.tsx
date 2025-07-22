@@ -280,12 +280,12 @@ export default function Guides() {
                     </CardTitle>
                     {item.description && (
                       <div
-                        className="mt-4 mb-8 text-sm text-gray-700 leading-relaxed"
+                        className="mt-4 text-sm text-gray-700 leading-relaxed"
                         dangerouslySetInnerHTML={{ __html: item.description }}
                       />
                     )}
 
-                    <CardDescription className="text-blue-700 mt-8">
+                    <CardDescription className="text-blue-700 mt-6">
                       Key focus areas and achievements for this period
                     </CardDescription>
                   </CardHeader>
