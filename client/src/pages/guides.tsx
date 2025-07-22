@@ -429,113 +429,99 @@ export default function Guides() {
   // Quick resource links for the right panel (with subheaders and descriptions)
   const quickLinks = [
     {
-      subheader: "Virtual Tours",
-      links: [
-        {
-          label: "YouVisit",
-          url: "https://www.youvisit.com/collegesearch/",
-          description: "Search by college name or by fun rankings such as best campus food or coolest dorms. Videos complement those found on college admissions websites."
-        },
-        {
-          label: "CampusReel",
-          url: "https://www.campusreel.org/",
-          description: "Virtual campus tours that show what a campus looks and feels like, with student-generated content."
-        },
-        {
-          label: "College Tours",
-          url: "https://www.collegetours.com/",
-          description: "Offers videos, campus maps, and general information about colleges, including videos by category of interest."
-        },
-        {
-          label: "MHS College & Career Resources",
-          url: "https://www.acalanes.k12.ca.us/Page/2734",
-          description: "Comprehensive resource page for college and career planning, including virtual tours and more."
-        }
-      ]
-    },
-    {
-      subheader: "Financial Aid",
-      links: [
-        {
-          label: "FAFSA (Federal Student Aid)",
-          url: "https://studentaid.gov/",
-          description: "Apply for federal financial aid for college. The official Free Application for Federal Student Aid (FAFSA) site."
-        },
-        {
-          label: "CSS Profile",
-          url: "https://cssprofile.collegeboard.org/",
-          description: "A financial aid application required by many private colleges and universities."
-        },
-        {
-          label: "Scholarship Search (Fastweb)",
-          url: "https://www.fastweb.com/",
-          description: "Search for scholarships, internships, and financial aid opportunities."
-        }
-      ]
-    },
-    {
       subheader: "List Building",
       links: [
-        {
-          label: "Corsava",
-          url: "https://www.corsava.com/",
-          description: "A free tool to help you sort and list your preferences for college selection."
-        },
-        {
-          label: "CollegeXpress",
-          url: "https://www.collegexpress.com/",
-          description: "Search from an amazing set of lists according to your interests, such as 'Schools for the Free Spirit.'"
-        },
-        {
-          label: "Niche",
-          url: "https://www.niche.com/colleges/search/best-colleges/",
-          description: "Rankings and reviews based on academic, admissions, financial, and student life data."
-        },
-        {
-          label: "BigFuture (College Board)",
-          url: "https://bigfuture.collegeboard.org/",
-          description: "A free college planning tool to support students in discovering best-fit colleges and career options."
-        },
-        {
-          label: "College Navigator",
-          url: "https://nces.ed.gov/collegenavigator/",
-          description: "Created by the US Department of Education, this tool provides detailed information about colleges."
-        }
+        { label: "Corsava", url: "https://www.corsava.com/", description: "A free tool to help you sort and list your preferences in a way that will help you figure out what you want from your college experience." },
+        { label: "CollegeXpress", url: "https://www.collegexpress.com/", description: "Students can search from an amazing set of lists according to their interests. Students can type in anything from “Schools for the Free Spirit” to “Great Private Colleges for the B Student” and get a list of results compiled by experts." },
+        { label: "Niche", url: "https://www.niche.com/colleges/search/best-colleges/", description: "Rankings/Niche Grades are based on rigorous analysis of academic, admissions, financial, and student life data from the U.S. Department of Education along with millions of reviews from students and alumni." },
+        { label: "BigFuture", url: "https://bigfuture.collegeboard.org/", description: "The College Board's free college planning tool, designed to support students in the planning process and discover best-fit colleges. Provides tools to discover interests and career options." },
+        { label: "College Navigator", url: "https://nces.ed.gov/collegenavigator/", description: "Created by the US Department of Education and its National Center for Education Statistics." },
+        { label: "Appily", url: "https://www.appily.com/", description: "Tool that allows you to input your weighted and unweighted GPA, your test scores, and your college preferences. It will match you with schools that meet your preferences and provide a rough sense of your chance of admission. Bonus: Appily will give you the average Net Price paid by students (which is different from the sticker price) as well as the merit scholarships that are available at each school to which you are applying under the “Scholarships” tab. This will show up once you’ve added your colleges on Appily." },
+        { label: "Unigo", url: "https://www.unigo.com/", description: "Provides a student perspective. You can read students’ opinions on their schools. Read multiple reviews, in particular, the “What’s the stereotype of students at your school?” and “Is the stereotype true?” You’ll get a sense of the school vibe." },
+        { label: "CollegeData", url: "https://www.collegedata.com/", description: "TONS of data on the average test scores, general acceptance rates, and average GPAs of incoming first-year college students. It also provides data around average financial aid packages offered, specific financial aid packages offered to students who were admitted, and other numbers that might help you and your family plan for college costs." }
+      ]
+    },
+    {
+      subheader: "Senior Resources",
+      links: [
+        { label: "College Essay Guy Application Hub", url: "https://www.collegeessayguy.com/application-hub", description: "Contains free guides to almost every part of the college application process." },
+        { label: "Common App Essay Formatting and Style Guide", url: "https://www.collegeessayguy.com/blog/common-app-essay-formatting", description: "This guide is dedicated to helping take some of the guesswork out of punctuation, style, grammar, and even the Common App essay formatting. Also shares some common college essay grammar mistakes students make and how to fix them." },
+        { label: "UC Guide to Presenting Yourself on the UC Application", url: "https://admission.universityofcalifornia.edu/how-to-apply/presenting-yourself.html", description: "Official UC guide for presenting yourself on the UC application." },
+        { label: "AXS Companion to Common App", url: "https://www.commonapp.org/ready", description: "A free, open online platform to provide access and clarity for students as they apply to college using the Common App. The AXS Companion is used side-by-side with Common App and includes video modules that can be viewed sequentially or just as needed." }
+      ]
+    },
+    {
+      subheader: "Virtual Tours",
+      links: [
+        { label: "YouVisit", url: "https://www.youvisit.com/collegesearch/", description: "You can search by college name or by fun rankings such as best campus food or coolest dorms. The videos are a nice complement to the tours found on college admissions websites." },
+        { label: "CampusReel", url: "https://www.campusreel.org/", description: "For virtual campus tours. Not only shows what a campus looks like but really lets you get a sense of what the college campus feels like." },
+        { label: "College Tours", url: "https://www.collegetours.com/", description: "Offers videos and campus maps as well as general information about the colleges. It also provides videos by category of interest." }
       ]
     },
     {
       subheader: "Alternative Institutions for Coursework",
       links: [
-        {
-          label: "UC Scout",
-          url: "https://www.ucscout.org/",
-          description: "Online approved UC A-G high school courses."
-        },
-        {
-          label: "Apex Learning",
-          url: "https://www.apexlearning.com/",
-          description: "Online courses for original credit or credit recovery towards grade-level advancement and graduation."
-        },
-        {
-          label: "National University Virtual High School",
-          url: "https://www.nuvhs.org/",
-          description: "Online AP, UC (A-G), or elective courses to achieve academic goals."
-        },
-        {
-          label: "Language Bird",
-          url: "https://www.languagebird.com/",
-          description: "Online language courses for high school credit."
-        },
-        {
-          label: "Laurel Springs Online School",
-          url: "https://laurelsprings.com/",
-          description: "Online UC (A-G) approved courses for high school students."
-        },
-        {
-          label: "Tilden Prep",
-          url: "https://tildenprep.com/",
-          description: "A WASC-accredited, college preparatory school offering UC-approved courses one-to-one and in small groups."
-        }
+        { label: "UC Scout", url: "https://www.ucscout.org/", description: "Online approved UC A-G high school courses." },
+        { label: "BYU Online", url: "https://is.byu.edu/catalog/HS", description: "Online approved UC A-G high school courses." },
+        { label: "Apex Learning", url: "https://www.apexlearning.com/", description: "Online for original credit or f credit recovery towards grade-level advancement and high school graduation." },
+        { label: "National University Virtual High School", url: "https://www.nuvhs.org/", description: "Online AP, UC (A-G), or elective courses to achieve academic goals." },
+        { label: "Language Bird", url: "https://www.languagebird.com/", description: "Online language courses for high school credit." },
+        { label: "Laurel Springs Online School", url: "https://laurelsprings.com/", description: "Online UC (A-G) approved courses." },
+        { label: "Tilden Prep", url: "https://tildenprep.com/", description: "A unique, WASC-accredited, college preparatory school. Teaches UC-approved courses one-to-one and in small groups." }
+      ]
+    },
+    {
+      subheader: "College Majors",
+      links: [
+        { label: "BigFuture Major & Career Search", url: "https://bigfuture.collegeboard.org/majors-careers", description: "College Board’s major and career search engine." },
+        { label: "College Majors 101", url: "https://www.collegemajors101.com/", description: "Exploration tool to gather more in-depth information about college major selection and find the major that fits you." },
+        { label: "My Majors", url: "https://www.mymajors.com/", description: "Diagnostic tool to explore options when deciding on a college major." },
+        { label: "ThoughtCo. Major Quiz", url: "https://www.thoughtco.com/college-major-quiz-4076781", description: "Assessment to help you determine which major is right for you." },
+        { label: "UC Majors", url: "https://admission.universityofcalifornia.edu/counselors/files/uc-majors-list.pdf", description: "List of UC campuses and the majors they offer." },
+        { label: "CSU Majors", url: "https://www2.calstate.edu/attend/degree-programs/Pages/bachelors-degree-programs.aspx", description: "List of CSU campuses and the majors they offer." },
+        { label: "Northeastern University Career Center", url: "https://careers.northeastern.edu/", description: "Northeastern University Career Center." },
+        { label: "Berkeley (What can I do with this Major)", url: "https://career.berkeley.edu/Info/Majors", description: "Explore career options by major at UC Berkeley." },
+        { label: "University of Michigan", url: "https://careercenter.umich.edu/article/what-can-i-do-major", description: "Career options by major at University of Michigan." },
+        { label: "Penn State University", url: "https://studentaffairs.psu.edu/career/majors", description: "Career options by major at Penn State." }
+      ]
+    },
+    {
+      subheader: "Career Resources",
+      links: [
+        { label: "Jobs For Teens", url: "https://www.jobsforteenshq.com/", description: "Website dedicated to helping teens find jobs. Offers education regarding potential jobs, resume writing tips, volunteer opportunities, and more." },
+        { label: "O* NET Resource Center", url: "https://www.onetcenter.org/", description: "Occupational information network. Primary sources of occupational information. The database is skill-based and contains information about worker attributes, job characteristics, and career exploration tools that relate the results of assessments to career and labor market information in the database." },
+        { label: "Big Future/RoadTrip Nation", url: "https://roadtripnation.com/", description: "College Board’s site for helping students determine career interests. Links to RoadTrip Nation. Roadtrip Nation helps career-seekers connect to real-world professionals and discover pathways aligned with their interests." },
+        { label: "YouScience", url: "https://www.youscience.com/", description: "Fee-based sight to discover your aptitude, true strengths, and how to select the right pathway and career for you." },
+        { label: "16 Personalities", url: "https://www.16personalities.com/", description: "A free personality test that helps students learn how their personality type influences many areas of their life, including major and career choices." },
+        { label: "My Next Move", url: "https://www.mynextmove.org/", description: "Interest profiler to help determine what your interests are and how they relate to the world of work." },
+        { label: "Career One Stop", url: "https://www.careeronestop.org/", description: "Sponsored by the U.S. Department of Labor. Source for career exploration, training, and jobs." },
+        { label: "CA Career Zone", url: "https://www.cacareerzone.org/", description: "The California CareerZone helps students, educators, job seekers, and others access up-to-date career information." }
+      ]
+    },
+    {
+      subheader: "Financial Aid",
+      links: [
+        { label: "Paying for College in Four Steps", url: "https://www.collegeessayguy.com/blog/paying-for-college", description: "A blog post from College Essay Guy." },
+        { label: "FAFSA", url: "https://studentaid.gov/", description: "Application for Federal Financial Aid" },
+        { label: "CSS Profile", url: "https://cssprofile.collegeboard.org/", description: "Online application that collects information used by nearly 400 colleges and scholarship programs to award non-federal aid for private and some public colleges. See a list of schools that use the CSS Profile here" },
+        { label: "California Student Aid Commission", url: "https://www.csac.ca.gov/", description: "Provides state financial aid for those who meet certain income, assets, and other financial aid standards to attend college" },
+        { label: "FinAid.org", url: "https://finaid.org/", description: "Information on financial aid for college and tips on how to help ease the burden of college expenses" },
+        { label: "the balance", url: "https://www.thebalancemoney.com/paying-for-college-4074016", description: "Informative website on how to calculate college costs, save with a 529 plan, apply for and secure financial aid and get scholarships and other sources of funding for education" },
+        { label: "BigFuture", url: "https://bigfuture.collegeboard.org/pay-for-college", description: "BigFuture is the College Board's free college planning tool, designed to support students in the entire college planning process, including paying for college. Offers tools and information to help navigate the financial aid landscape" },
+        { label: "Net Price Calculator Center", url: "https://collegecost.ed.gov/net-price", description: "Department of Education tool to search for any school’s net price calculator" },
+        { label: "Big Future EFC Calculator", url: "https://bigfuture.collegeboard.org/pay-for-college/paying-your-share/expected-family-contribution-calculator", description: "College Board tool to estimate how much a student’s family will be expected to contribute financially towards college costs for one year" },
+        { label: "Mapping Your Future: Student Loan Debt Calculator", url: "https://www.mappingyourfuture.org/paying/debtwizard/", description: "Student Loan Debt calculator which helps estimate student loan payments under a standard repayment plan (equal payments)" },
+        { label: "Fastweb", url: "https://www.fastweb.com/", description: "Site that matches the information entered into your profile to scholarship, college, job, and internship opportunities. Students can use the information that Fastweb provides to apply for scholarships, discover prospective colleges, explore internship possibilities, or learn about part-time jobs" },
+        { label: "JLV College Counseling", url: "https://jlvcollegecounseling.com/scholarships/", description: "List of national scholarships sorted by category" },
+        { label: "Going Merry", url: "https://www.goingmerry.com/", description: "Site for personalized matching and thousands of scholarships" },
+        { label: "College GreenLight", url: "https://www.collegegreenlight.com/", description: "Scholarship site to connect first-generation and underrepresented students to colleges, generous scholarships, and counselors" }
+      ]
+    },
+    {
+      subheader: "Templates",
+      links: [
+        { label: "Resume Templates", url: "https://www.acalanes.k12.ca.us/Page/3806", description: "Sample resume templates for students." },
+        { label: "Teacher Brag Sheet", url: "https://www.acalanes.k12.ca.us/Page/3806", description: "Template for teacher recommendations." }
       ]
     }
   ];
