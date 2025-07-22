@@ -197,7 +197,11 @@ export const TUTORING_SUBJECTS = [
 export const CAMP_CATEGORIES = [
   { value: "STEM", label: "STEM" },
   { value: "Mathematics", label: "Mathematics" },
+  { value: "Medicine & Health Science", label: "Medicine & Health Science" },
   { value: "Leadership", label: "Leadership" },
+  { value: "Engineering", label: "Engineering" },
+  { value: "Computer Science", label: "Computer Science" },
+  { value: "Law & Government", label: "Law & Government" },
   { value: "Humanities & Social Sciences", label: "Humanities & Social Sciences" },
   { value: "Language & Cultural Immersion", label: "Language & Cultural Immersion" },
   { value: "Pre-Professional", label: "Pre-Professional" },

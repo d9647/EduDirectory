@@ -15,7 +15,7 @@ export default function Header() {
     { href: "/summer-camps", label: "Camps" },
     { href: "/internships", label: "Internships" },
     { href: "/jobs", label: "Jobs" },
-
+    { href: "/guides", label: "Guides" },
   ];
 
   const isActiveRoute = (href: string) => location === href;
