@@ -278,14 +278,14 @@ export default function Guides() {
                       <Calendar className="h-5 w-5" />
                       {item.title} - {item.period}
                     </CardTitle>
-                    <CardDescription className="text-blue-700">
-                      Key focus areas and achievements for this period
-                    </CardDescription>
                     {item.description && (
                       <div className="mt-4 text-base text-gray-700 leading-relaxed">
                         {item.description}
                       </div>
                     )}
+                    <CardDescription className="text-blue-700">
+                      Key focus areas and achievements for this period
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="p-6">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
