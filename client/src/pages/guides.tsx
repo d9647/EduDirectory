@@ -246,7 +246,7 @@ export default function Guides() {
                       }
                     `}
                   >
-                    <span className="truncate">{item.title}</span>
+                    <span className="truncate text-xs sm:text-xs lg:text-[11px] xl:text-xs">{item.title}</span>
                   </Button>
                   <span className="mt-2 text-xs text-gray-500 text-center">
                     {item.period}
