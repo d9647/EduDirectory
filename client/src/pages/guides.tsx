@@ -20,7 +20,7 @@ const timelineData: TimelineItem[] = [
     id: "9th",
     title: "9th Grade",
     period: "Freshman Year",
-    description: "As a first-year, you have one job when it comes to the college process: don't think about it! Instead, get to know your high school and let yourself fall in love with the place you will call \"home\" for the next four years. Your first year is about exploring your horizons and creating a solid foundation to build the story of your life. Join a club or two, play a sport, participate in a theatre production—not because doing so will someday look \"good\" on a college resume—but because the more you engage with your school community, the more fulfilling your high school experience will be. So spend this year getting acclimated, strengthening your study skills, making friends, and trying new things. Rest assured, through exploring and embracing what your high school has to offer, you have already begun your college journey.",
+    description: "As a first-year, you have one job when it comes to the college process: don't think about it! Instead, get to know your high school and let yourself fall in love with the place you will call \"home\" for the next four years. <br><br>Your first year is about exploring your horizons and creating a solid foundation to build the story of your life. Join a club or two, play a sport, participate in a theatre production—not because doing so will someday look \"good\" on a college resume—but because the more you engage with your school community, the more fulfilling your high school experience will be. So spend this year getting acclimated, strengthening your study skills, making friends, and trying new things. Rest assured, through exploring and embracing what your high school has to offer, you have already begun your college journey.",
     goals: [
       "Establish strong study habits and time management skills",
       "Explore extracurricular activities and find your passions",
@@ -116,7 +116,7 @@ const timelineData: TimelineItem[] = [
     id: "11th",
     title: "11th Grade",
     period: "Junior Year",
-    description: "",
+    description: "Your junior year marks a transition and becomes about preparation for your post-secondary journey. While you are still actively building your story through your academics, extracurriculars, work, and family responsibilities, this year, you are also taking what you know about yourself to uncover your best \"fit.\"<br><br>Throughout your junior year, continually ask yourself where you can take the initiative to make a greater impact in your life. Is that in your courses, relationships with your teachers, leadership roles, community involvement, studying for standardized testing, summer experience? Repeatedly reassess your answers, and take concrete steps to deepen your engagement wherever you can. Plus, how you choose to spend your time will likely become the topic of your college essays. Alongside increased initiative and impact, junior year is also about engaging with your values, skills, and interests to find the right college for you. <br><br>While you have been preparing for two and a half years by immersing yourself in your school community and getting to know yourself, the official college process kicks off in January. Speak to your counselor to educate yourself on the logistics of the application process. Start to follow the application timeline, attend college fairs, visit schools when possible. Become empowered and take the information you learn to determine your best path. Finally, if you are considering a college, use what you know about yourself and what you are looking for in your college experience to build a list of schools you will apply to in your senior year. In short, do the groundwork now to set yourself up for success in the fall.",
     goals: [
       "Take most challenging course load including AP classes",
       "Prepare for and take SAT/ACT tests",
@@ -164,7 +164,7 @@ const timelineData: TimelineItem[] = [
     id: "12th",
     title: "12th Grade",
     period: "Senior Year",
-    description: "",
+    description: "It is time to finally share your story with the colleges you are applying to. Over the last three years, you have carefully honed your values, skills, and interests. You have dug deep in your academics, extracurriculars, leadership, and employment. Your college applications are an opportunity to pull it all together and showcase who you are, what matters to you, and why it matters. <br><br> Senior year is about being organized, following timelines, and honoring deadlines. This is true regardless of the path you follow. While most of you will attend college, there are many post-secondary opportunities. Speak to your school or private counselor, they are to guide and support you as you make the transition. Remember, your next steps are just the beginning. Where you land does not define who you are; what you do once you land there does.",
     goals: [
       "Submit college applications and financial aid forms",
       "Maintain strong academic performance",
