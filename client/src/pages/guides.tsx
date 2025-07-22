@@ -230,7 +230,7 @@ export default function Guides() {
             <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-300 transform -translate-y-1/2 hidden sm:block"></div>
             
             {/* Timeline Items */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-4 relative">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-3 lg:gap-4 relative">
               {timelineData.map((item, index) => (
                 <div key={item.id} className="flex flex-col items-center">
                   <Button
@@ -238,14 +238,15 @@ export default function Guides() {
                     size="sm"
                     onClick={() => toggleTimeline(item.id)}
                     className={`
-                      relative z-10 h-12 w-full sm:w-20 text-xs sm:text-sm font-medium
+                      relative z-10 h-12 w-full sm:w-20 lg:w-24 xl:w-28 text-xs sm:text-sm font-medium px-2
+                      whitespace-nowrap overflow-hidden text-ellipsis
                       ${activeTimeline === item.id 
                         ? "bg-blue-600 text-white shadow-lg" 
                         : "bg-white border-2 border-gray-300 text-gray-700 hover:border-blue-400"
                       }
                     `}
                   >
-                    {item.title}
+                    <span className="truncate">{item.title}</span>
                   </Button>
                   <span className="mt-2 text-xs text-gray-500 text-center">
                     {item.period}
