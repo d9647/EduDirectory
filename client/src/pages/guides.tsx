@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight, Calendar, Target, BookOpen } from "lucide-react";
+import { ChevronDown, ChevronRight, Calendar, Target, BookOpen, Send } from "lucide-react";
 import Header from "@/components/layout/header";
 
 interface TimelineItem {
@@ -209,16 +209,32 @@ const timelineData: TimelineItem[] = [
           "Ask teachers for letters of recommendation before summer.",
           "Start drafting your college application essays.",
           "Revisit your four-year plan course plan and make adjustments where you feel they are needed",
-          "Demonstrate interest in colleges by signing up on MaiaLearning for an admission representative’s presentation (limit 2). Over 120 colleges visit the C&CC each year",
+          "Demonstrate interest in colleges by signing up to attend college fair with the admission representative’s presentation (limit 2). Many colleges visit  your high school each year",
           "Take the PSAT in October to be considered for National Merit Scholarship",
           "Attend a local College Fair",
           "Sign up for AP tests and take them in May",
           "Determine your standardized testing plan. Consider taking the SAT/ACT in winter or spring: sign up on the appropriate testing platform. Establish your test prep schedule",
-          "Stay on track with your ACT/SAT testing timeline and study schedule. Test prep resources are available on the website and in the C&CC. Take multiple full-length practice exams in advance of exams",
-          "Build a list of preliminary schools you are interested in on MaiaLearning; add schools of interest, you can condense the list next year",
+          "Stay on track with your ACT/SAT testing timeline and study schedule. Test prep resources are available on the website and in the school counseling department. Take multiple full-length practice exams in advance of exams",
+          "Build a list of preliminary schools you are interested in; add schools of interest, you can condense the list next year",
           <>Take an assessment at <a href="https://www.mymajors.com/" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">MyMajors</a></>,
           "Athletes: Double-check that your classes meet NCAA Clearinghouse requirements. Complete online recruitment forms for each college you're considering. Make your sports resume and recruitment videos. Correspond with coaches periodically to show interest",
           "Fine and Performing Arts Students: Sign up for Performing and Visual Arts College Fairs. Work on portfolio or audition materials throughout junior year"
+        ]
+      },
+      {
+        subheader: "Winter/Spring",
+        bullets: [
+          "Continue to draft your college application essays.",
+          "Revisit your four-year plan course plan and make adjustments where you feel they are needed",
+          "Take the SAT/ACT. Test prep resources are available in the C&CC and on the MHS Website",
+          "Spend time search engines researching potential colleges and their admission requirements",
+          "Continue to add schools to \"Considering\" in your college list",
+          "Visit and tour college campuses during breaks or take an online virtual tour",
+          "Start to research college scholarships",
+          "Request letters of recommendation from two academic teachers after Spring Break",
+          "Investigate and secure summer experiences. See <a href='https://www.miramonte.org/page/view/1000000000000000000000000000000000000000' target='_blank' rel='noopener noreferrer' className='text-blue-700 underline'>MHS website</a> for a full list of ideas",
+          "Athletes: Send your sports resume and video to college coaches and fill out athletic recruitment surveys on the college websites",
+          "Fine and Performing Arts Students: Explore how the audition and portfolio process for college admissions. Continue to build your portfolio and audition videos"
         ]
       }
     ]
@@ -229,15 +245,6 @@ const timelineData: TimelineItem[] = [
     period: "Third Summer",
     description: "",
     goals: [
-      "Participate in summer experiences: research, internships, college coursework, work, travel, volunteer work",
-      "Finalize your college list. Make sure it reflects a balance of admissions possibilities (Likely, Target, Reach)",
-      "Research the type of applications required for each school on your list. Understand the requirements and deadlines",
-      "Enter dates and deadlines into a college application spreadsheet to organize your information (see Senior Resources page)",
-      "Create a scholarship spreadsheet",
-      "Note down your Counselor Brag sheet (on google sheet or any platform, such as MaiaLearning",
-      "Continue to draft your Common App Personal Statement you began in your junior English class. or Personal Insight Questions (UC) and create summer drafts",
-      "Open a Common App account and complete the main sections of the Common App tab",
-      "Brainstorm your UC personal insight questions, if applying",
       "Focus on college applications and essays",
       "Gain meaningful work or internship experience",
       "Retake standardized tests if needed",
@@ -254,6 +261,22 @@ const timelineData: TimelineItem[] = [
       "Essay writing workshops",
       "Scholarship search engines",
       "Financial aid counselors"
+    ],
+    extraNotes: [
+      {
+        subheader: "All Summer",
+        bullets: [
+          "Participate in summer experiences: research, internships, college coursework, work, travel, volunteer work",
+          "Finalize your college list. Make sure it reflects a balance of admissions possibilities (Likely, Target, Reach)",
+          "Research the type of applications required for each school on your list. Understand the requirements and deadlines",
+          "Enter dates and deadlines into a college application spreadsheet to organize your information (see <a href='https://www.miramonte.org/page/view/1000000000000000000000000000000000000000' target='_blank' rel='noopener noreferrer' className='text-blue-700 underline'>Senior Resources page</a>)",
+          "Create a scholarship spreadsheet",
+          "Fill out your Counselor Brag sheet",
+          "Continue to draft your Common App Personal Statement you began in your junior English class. or Personal Insight Questions (UC) and create summer drafts",
+          "Open a Common App account and complete the main sections of the Common App tab",
+          "Brainstorm your UC personal insight questions, if applying"
+        ]
+      }
     ]
   },
   {
@@ -281,10 +304,52 @@ const timelineData: TimelineItem[] = [
     ],
     extraNotes: [
       {
+        subheader: "All Year Long",
+        bullets: [
+          "Keep up your grades. Acceptances are conditional, and colleges expect the GPA you applied with to stay roughly the same",
+          "Continue to participate in extracurricular activities outside of class",
+          "Check your application portals and email regularly",
+          "Send colleges any additional information they request promptly",
+          "Keep track of your admissions results or other post-secondary plans"
+        ]
+      },
+      {
+        subheader: "August/September/October",
+        bullets: [
+          "Finalize college list, requirements, and deadlines for each college you are applying to",
+          "Decide if you are applying ED, EA, or RD for each college",
+          "Work on your applications",
+          "Keep a log of the different websites, username/password data for each college application portal",
+          "Turn in your Brag sheet to your counselor. Due September 1st",
+          "Check your high school transcripts and make sure they are accurate",
+          "Take the ACT/SAT one more time, if needed",
+          "Update your activities resume. Add activities you participated in over the summer. Use this information to fill out the activities section of your various applications (see <a href='https://www.miramonte.org/page/view/1000000000000000000000000000000000000000' target='_blank' rel='noopener noreferrer' className='text-blue-700 underline'>Senior Resources page</a>)",
+          "Update the MaiaLearning \"Considering\" list and move colleges over to the \"Applying\" section",
+          "Request/Confirm teacher recommendations verbally and send formal requests through Maia Learning",
+          "Order official transcripts from your high school",
+          "Send official transcripts from any other schools you have taken coursework to colleges that require official transcripts at the time of application",
+          "Send ACT/SAT scores through the College Board (SAT) or ACT official sites to colleges you are applying to, if applicable",
+          "Register for AP test if taking AP classes"
+        ]
+      },
+      {
+        subheader: "October/November",
+        bullets: [
+          "Take the ACT/SAT for the final time",
+          "Finish your college essay(s) and personal statements",
+          "Complete and send out all EA and ED applications by late October (Typically Nov. 1 deadline)",
+          "Review and submit financial aid information. FAFSA opens on October 1st. Apply by your school deadlines and/or FAFSA deadline. ???MHS automatically uploads Cal Grant eligibility for you",
+          "Fill out the CSS Profile if needed for your colleges",
+          "Submit CSU and UC applications by the November 30th deadline (good idea to send by Thanksgiving)"
+        ]
+      },
+      {
         subheader: "December",
         bullets: [
           "Regular Decision (RD) deadlines are typically around January 1. Complete and send out all RD applications no later than mid-December",
-          "If you applied to a college EA or ED, you should receive admissions decisions around mid-December"
+          "If you applied to a college EA or ED, you should receive admissions decisions around mid-December",
+          "If accepted ED, pull all other submitted applications",
+          "Thank all of your letter of recommender writers"
         ]
       },
       {
@@ -292,6 +357,35 @@ const timelineData: TimelineItem[] = [
         bullets: [
           "If deferred, send a letter of continued interest to the admissions representative. Reaffirm your interest in the school and offer them any updates to your application (awards, achievements)",
           "Start to receive RD admissions decisions. CSUs and UCs typically announce decisions in mid-March"
+        ]
+      },
+      {
+        subheader: "March/April",
+        bullets: [
+          "Colleges have until April 1st to release decisions",
+          "Evaluate financial aid packages and scholarship offerings",
+          "Track your notes with application decisions received",
+          "Plan visits to accepted colleges if needed to make your final decision. Attend admitted student day if offered admission to learn more about a college before enrolling",
+          "Accept admission to your college of choice by May 1st or earlier. May 1st is National Deposit Day. Once you accept an admission offer, you should let other colleges know that you do not plan to attend",
+          "Enroll and submit a deposit by May 1"
+        ]
+      },
+      {
+        subheader: "May",
+        bullets: [
+          "If you have been waitlisted, make sure to let the school know you are still interested by writing a Letter of Continued Interest (see <a href='https://www.miramonte.org/page/view/1000000000000000000000000000000000000000' target='_blank' rel='noopener noreferrer' className='text-blue-700 underline'>Senior Resources page</a>)",
+          "Complete the your high school's Graduation Survey if any",
+          "Complete the final transcript Google form sent by the Registrar if any",
+          "Sign up for campus housing if you plan to live on campus and send a deposit, if required"
+        ]
+      },
+      {
+        subheader: "After Graduation",
+        bullets: [
+          "Sign up for College Orientation Sessions",
+          "Check your portal for any additional information needed by your college of choice",
+          "Send your AP Scores to the college you are attending",
+          "If waitlisted, continue to check your email for notifications"
         ]
       }
     ]
