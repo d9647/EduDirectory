@@ -423,17 +423,7 @@ export default function Guides() {
     setActiveTimeline(activeTimeline === id ? null : id);
   };
 
-  // State for expanding/collapsing quick links sections
-  const [activeQuickLinkSection, setActiveQuickLinkSection] = useState<string | null>(null);
-  const [quickLinksPage, setQuickLinksPage] = useState(0);
-  const categoriesPerPage = 4;
-  const totalPages = Math.ceil(quickLinks.length / categoriesPerPage);
-  const pagedQuickLinks = quickLinks.slice(
-    quickLinksPage * categoriesPerPage,
-    (quickLinksPage + 1) * categoriesPerPage
-  );
-
-  // Quick resource links for the right panel (with subheaders and descriptions)
+  // Move quickLinks above state usage to avoid initialization error
   const quickLinks = [
     {
       subheader: "List Building",
@@ -532,6 +522,15 @@ export default function Guides() {
       ]
     }
   ];
+  // State for expanding/collapsing quick links sections
+  const [activeQuickLinkSection, setActiveQuickLinkSection] = useState<string | null>(null);
+  const [quickLinksPage, setQuickLinksPage] = useState(0);
+  const categoriesPerPage = 4;
+  const totalPages = Math.ceil(quickLinks.length / categoriesPerPage);
+  const pagedQuickLinks = quickLinks.slice(
+    quickLinksPage * categoriesPerPage,
+    (quickLinksPage + 1) * categoriesPerPage
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
