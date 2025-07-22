@@ -426,7 +426,7 @@ export default function Guides() {
   // Move quickLinks above state usage to avoid initialization error
   const quickLinks = [
     {
-      subheader: "List Building",
+      subheader: "College List Building",
       links: [
         { label: "Corsava", url: "https://www.corsava.com/", description: "A free tool to help you sort and list your preferences in a way that will help you figure out what you want from your college experience." },
         { label: "CollegeXpress", url: "https://www.collegexpress.com/", description: "Students can search from an amazing set of lists according to their interests. Students can type in anything from “Schools for the Free Spirit” to “Great Private Colleges for the B Student” and get a list of results compiled by experts." },
@@ -439,12 +439,12 @@ export default function Guides() {
       ]
     },
     {
-      subheader: "Senior Resources",
+      subheader: "Essay Guides & Common Apps",
       links: [
-        { label: "College Essay Guy Application Hub", url: "https://www.collegeessayguy.com/application-hub", description: "Contains free guides to almost every part of the college application process." },
-        { label: "Common App Essay Formatting and Style Guide", url: "https://www.collegeessayguy.com/blog/common-app-essay-formatting", description: "This guide is dedicated to helping take some of the guesswork out of punctuation, style, grammar, and even the Common App essay formatting. Also shares some common college essay grammar mistakes students make and how to fix them." },
-        { label: "UC Guide to Presenting Yourself on the UC Application", url: "https://admission.universityofcalifornia.edu/how-to-apply/presenting-yourself.html", description: "Official UC guide for presenting yourself on the UC application." },
-        { label: "AXS Companion to Common App", url: "https://www.commonapp.org/ready", description: "A free, open online platform to provide access and clarity for students as they apply to college using the Common App. The AXS Companion is used side-by-side with Common App and includes video modules that can be viewed sequentially or just as needed." }
+        { label: "College Essay Guy Application Hub", url: "https://www.collegeessayguy.com/college-application-hub", description: "Contains free guides to almost every part of the college application process." },
+        { label: "Common App Essay Formatting and Style Guide", url: "https://www.collegeessayguy.com/blog/common-app-essay-format-mistakes", description: "This guide is dedicated to helping take some of the guesswork out of punctuation, style, grammar, and even the Common App essay formatting. Also shares some common college essay grammar mistakes students make and how to fix them." },
+        { label: "UC Guide to Presenting Yourself on the UC Application", url: "https://admission.universityofcalifornia.edu/counselors/_files/documents/presenting-yourself-on-the-uc-application-first-year.pdf", description: "Official UC guide for presenting yourself on the UC application." },
+        { label: "AXS Companion to Common App", url: "https://open.oregonstate.education/axscompanion/", description: "A free, open online platform to provide access and clarity for students as they apply to college using the Common App. The AXS Companion is used side-by-side with Common App and includes video modules that can be viewed sequentially or just as needed." }
       ]
     },
     {
