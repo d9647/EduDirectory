@@ -49,7 +49,7 @@ const timelineData: TimelineItem[] = [
           "Plan a summer experience that helps you expand your world.",
           "Athletes: Familiarize yourself with the NCAA and NAIA requirements.",
           "Start an activities resume and keep track of all extracurricular activities (hrs/week/month), employment, awards, and volunteer work. You will need an activities resume for many colleges",
-          "Explore CollegeBoard or MaiaLearning or any other platforms: Begin searching colleges, look at academic profiles needed for schools you are interested in"
+          <>Explore <a href="https://www.collegeboard.org/" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">College Board</a> or <a href="https://nces.ed.gov/collegenavigator/" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">College Navigator</a> or any other platforms: Begin searching colleges, look at academic profiles needed for schools you are interested in</>
         ]
       }
     ]
@@ -124,7 +124,7 @@ const timelineData: TimelineItem[] = [
           "Consider taking a community college course in a subject of interest not available to you at Miramonte during the summer. The registration process begins in March",
           "Continue pursuing your interests over the summer. Take on a job, volunteer work, internship, or self-directed project",
           "Athletes: If you think you may play Division I or II sports in college, register for the NCAA Clearinghouse, the NAIA Eligibility Center, and familiarize yourself with the academic requirements",
-          "Explore CollegeBoard or MaiaLearning or any other platforms: Begin searching colleges, look at academic profiles needed for schools you are interested in"
+          <>Explore <a href="https://www.collegeboard.org/" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">College Board</a> or any other platforms: Begin searching colleges, look at academic profiles needed for schools you are interested in</>
         ]
       },
       {
@@ -423,6 +423,120 @@ export default function Guides() {
     setActiveTimeline(activeTimeline === id ? null : id);
   };
 
+  // Quick resource links for the right panel (with subheaders and descriptions)
+  const quickLinks = [
+    {
+      subheader: "Virtual Tours",
+      links: [
+        {
+          label: "YouVisit",
+          url: "https://www.youvisit.com/collegesearch/",
+          description: "Search by college name or by fun rankings such as best campus food or coolest dorms. Videos complement those found on college admissions websites."
+        },
+        {
+          label: "CampusReel",
+          url: "https://www.campusreel.org/",
+          description: "Virtual campus tours that show what a campus looks and feels like, with student-generated content."
+        },
+        {
+          label: "College Tours",
+          url: "https://www.collegetours.com/",
+          description: "Offers videos, campus maps, and general information about colleges, including videos by category of interest."
+        },
+        {
+          label: "MHS College & Career Resources",
+          url: "https://www.acalanes.k12.ca.us/Page/2734",
+          description: "Comprehensive resource page for college and career planning, including virtual tours and more."
+        }
+      ]
+    },
+    {
+      subheader: "Financial Aid",
+      links: [
+        {
+          label: "FAFSA (Federal Student Aid)",
+          url: "https://studentaid.gov/",
+          description: "Apply for federal financial aid for college. The official Free Application for Federal Student Aid (FAFSA) site."
+        },
+        {
+          label: "CSS Profile",
+          url: "https://cssprofile.collegeboard.org/",
+          description: "A financial aid application required by many private colleges and universities."
+        },
+        {
+          label: "Scholarship Search (Fastweb)",
+          url: "https://www.fastweb.com/",
+          description: "Search for scholarships, internships, and financial aid opportunities."
+        }
+      ]
+    },
+    {
+      subheader: "List Building",
+      links: [
+        {
+          label: "Corsava",
+          url: "https://www.corsava.com/",
+          description: "A free tool to help you sort and list your preferences for college selection."
+        },
+        {
+          label: "CollegeXpress",
+          url: "https://www.collegexpress.com/",
+          description: "Search from an amazing set of lists according to your interests, such as 'Schools for the Free Spirit.'"
+        },
+        {
+          label: "Niche",
+          url: "https://www.niche.com/colleges/search/best-colleges/",
+          description: "Rankings and reviews based on academic, admissions, financial, and student life data."
+        },
+        {
+          label: "BigFuture (College Board)",
+          url: "https://bigfuture.collegeboard.org/",
+          description: "A free college planning tool to support students in discovering best-fit colleges and career options."
+        },
+        {
+          label: "College Navigator",
+          url: "https://nces.ed.gov/collegenavigator/",
+          description: "Created by the US Department of Education, this tool provides detailed information about colleges."
+        }
+      ]
+    },
+    {
+      subheader: "Alternative Institutions for Coursework",
+      links: [
+        {
+          label: "UC Scout",
+          url: "https://www.ucscout.org/",
+          description: "Online approved UC A-G high school courses."
+        },
+        {
+          label: "Apex Learning",
+          url: "https://www.apexlearning.com/",
+          description: "Online courses for original credit or credit recovery towards grade-level advancement and graduation."
+        },
+        {
+          label: "National University Virtual High School",
+          url: "https://www.nuvhs.org/",
+          description: "Online AP, UC (A-G), or elective courses to achieve academic goals."
+        },
+        {
+          label: "Language Bird",
+          url: "https://www.languagebird.com/",
+          description: "Online language courses for high school credit."
+        },
+        {
+          label: "Laurel Springs Online School",
+          url: "https://laurelsprings.com/",
+          description: "Online UC (A-G) approved courses for high school students."
+        },
+        {
+          label: "Tilden Prep",
+          url: "https://tildenprep.com/",
+          description: "A WASC-accredited, college preparatory school offering UC-approved courses one-to-one and in small groups."
+        }
+      ]
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -478,97 +592,129 @@ export default function Guides() {
             {timelineData
               .filter(item => item.id === activeTimeline)
               .map(item => (
-                <Card key={item.id} className="shadow-lg border-0">
-                  <CardHeader className="bg-blue-50">
-                    <CardTitle className="text-xl sm:text-2xl text-blue-900 flex items-center gap-2">
-                      <Calendar className="h-5 w-5" />
-                      {item.title} - {item.period}
-                    </CardTitle>
-                    {item.description && (
-                      <div
-                        className="mt-4 text-sm text-gray-700 leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: item.description }}
-                      />
-                    )}
-
-                    <CardDescription className="text-blue-700 mt-6">
-                      Key focus areas and achievements for this period
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                      {/* Goals */}
-                      <div className="space-y-3">
-                        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                          <Target className="h-5 w-5 text-green-600" />
-                          Goals
-                        </h3>
-                        <ul className="space-y-2">
-                          {item.goals.map((goal, index) => (
-                            <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
-                              <ChevronRight className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                              {goal}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Milestones */}
-                      <div className="space-y-3">
-                        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                          <Calendar className="h-5 w-5 text-blue-600" />
-                          Milestones
-                        </h3>
-                        <ul className="space-y-2">
-                          {item.milestones.map((milestone, index) => (
-                            <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
-                              <ChevronRight className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                              {milestone}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* Resources */}
-                      <div className="space-y-3">
-                        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                          <BookOpen className="h-5 w-5 text-purple-600" />
-                          Resources
-                        </h3>
-                        <ul className="space-y-2">
-                          {item.resources.map((resource, index) => (
-                            <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
-                              <ChevronRight className="h-4 w-4 text-purple-500 mt-0.5 flex-shrink-0" />
-                              {resource}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </CardContent>
-                  {item.extraNotes && item.extraNotes.length > 0 && (
-                    <CardFooter className="bg-blue-50 flex flex-col items-start px-6 py-8">
-                      <CardDescription className="text-blue-700 mb-4">
-                        Key focus areas on different timelines
-                      </CardDescription>
-                      <div className="mt-4 text-sm text-gray-700 leading-relaxed w-full">
-                        {item.extraNotes.map((note, idx) => (
-                          <div key={idx} className="mb-4">
-                            <div className="font-bold mb-2">{note.subheader}</div>
+                <div className="flex flex-col lg:flex-row gap-8">
+                  <div className="flex-1">
+                    <Card key={item.id} className="shadow-lg border-0">
+                      <CardHeader className="bg-blue-50">
+                        <CardTitle className="text-xl sm:text-2xl text-blue-900 flex items-center gap-2">
+                          <Calendar className="h-5 w-5" />
+                          {item.title} - {item.period}
+                        </CardTitle>
+                        <CardDescription className="text-blue-700 mt-6">
+                          Key focus areas and achievements for this period
+                        </CardDescription>
+                        {item.description && (
+                          <div
+                            className="mt-4 text-sm text-gray-700 leading-relaxed"
+                            dangerouslySetInnerHTML={{ __html: item.description }}
+                          />
+                        )}
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                          {/* Goals */}
+                          <div className="space-y-3">
+                            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                              <Target className="h-5 w-5 text-green-600" />
+                              Goals
+                            </h3>
                             <ul className="space-y-2">
-                              {note.bullets.map((bullet, i) => (
-                                <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                              {item.goals.map((goal, index) => (
+                                <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
                                   <ChevronRight className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                                  {bullet}
+                                  {goal}
                                 </li>
                               ))}
                             </ul>
                           </div>
-                        ))}
-                      </div>
-                    </CardFooter>
-                  )}
-                </Card>
+
+                          {/* Milestones */}
+                          <div className="space-y-3">
+                            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                              <Calendar className="h-5 w-5 text-blue-600" />
+                              Milestones
+                            </h3>
+                            <ul className="space-y-2">
+                              {item.milestones.map((milestone, index) => (
+                                <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
+                                  <ChevronRight className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                                  {milestone}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          {/* Resources */}
+                          <div className="space-y-3">
+                            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                              <BookOpen className="h-5 w-5 text-purple-600" />
+                              Resources
+                            </h3>
+                            <ul className="space-y-2">
+                              {item.resources.map((resource, index) => (
+                                <li key={index} className="flex items-start gap-2 text-sm text-gray-700">
+                                  <ChevronRight className="h-4 w-4 text-purple-500 mt-0.5 flex-shrink-0" />
+                                  {resource}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </CardContent>
+                      {item.extraNotes && item.extraNotes.length > 0 && (
+                        <CardFooter className="bg-blue-50 flex flex-col items-start px-6 py-8">
+                          <CardDescription className="text-blue-700 mb-4">
+                            Key focus areas on different timelines
+                          </CardDescription>
+                          <div className="mt-4 text-sm text-gray-700 leading-relaxed w-full">
+                            {item.extraNotes.map((note, idx) => (
+                              <div key={idx} className="mb-4">
+                                <div className="font-bold mb-2">{note.subheader}</div>
+                                <ul className="space-y-2">
+                                  {note.bullets.map((bullet, i) => (
+                                    <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                                      <ChevronRight className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                                      {bullet}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        </CardFooter>
+                      )}
+                    </Card>
+                  </div>
+                  {/* Right Panel: Quick Resources */}
+                  <div className="w-full lg:w-80">
+                    <div className="bg-blue-50 rounded-lg p-4 shadow-sm">
+                      <h3 className="text-blue-800 font-semibold mb-3 text-sm">Quick Resources</h3>
+                      {quickLinks.map(section => (
+                        <div key={section.subheader} className="mb-4">
+                          <div className="font-semibold text-blue-700 text-xs mb-2">{section.subheader}</div>
+                          <ul className="space-y-2">
+                            {section.links.map(link => (
+                              <li key={link.label}>
+                                <a
+                                  href={link.url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-start gap-2 text-blue-700 hover:underline text-sm"
+                                >
+                                  <Send className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                                  <span>
+                                    <span className="font-medium">{link.label}</span>
+                                    <span className="block text-gray-700 font-normal">{link.description}</span>
+                                  </span>
+                                </a>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               ))}
           </div>
         )}
