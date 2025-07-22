@@ -428,13 +428,16 @@ export default function Guides() {
                       <CardDescription className="text-blue-700 mb-4">
                         Key focus areas on different timelines
                       </CardDescription>
-                      <div className="text-sm text-gray-700 leading-relaxed w-full">
+                      <div className="mt-4 text-sm text-gray-700 leading-relaxed w-full">
                         {item.extraNotes.map((note, idx) => (
                           <div key={idx} className="mb-4">
                             <div className="font-bold mb-2">{note.subheader}</div>
-                            <ul className="list-disc list-inside space-y-1">
+                            <ul className="space-y-2">
                               {note.bullets.map((bullet, i) => (
-                                <li key={i}>{bullet}</li>
+                                <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                                  <ChevronRight className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                                  {bullet}
+                                </li>
                               ))}
                             </ul>
                           </div>
