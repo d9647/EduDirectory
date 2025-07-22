@@ -13,6 +13,7 @@ interface TimelineItem {
   goals: string[];
   milestones: string[];
   resources: string[];
+  extraNotes?: { subheader: string; bullets: string[] }[];
 }
 
 const timelineData: TimelineItem[] = [
@@ -22,10 +23,8 @@ const timelineData: TimelineItem[] = [
     period: "Freshman Year",
     description: "As a first-year, you have one job when it comes to the college process: don't think about it! Instead, get to know your high school and let yourself fall in love with the place you will call \"home\" for the next four years. <br><br>Your first year is about exploring your horizons and creating a solid foundation to build the story of your life. Join a club or two, play a sport, participate in a theatre production—not because doing so will someday look \"good\" on a college resume—but because the more you engage with your school community, the more fulfilling your high school experience will be. So spend this year getting acclimated, strengthening your study skills, making friends, and trying new things. Rest assured, through exploring and embracing what your high school has to offer, you have already begun your college journey.<br><br>",
     goals: [
-      "Explore extracurricular activities. Find clubs and activities that excite you and that align with your values, skills, and interests—connect to your new community.",
-      "Develop your time management and study skills.", 
-      "Plan a summer experience that helps you expand your world.",
-      "Athletes: Familiarize yourself with the NCAA and NAIA requirements.",
+      "Establish strong study habits and time management skills",
+      "Explore extracurricular activities and find your passions",
       "Build relationships with teachers and counselors",
       "Maintain a strong GPA (aim for 3.5 or higher)"
     ],
@@ -40,6 +39,22 @@ const timelineData: TimelineItem[] = [
       "Study skills workshops",
       "Academic tutoring services",
       "Club and activity fairs"
+    ],
+    extraNotes: [
+      {
+        subheader: "September",
+        bullets: [
+          "Attend orientation and get to know your campus.",
+          "Introduce yourself to your teachers and counselors."
+        ]
+      },
+      {
+        subheader: "October/November",
+        bullets: [
+          "Join at least one club or extracurricular activity.",
+          "Start a study group for your classes."
+        ]
+      }
     ]
   },
   {
@@ -64,6 +79,15 @@ const timelineData: TimelineItem[] = [
       "Summer academic programs",
       "Volunteer organizations",
       "Career exploration websites"
+    ],
+    extraNotes: [
+      {
+        subheader: "All Summer",
+        bullets: [
+          "Try a new hobby or skill—summer is a great time to explore!",
+          "Keep a journal of your summer experiences to reflect on your growth."
+        ]
+      }
     ]
   },
   {
@@ -75,19 +99,7 @@ const timelineData: TimelineItem[] = [
       "Take challenging courses including honors classes",
       "Deepen involvement in extracurricular activities",
       "Begin standardized test preparation",
-      "Explore potential college majors and careers",
-      "Continue existing extracurricular activities or get involved in new ones. Find a few activities to focus on and deepen your involvement. Possibly take on a leadership role",
-      "Stay focused on your academics. Sophomore year is important to college admissions officers and sets the tone for junior year",
-      "Consider taking the PSAT (preliminary SAT) in October",
-      "Continue to familiarize yourself with resources available in the C&CC",
-      "Meet with your counselor to discuss course selection for junior year. Consider challenging yourself to take high-level coursework in subjects you excel in",
-      "Visit a college or two locally or when you are on vacation. Plan to take an official college tour if you are traveling during spring break or over summer vacation",
-      "In the spring, take a full-length practice ACT and SAT to get a feel for which test format you prefer",
-      "Consider taking a community college course in a subject of interest not available to you at your high school during the summer. The registration process begins in March",
-      "Continue pursuing your interests over the summer. Take on a job, volunteer work, internship, or self-directed project",
-      "Athletes: If you think you may play Division I or II sports in college, register for the NCAA Clearinghouse, the NAIA Eligibility Center, and familiarize yourself with the academic requirements",
-      "Start an activities resume and keep track of all extracurricular activities (hrs/week/month), employment, awards, and volunteer work. You will need an activities resume for many colleges",
-      "Explore MaiaLearning: Begin searching colleges, look at academic profiles needed for schools you are interested in",
+      "Explore potential college majors and careers"
     ],
     milestones: [
       "Take PSAT/NMSQT for practice",
@@ -100,6 +112,22 @@ const timelineData: TimelineItem[] = [
       "College search websites",
       "Career assessment tools",
       "Academic advisors"
+    ],
+    extraNotes: [
+      {
+        subheader: "Fall Semester",
+        bullets: [
+          "Meet with your counselor to review your 4-year plan.",
+          "Consider taking on a leadership role in a club or activity."
+        ]
+      },
+      {
+        subheader: "Spring Semester",
+        bullets: [
+          "Register for challenging courses for next year.",
+          "Start thinking about summer enrichment opportunities."
+        ]
+      }
     ]
   },
   {
@@ -148,6 +176,22 @@ const timelineData: TimelineItem[] = [
       "College counseling services",
       "AP study materials",
       "College fairs and information sessions"
+    ],
+    extraNotes: [
+      {
+        subheader: "August/September",
+        bullets: [
+          "Register for the SAT/ACT if you haven't already.",
+          "Attend the fall college fair at your school."
+        ]
+      },
+      {
+        subheader: "Spring",
+        bullets: [
+          "Ask teachers for letters of recommendation before summer.",
+          "Start drafting your college application essays."
+        ]
+      }
     ]
   },
   {
@@ -156,6 +200,15 @@ const timelineData: TimelineItem[] = [
     period: "Third Summer",
     description: "",
     goals: [
+      "Participate in summer experiences: research, internships, college coursework, work, travel, volunteer work",
+      "Finalize your college list. Make sure it reflects a balance of admissions possibilities (Likely, Target, Reach)",
+      "Research the type of applications required for each school on your list. Understand the requirements and deadlines",
+      "Enter dates and deadlines into a college application spreadsheet to organize your information (see Senior Resources page)",
+      "Create a scholarship spreadsheet",
+      "Note down your Counselor Brag sheet (on google sheet or any platform, such as MaiaLearning",
+      "Continue to draft your Common App Personal Statement you began in your junior English class. or Personal Insight Questions (UC) and create summer drafts",
+      "Open a Common App account and complete the main sections of the Common App tab",
+      "Brainstorm your UC personal insight questions, if applying",
       "Focus on college applications and essays",
       "Gain meaningful work or internship experience",
       "Retake standardized tests if needed",
@@ -196,6 +249,22 @@ const timelineData: TimelineItem[] = [
       "Financial aid offices",
       "Senior year counseling services",
       "College transition workshops"
+    ],
+    extraNotes: [
+      {
+        subheader: "December",
+        bullets: [
+          "Regular Decision (RD) deadlines are typically around January 1. Complete and send out all RD applications no later than mid-December",
+          "If you applied to a college EA or ED, you should receive admissions decisions around mid-December"
+        ]
+      },
+      {
+        subheader: "January/March",
+        bullets: [
+          "If deferred, send a letter of continued interest to the admissions representative. Reaffirm your interest in the school and offer them any updates to your application (awards, achievements)",
+          "Start to receive RD admissions decisions. CSUs and UCs typically announce decisions in mid-March"
+        ]
+      }
     ]
   },
   {
@@ -352,6 +421,22 @@ export default function Guides() {
                           ))}
                         </ul>
                       </div>
+
+                      {/* Extra Notes Section */}
+                      {item.extraNotes && item.extraNotes.length > 0 && (
+                        <div className="mt-8 text-sm text-gray-700 leading-relaxed">
+                          {item.extraNotes.map((note, idx) => (
+                            <div key={idx} className="mb-4">
+                              <div className="font-bold mb-2">{note.subheader}</div>
+                              <ul className="list-disc list-inside space-y-1">
+                                {note.bullets.map((bullet, i) => (
+                                  <li key={i}>{bullet}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
