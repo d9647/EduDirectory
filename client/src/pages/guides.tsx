@@ -40,7 +40,7 @@ const timelineData: TimelineItem[] = [
   },
   {
     id: "summer-9",
-    title: "Summer after 9th",
+    title: "Summer",
     period: "First Summer",
     goals: [
       "Continue learning through summer programs or courses",
@@ -86,7 +86,7 @@ const timelineData: TimelineItem[] = [
   },
   {
     id: "summer-10",
-    title: "Summer after 10th",
+    title: "Summer",
     period: "Second Summer",
     goals: [
       "Gain work experience through jobs or internships",
@@ -132,7 +132,7 @@ const timelineData: TimelineItem[] = [
   },
   {
     id: "summer-11",
-    title: "Summer after 11th",
+    title: "Summer",
     period: "Third Summer",
     goals: [
       "Focus on college applications and essays",
@@ -178,7 +178,7 @@ const timelineData: TimelineItem[] = [
   },
   {
     id: "summer-12",
-    title: "Summer after 12th",
+    title: "Summer",
     period: "Final Summer",
     goals: [
       "Prepare for college transition",
@@ -246,7 +246,7 @@ export default function Guides() {
                       }
                     `}
                   >
-                    <span className="truncate text-xs sm:text-xs lg:text-[11px] xl:text-xs">{item.title}</span>
+                    <span className="truncate">{item.title}</span>
                   </Button>
                   <span className="mt-2 text-xs text-gray-500 text-center">
                     {item.period}
