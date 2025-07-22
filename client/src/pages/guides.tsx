@@ -13,7 +13,7 @@ interface TimelineItem {
   goals: string[];
   milestones: string[];
   resources: string[];
-  extraNotes?: { subheader: string; bullets: string[] }[];
+  extraNotes?: { subheader: string; bullets: (string | JSX.Element)[] }[];
 }
 
 const timelineData: TimelineItem[] = [
@@ -42,17 +42,14 @@ const timelineData: TimelineItem[] = [
     ],
     extraNotes: [
       {
-        subheader: "September",
+        subheader: "All Year Long",
         bullets: [
-          "Attend orientation and get to know your campus.",
-          "Introduce yourself to your teachers and counselors."
-        ]
-      },
-      {
-        subheader: "October/November",
-        bullets: [
-          "Join at least one club or extracurricular activity.",
-          "Start a study group for your classes."
+          "Explore extracurricular activities. Find clubs and activities that excite you and that align with your values.",
+          "Develop your time management and study skills.",
+          "Plan a summer experience that helps you expand your world.",
+          "Athletes: Familiarize yourself with the NCAA and NAIA requirements.",
+          "Start an activities resume and keep track of all extracurricular activities (hrs/week/month), employment, awards, and volunteer work. You will need an activities resume for many colleges",
+          "Explore CollegeBoard or MaiaLearning or any other platforms: Begin searching colleges, look at academic profiles needed for schools you are interested in"
         ]
       }
     ]
@@ -114,6 +111,22 @@ const timelineData: TimelineItem[] = [
       "Academic advisors"
     ],
     extraNotes: [
+      {
+        subheader: "All Year Long",
+        bullets: [
+          "Continue existing extracurricular activities or get involved in new ones. Find a few activities to focus on and deepen your involvement. Possibly take on a leadership role",
+          "Stay focused on your academics. Sophomore year is important to college admissions officers and sets the tone for junior year",
+          "Consider taking the PSAT (preliminary SAT) in October",
+          "Continue to familiarize yourself with resources available in the school counseling department",
+          "Meet with your counselor to discuss course selection for junior year. Consider challenging yourself to take high-level coursework in subjects you excel in",
+          "Visit a college or two locally or when you are on vacation. Plan to take an official college tour if you are traveling during spring break or over summer vacation",
+          "In the spring, take a full-length practice ACT and SAT to get a feel for which test format you prefer",
+          "Consider taking a community college course in a subject of interest not available to you at Miramonte during the summer. The registration process begins in March",
+          "Continue pursuing your interests over the summer. Take on a job, volunteer work, internship, or self-directed project",
+          "Athletes: If you think you may play Division I or II sports in college, register for the NCAA Clearinghouse, the NAIA Eligibility Center, and familiarize yourself with the academic requirements",
+          "Explore CollegeBoard or MaiaLearning or any other platforms: Begin searching colleges, look at academic profiles needed for schools you are interested in"
+        ]
+      },
       {
         subheader: "Fall Semester",
         bullets: [
@@ -179,17 +192,33 @@ const timelineData: TimelineItem[] = [
     ],
     extraNotes: [
       {
-        subheader: "August/September",
+        subheader: "All Year Long",
         bullets: [
           "Register for the SAT/ACT if you haven't already.",
-          "Attend the fall college fair at your school."
+          "Attend the fall college fair at your school.",
+          "Focus on your academics. Junior year grades are often the last ones colleges see",
+          "Plan to take an official campus tour of colleges you are interested in or attend virtual tours and information sessions. When possible, visit campuses when college students are on campus to get a true feeling for campus life. Spring Break is a good time to plan college tours",
+          "Continue to participate in activities outside of class; it is not too late to get involved",
+          "Deepen your involvement, take on leadership roles",
+          "Update your activities resume with activities you participated in over the summer"
         ]
       },
       {
-        subheader: "Spring",
+        subheader: "Fall",
         bullets: [
           "Ask teachers for letters of recommendation before summer.",
-          "Start drafting your college application essays."
+          "Start drafting your college application essays.",
+          "Revisit your four-year plan course plan and make adjustments where you feel they are needed",
+          "Demonstrate interest in colleges by signing up on MaiaLearning for an admission representative’s presentation (limit 2). Over 120 colleges visit the C&CC each year",
+          "Take the PSAT in October to be considered for National Merit Scholarship",
+          "Attend a local College Fair",
+          "Sign up for AP tests and take them in May",
+          "Determine your standardized testing plan. Consider taking the SAT/ACT in winter or spring: sign up on the appropriate testing platform. Establish your test prep schedule",
+          "Stay on track with your ACT/SAT testing timeline and study schedule. Test prep resources are available on the website and in the C&CC. Take multiple full-length practice exams in advance of exams",
+          "Build a list of preliminary schools you are interested in on MaiaLearning; add schools of interest, you can condense the list next year",
+          <>Take an assessment at <a href="https://www.mymajors.com/" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">MyMajors</a></>,
+          "Athletes: Double-check that your classes meet NCAA Clearinghouse requirements. Complete online recruitment forms for each college you're considering. Make your sports resume and recruitment videos. Correspond with coaches periodically to show interest",
+          "Fine and Performing Arts Students: Sign up for Performing and Visual Arts College Fairs. Work on portfolio or audition materials throughout junior year"
         ]
       }
     ]
