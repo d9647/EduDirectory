@@ -425,7 +425,7 @@ export default function Guides() {
 
                     {/* Extra Notes Section with Title - now a new section below the grid */}
                     {item.extraNotes && item.extraNotes.length > 0 && (
-                      <div className="mt-10">
+                      <div className="mt-10 bg-blue-50">
                         <CardDescription className="text-blue-700 mb-4">
                           Key focus areas on different timelines
                         </CardDescription>
