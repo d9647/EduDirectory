@@ -522,15 +522,8 @@ export default function Guides() {
       ]
     }
   ];
-  // State for expanding/collapsing quick links sections
-  const [activeQuickLinkSection, setActiveQuickLinkSection] = useState<string | null>(null);
-  const [quickLinksPage, setQuickLinksPage] = useState(0);
-  const categoriesPerPage = 4;
-  const totalPages = Math.ceil(quickLinks.length / categoriesPerPage);
-  const pagedQuickLinks = quickLinks.slice(
-    quickLinksPage * categoriesPerPage,
-    (quickLinksPage + 1) * categoriesPerPage
-  );
+  // Collapsible right panel: only one section open at a time
+  const [openQuickLinkSection, setOpenQuickLinkSection] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -587,9 +580,9 @@ export default function Guides() {
             {timelineData
               .filter(item => item.id === activeTimeline)
               .map(item => (
-                <div className="flex flex-col lg:flex-row gap-8 items-stretch">
-                  <div className="flex-1 flex flex-col">
-                    <Card key={item.id} className="shadow-lg border-0 h-full flex flex-col">
+                <div className="flex flex-col lg:flex-row gap-8">
+                  <div className="flex-1">
+                    <Card key={item.id} className="shadow-lg border-0">
                       <CardHeader className="bg-blue-50">
                         <CardTitle className="text-xl sm:text-2xl text-blue-900 flex items-center gap-2">
                           <Calendar className="h-5 w-5" />
@@ -685,24 +678,21 @@ export default function Guides() {
                     </Card>
                   </div>
                   {/* Right Panel: Quick Resources */}
-                  <div className="w-full lg:w-80 flex flex-col">
-                    <div className="bg-blue-50 rounded-lg p-4 shadow-sm h-full overflow-y-auto">
+                  <div className="w-full lg:w-80">
+                    <div className="bg-blue-50 rounded-lg p-4 shadow-sm">
                       <h3 className="text-blue-800 font-semibold mb-3 text-sm">Quick Resources</h3>
-                      {activeQuickLinkSection === null ? (
-                        pagedQuickLinks.map(section => (
-                          <div key={section.subheader} className="mb-4">
-                            <div
-                              className="font-semibold text-blue-700 text-xs mb-2 cursor-pointer"
-                              onClick={() => section.links.length > 5 ? setActiveQuickLinkSection(section.subheader) : undefined}
-                            >
-                              {section.subheader}
-                              {section.links.length > 5 && (
-                                <span className="ml-2 text-xs text-blue-500 underline cursor-pointer">View More</span>
-                              )}
-                            </div>
-                            <ul className="space-y-2">
-                              {(section.links.length > 5 ? section.links.slice(0, 5) : section.links).map(link => (
-                                <li key={link.label}>
+                      {quickLinks.map(section => (
+                        <div key={section.subheader} className="mb-2">
+                          <button
+                            className="w-full text-left font-semibold text-blue-700 text-xs py-2 px-1 rounded hover:bg-blue-100 transition"
+                            onClick={() => setOpenQuickLinkSection(openQuickLinkSection === section.subheader ? null : section.subheader)}
+                          >
+                            {section.subheader}
+                          </button>
+                          {openQuickLinkSection === section.subheader && (
+                            <ul className="pl-4 py-1">
+                              {section.links.map(link => (
+                                <li key={link.label} className="mb-1">
                                   <a
                                     href={link.url}
                                     target="_blank"
@@ -720,66 +710,10 @@ export default function Guides() {
                                 </li>
                               ))}
                             </ul>
-                          </div>
-                        ))
-                      ) : (
-                        <div>
-                          <button
-                            className="mb-2 text-xs text-blue-700 underline"
-                            onClick={() => setActiveQuickLinkSection(null)}
-                          >
-                            ← Back to Quick Links
-                          </button>
-                          {quickLinks.filter(s => s.subheader === activeQuickLinkSection).map(section => (
-                            <div key={section.subheader}>
-                              <div className="font-semibold text-blue-700 text-xs mb-2">{section.subheader}</div>
-                              <ul className="space-y-2">
-                                {section.links.map(link => (
-                                  <li key={link.label}>
-                                    <a
-                                      href={link.url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="flex items-start gap-2 text-blue-700 hover:underline text-xs"
-                                    >
-                                      <Send className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                                      <span className="flex flex-wrap items-center gap-1 text-xs text-gray-700 font-normal leading-tight">
-                                        <span className="underline">{link.label}</span>
-                                        {link.description && (
-                                          <span>- {link.description}</span>
-                                        )}
-                                      </span>
-                                    </a>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          ))}
+                          )}
                         </div>
-                      )}
+                      ))}
                     </div>
-                    {/* Pagination controls for right panel */}
-                    {activeQuickLinkSection === null && totalPages > 1 && (
-                      <div className="flex justify-between items-center mt-2">
-                        <button
-                          disabled={quickLinksPage === 0}
-                          onClick={() => setQuickLinksPage(quickLinksPage - 1)}
-                          className="text-xs text-blue-700 underline disabled:text-gray-400"
-                        >
-                          Previous
-                        </button>
-                        <span className="text-xs text-gray-500">
-                          Page {quickLinksPage + 1} of {totalPages}
-                        </span>
-                        <button
-                          disabled={quickLinksPage === totalPages - 1}
-                          onClick={() => setQuickLinksPage(quickLinksPage + 1)}
-                          className="text-xs text-blue-700 underline disabled:text-gray-400"
-                        >
-                          Next
-                        </button>
-                      </div>
-                    )}
                   </div>
                 </div>
               ))}
