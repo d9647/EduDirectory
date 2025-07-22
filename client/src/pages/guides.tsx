@@ -587,9 +587,9 @@ export default function Guides() {
             {timelineData
               .filter(item => item.id === activeTimeline)
               .map(item => (
-                <div className="flex flex-col lg:flex-row gap-8">
-                  <div className="flex-1">
-                    <Card key={item.id} className="shadow-lg border-0">
+                <div className="flex flex-col lg:flex-row gap-8 items-stretch">
+                  <div className="flex-1 flex flex-col">
+                    <Card key={item.id} className="shadow-lg border-0 h-full flex flex-col">
                       <CardHeader className="bg-blue-50">
                         <CardTitle className="text-xl sm:text-2xl text-blue-900 flex items-center gap-2">
                           <Calendar className="h-5 w-5" />
@@ -685,8 +685,8 @@ export default function Guides() {
                     </Card>
                   </div>
                   {/* Right Panel: Quick Resources */}
-                  <div className="w-full lg:w-80">
-                    <div className="bg-blue-50 rounded-lg p-4 shadow-sm">
+                  <div className="w-full lg:w-80 flex flex-col">
+                    <div className="bg-blue-50 rounded-lg p-4 shadow-sm h-full overflow-y-auto">
                       <h3 className="text-blue-800 font-semibold mb-3 text-sm">Quick Resources</h3>
                       {activeQuickLinkSection === null ? (
                         pagedQuickLinks.map(section => (
