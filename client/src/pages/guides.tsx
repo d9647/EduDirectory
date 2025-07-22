@@ -423,6 +423,9 @@ export default function Guides() {
     setActiveTimeline(activeTimeline === id ? null : id);
   };
 
+  // State for expanding/collapsing quick links sections
+  const [activeQuickLinkSection, setActiveQuickLinkSection] = useState<string | null>(null);
+
   // Quick resource links for the right panel (with subheaders and descriptions)
   const quickLinks = [
     {
@@ -689,29 +692,71 @@ export default function Guides() {
                   <div className="w-full lg:w-80">
                     <div className="bg-blue-50 rounded-lg p-4 shadow-sm">
                       <h3 className="text-blue-800 font-semibold mb-3 text-sm">Quick Resources</h3>
-                      {quickLinks.map(section => (
-                        <div key={section.subheader} className="mb-4">
-                          <div className="font-semibold text-blue-700 text-xs mb-2">{section.subheader}</div>
-                          <ul className="space-y-2">
-                            {section.links.map(link => (
-                              <li key={link.label}>
-                                <a
-                                  href={link.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-start gap-2 text-blue-700 hover:underline text-sm"
-                                >
-                                  <Send className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                                  <span>
-                                    <span className="font-medium">{link.label}</span>
-                                    <span className="block text-gray-700 font-normal">{link.description}</span>
-                                  </span>
-                                </a>
-                              </li>
-                            ))}
-                          </ul>
+                      {activeQuickLinkSection === null ? (
+                        quickLinks.map(section => (
+                          <div key={section.subheader} className="mb-4">
+                            <div
+                              className="font-semibold text-blue-700 text-xs mb-2 cursor-pointer"
+                              onClick={() => section.links.length > 5 ? setActiveQuickLinkSection(section.subheader) : undefined}
+                            >
+                              {section.subheader}
+                              {section.links.length > 5 && (
+                                <span className="ml-2 text-xs text-blue-500 underline cursor-pointer">View More</span>
+                              )}
+                            </div>
+                            <ul className="space-y-2">
+                              {(section.links.length > 5 ? section.links.slice(0, 5) : section.links).map(link => (
+                                <li key={link.label}>
+                                  <a
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-start gap-2 text-blue-700 hover:underline text-sm"
+                                  >
+                                    <Send className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                                    <span>
+                                      <span className="font-medium">{link.label}</span>
+                                      <span className="block text-gray-700 font-normal">{link.description}</span>
+                                    </span>
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))
+                      ) : (
+                        <div>
+                          <button
+                            className="mb-2 text-xs text-blue-700 underline"
+                            onClick={() => setActiveQuickLinkSection(null)}
+                          >
+                            ← Back to Quick Links
+                          </button>
+                          {quickLinks.filter(s => s.subheader === activeQuickLinkSection).map(section => (
+                            <div key={section.subheader}>
+                              <div className="font-semibold text-blue-700 text-xs mb-2">{section.subheader}</div>
+                              <ul className="space-y-2">
+                                {section.links.map(link => (
+                                  <li key={link.label}>
+                                    <a
+                                      href={link.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-start gap-2 text-blue-700 hover:underline text-sm"
+                                    >
+                                      <Send className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                                      <span>
+                                        <span className="font-medium">{link.label}</span>
+                                        <span className="block text-gray-700 font-normal">{link.description}</span>
+                                      </span>
+                                    </a>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      )}
                     </div>
                   </div>
                 </div>
