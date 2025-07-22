@@ -677,7 +677,11 @@ export default function Guides() {
                                   {note.bullets.map((bullet, i) => (
                                     <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
                                       <ChevronRight className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                                      {bullet}
+                                      {typeof bullet === 'string' ? (
+                                        <span>{bullet}</span>
+                                      ) : (
+                                        <span className="inline">{bullet}</span>
+                                      )}
                                     </li>
                                   ))}
                                 </ul>
