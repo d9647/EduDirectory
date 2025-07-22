@@ -703,20 +703,20 @@ export default function Guides() {
                             <ul className="space-y-2">
                               {(section.links.length > 5 ? section.links.slice(0, 5) : section.links).map(link => (
                                 <li key={link.label}>
-                                  <span className="flex items-start gap-2 text-xs text-gray-700 font-normal leading-tight">
-                                    <a
-                                      href={link.url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="underline text-blue-700 hover:underline"
-                                    >
-                                      <Send className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0 inline" />
-                                      {link.label}
-                                    </a>
-                                    {link.description && (
-                                      <span className="ml-1">- {link.description}</span>
-                                    )}
-                                  </span>
+                                  <a
+                                    href={link.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-start gap-2 text-blue-700 hover:underline text-xs"
+                                  >
+                                    <Send className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                                    <span className="flex flex-wrap items-center gap-1 text-xs text-gray-700 font-normal leading-tight">
+                                      <span className="underline">{link.label}</span>
+                                      {link.description && (
+                                        <span>- {link.description}</span>
+                                      )}
+                                    </span>
+                                  </a>
                                 </li>
                               ))}
                             </ul>
@@ -736,20 +736,20 @@ export default function Guides() {
                               <ul className="space-y-2">
                                 {section.links.map(link => (
                                   <li key={link.label}>
-                                    <span className="flex items-start gap-2 text-xs text-gray-700 font-normal leading-tight">
-                                      <a
-                                        href={link.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="underline text-blue-700 hover:underline"
-                                      >
-                                        <Send className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0 inline" />
-                                        {link.label}
-                                      </a>
-                                      {link.description && (
-                                        <span className="ml-1">- {link.description}</span>
-                                      )}
-                                    </span>
+                                    <a
+                                      href={link.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-start gap-2 text-blue-700 hover:underline text-xs"
+                                    >
+                                      <Send className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                                      <span className="flex flex-wrap items-center gap-1 text-xs text-gray-700 font-normal leading-tight">
+                                        <span className="underline">{link.label}</span>
+                                        {link.description && (
+                                          <span>- {link.description}</span>
+                                        )}
+                                      </span>
+                                    </a>
                                   </li>
                                 ))}
                               </ul>
