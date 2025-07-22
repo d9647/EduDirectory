@@ -425,6 +425,13 @@ export default function Guides() {
 
   // State for expanding/collapsing quick links sections
   const [activeQuickLinkSection, setActiveQuickLinkSection] = useState<string | null>(null);
+  const [quickLinksPage, setQuickLinksPage] = useState(0);
+  const categoriesPerPage = 4;
+  const totalPages = Math.ceil(quickLinks.length / categoriesPerPage);
+  const pagedQuickLinks = quickLinks.slice(
+    quickLinksPage * categoriesPerPage,
+    (quickLinksPage + 1) * categoriesPerPage
+  );
 
   // Quick resource links for the right panel (with subheaders and descriptions)
   const quickLinks = [
@@ -436,9 +443,9 @@ export default function Guides() {
         { label: "Niche", url: "https://www.niche.com/colleges/search/best-colleges/", description: "Rankings/Niche Grades are based on rigorous analysis of academic, admissions, financial, and student life data from the U.S. Department of Education along with millions of reviews from students and alumni." },
         { label: "BigFuture", url: "https://bigfuture.collegeboard.org/", description: "The College Board's free college planning tool, designed to support students in the planning process and discover best-fit colleges. Provides tools to discover interests and career options." },
         { label: "College Navigator", url: "https://nces.ed.gov/collegenavigator/", description: "Created by the US Department of Education and its National Center for Education Statistics." },
-        { label: "Appily", url: "https://www.appily.com/", description: "Tool that allows you to input your weighted and unweighted GPA, your test scores, and your college preferences. It will match you with schools that meet your preferences and provide a rough sense of your chance of admission. Bonus: Appily will give you the average Net Price paid by students (which is different from the sticker price) as well as the merit scholarships that are available at each school to which you are applying under the “Scholarships” tab. This will show up once you’ve added your colleges on Appily." },
+        { label: "Appily", url: "https://www.appily.com/", description: "Matches you with schools and provides net price and merit scholarship info." },
         { label: "Unigo", url: "https://www.unigo.com/", description: "Provides a student perspective. You can read students’ opinions on their schools. Read multiple reviews, in particular, the “What’s the stereotype of students at your school?” and “Is the stereotype true?” You’ll get a sense of the school vibe." },
-        { label: "CollegeData", url: "https://www.collegedata.com/", description: "TONS of data on the average test scores, general acceptance rates, and average GPAs of incoming first-year college students. It also provides data around average financial aid packages offered, specific financial aid packages offered to students who were admitted, and other numbers that might help you and your family plan for college costs." }
+        { label: "CollegeData", url: "https://www.collegedata.com/", description: "Data on test scores, acceptance rates, GPAs, and financial aid packages." }
       ]
     },
     {
@@ -683,7 +690,7 @@ export default function Guides() {
                     <div className="bg-blue-50 rounded-lg p-4 shadow-sm">
                       <h3 className="text-blue-800 font-semibold mb-3 text-sm">Quick Resources</h3>
                       {activeQuickLinkSection === null ? (
-                        quickLinks.map(section => (
+                        pagedQuickLinks.map(section => (
                           <div key={section.subheader} className="mb-4">
                             <div
                               className="font-semibold text-blue-700 text-xs mb-2 cursor-pointer"
@@ -752,6 +759,28 @@ export default function Guides() {
                         </div>
                       )}
                     </div>
+                    {/* Pagination controls for right panel */}
+                    {activeQuickLinkSection === null && totalPages > 1 && (
+                      <div className="flex justify-between items-center mt-2">
+                        <button
+                          disabled={quickLinksPage === 0}
+                          onClick={() => setQuickLinksPage(quickLinksPage - 1)}
+                          className="text-xs text-blue-700 underline disabled:text-gray-400"
+                        >
+                          Previous
+                        </button>
+                        <span className="text-xs text-gray-500">
+                          Page {quickLinksPage + 1} of {totalPages}
+                        </span>
+                        <button
+                          disabled={quickLinksPage === totalPages - 1}
+                          onClick={() => setQuickLinksPage(quickLinksPage + 1)}
+                          className="text-xs text-blue-700 underline disabled:text-gray-400"
+                        >
+                          Next
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
