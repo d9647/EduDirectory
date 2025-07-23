@@ -528,7 +528,9 @@ export default function Guides() {
         { label: "16 Personalities", url: "https://www.16personalities.com/", description: "A free personality test that helps students learn how their personality type influences many areas of their life, including major and career choices." },
         { label: "My Next Move", url: "https://www.mynextmove.org/", description: "Interest profiler to help determine what your interests are and how they relate to the world of work." },
         { label: "Career One Stop", url: "https://www.careeronestop.org/", description: "Sponsored by the U.S. Department of Labor. Source for career exploration, training, and jobs." },
-        { label: "CA Career Zone", url: "https://www.cacareerzone.org/", description: "The California CareerZone helps students, educators, job seekers, and others access up-to-date career information." }
+        { label: "CA Career Zone", url: "https://www.cacareerzone.org/", description: "The California CareerZone helps students, educators, job seekers, and others access up-to-date career information." },
+        { label: "Jobs For Graduates", url: "https://www.theforage.com/", description: "Website dedicated to helping undergraduate to find jobs, featuring job simulations, career paths and jobs from leading companies" },
+        { label: "Career Center", url: "https://www.scu.edu/careercenter/", description: "Santa Clara University's career center provides career advice, job search, and career development resources." }
       ]
     },
     {
