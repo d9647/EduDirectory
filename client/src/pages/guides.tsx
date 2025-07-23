@@ -426,6 +426,16 @@ export default function Guides() {
   // Move quickLinks above state usage to avoid initialization error
   const quickLinks = [
     {
+      subheader: "Standardized Testing",
+      links: [
+        { label: "ACT", url: "https://www.act.org/content/act/en-california.html", description: "Official ACT website." },
+        { label: "SAT and AP Exams", url: "https://www.collegeboard.org/", description: "repares and administers standardized tests used in college admissions and placement." },
+        { label: "Fair Test", url: "https://fairtest.org/", description: "Comprehensive list of all test-optional and test-blind colleges (schools not requiring the ACT and SAT exams for acceptance)." },
+        { label: "ACT Test Prep", url: "https://www.act.org/content/act/en/domain-redirect-prep.html", description: "Crack ACT with practice tests." },
+        { label: "Khan Academy Test Prep", url: "https://www.khanacademy.org/", description: "Offers free and official SAT prep materials in partnership with College Board, the makers of the SAT. Free SAT study tools include quizzes, tests, video tutorials, and personalized practice recommendations." }
+      ]
+    },
+    { 
       subheader: "College List Building",
       links: [
         { label: "Corsava", url: "https://www.corsava.com/", description: "A free tool to help you sort and list your preferences in a way that will help you figure out what you want from your college experience." },
@@ -464,29 +474,32 @@ export default function Guides() {
         { label: "National University Virtual High School", url: "https://www.nuvhs.org/", description: "Online AP, UC (A-G), or elective courses to achieve academic goals." },
         { label: "Language Bird", url: "https://www.languagebird.com/", description: "Online language courses for high school credit." },
         { label: "Laurel Springs Online School", url: "https://laurelsprings.com/", description: "Online UC (A-G) approved courses." },
-        { label: "Tilden Prep", url: "https://tildenprep.com/", description: "A unique, WASC-accredited, college preparatory school. Teaches UC-approved courses one-to-one and in small groups." }
+        { label: "Tilden Preparatory School", url: "https://tildenprep.com/", description: "A unique, WASC-accredited, college preparatory school. Teaches UC-approved courses one-to-one and in small groups." },
+        { label: "Diablo Valley College", url: "https://www.diablos.edu/academics/online-learning", description: "Diablo Valley College's online learning program." },
+        { label: "Las Positas College", url: "https://www.laspositascollege.edu/academics/online-learning", description: "Las Positas College's online learning program." },
+        { label: "Quarry Lane School", url: "https://www.quarrylane.org/academics/online-learning", description: "Quarry Lane School's online learning program." },
+        { label: "Stanford University Online High School", url: "https://www.stanfordonlinehs.org/", description: "Stanford University Online High School's online learning program." },
       ]
     },
     {
       subheader: "College Majors",
       links: [
-        { label: "BigFuture Major & Career Search", url: "https://bigfuture.collegeboard.org/majors-careers", description: "College Board’s major and career search engine." },
+        { label: "BigFuture Major & Career Search", url: "https://bigfuture.collegeboard.org/explore-careers/majors", description: "College Board’s major and career search engine." },
         { label: "College Majors 101", url: "https://www.collegemajors101.com/", description: "Exploration tool to gather more in-depth information about college major selection and find the major that fits you." },
         { label: "My Majors", url: "https://www.mymajors.com/", description: "Diagnostic tool to explore options when deciding on a college major." },
-        { label: "ThoughtCo. Major Quiz", url: "https://www.thoughtco.com/college-major-quiz-4076781", description: "Assessment to help you determine which major is right for you." },
-        { label: "UC Majors", url: "https://admission.universityofcalifornia.edu/counselors/files/uc-majors-list.pdf", description: "List of UC campuses and the majors they offer." },
-        { label: "CSU Majors", url: "https://www2.calstate.edu/attend/degree-programs/Pages/bachelors-degree-programs.aspx", description: "List of CSU campuses and the majors they offer." },
+        { label: "ThoughtCo. Major Quiz", url: "https://www.thoughtco.com/college-major-quiz-4089204", description: "Assessment to help you determine which major is right for you." },
+        { label: "UC Majors", url: "https://admission.universityofcalifornia.edu/campuses-majors/majors/", description: "List of UC campuses and the majors they offer." },
+        { label: "CSU Majors", url: "https://www.calstate.edu/attend/degrees-certificates-credentials/Pages/search-degrees.aspx", description: "List of CSU campuses and the majors they offer." },
         { label: "Northeastern University Career Center", url: "https://careers.northeastern.edu/", description: "Northeastern University Career Center." },
         { label: "Berkeley (What can I do with this Major)", url: "https://career.berkeley.edu/Info/Majors", description: "Explore career options by major at UC Berkeley." },
-        { label: "University of Michigan", url: "https://careercenter.umich.edu/article/what-can-i-do-major", description: "Career options by major at University of Michigan." },
-        { label: "Penn State University", url: "https://studentaffairs.psu.edu/career/majors", description: "Career options by major at Penn State." }
+        { label: "University of Michigan", url: "https://careercenter.umich.edu/content/what-can-i-do-major", description: "Career options by major at University of Michigan." },
+        { label: "Penn State University", url: "https://studentaffairs.psu.edu/career/resources/planning", description: "Career options by major at Penn State." }
       ]
     },
     {
       subheader: "Career Resources",
       links: [
-        { label: "Jobs For Teens", url: "https://www.jobsforteenshq.com/", description: "Website dedicated to helping teens find jobs. Offers education regarding potential jobs, resume writing tips, volunteer opportunities, and more." },
-        { label: "O* NET Resource Center", url: "https://www.onetcenter.org/", description: "Occupational information network. Primary sources of occupational information. The database is skill-based and contains information about worker attributes, job characteristics, and career exploration tools that relate the results of assessments to career and labor market information in the database." },
+        { label: "O*  Resource Center", url: "https://www.onetcenter.org/", description: "Occupational information network. Primary sources of occupational information. The database is skill-based and contains information about worker attributes, job characteristics, and career exploration tools that relate the results of assessments to career and labor market information in the database." },
         { label: "Big Future/RoadTrip Nation", url: "https://roadtripnation.com/", description: "College Board’s site for helping students determine career interests. Links to RoadTrip Nation. Roadtrip Nation helps career-seekers connect to real-world professionals and discover pathways aligned with their interests." },
         { label: "YouScience", url: "https://www.youscience.com/", description: "Fee-based sight to discover your aptitude, true strengths, and how to select the right pathway and career for you." },
         { label: "16 Personalities", url: "https://www.16personalities.com/", description: "A free personality test that helps students learn how their personality type influences many areas of their life, including major and career choices." },
@@ -498,7 +511,7 @@ export default function Guides() {
     {
       subheader: "Financial Aid",
       links: [
-        { label: "Paying for College in Four Steps", url: "https://www.collegeessayguy.com/blog/paying-for-college", description: "A blog post from College Essay Guy." },
+        { label: "Paying for College in Four Steps", url: "https://www.collegeessayguy.com/paying-for-college/home", description: "A blog post from College Essay Guy." },
         { label: "FAFSA", url: "https://studentaid.gov/", description: "Application for Federal Financial Aid" },
         { label: "CSS Profile", url: "https://cssprofile.collegeboard.org/", description: "Online application that collects information used by nearly 400 colleges and scholarship programs to award non-federal aid for private and some public colleges. See a list of schools that use the CSS Profile here" },
         { label: "California Student Aid Commission", url: "https://www.csac.ca.gov/", description: "Provides state financial aid for those who meet certain income, assets, and other financial aid standards to attend college" },
@@ -515,9 +528,9 @@ export default function Guides() {
       ]
     },
     {
-      subheader: "Templates",
+      subheader: "Other Resources",
       links: [
-        { label: "Resume Templates", url: "https://www.acalanes.k12.ca.us/Page/3806", description: "Sample resume templates for students." },
+        { label: "Templates", url: "https://drive.google.com/drive/folders/1AHG6r2FsnRprWJaWADc_ObQW7XQOF94W?usp=sharing", description: "Sample templates for college applications, resumes, and more." },
         { label: "Teacher Brag Sheet", url: "https://www.acalanes.k12.ca.us/Page/3806", description: "Template for teacher recommendations." }
       ]
     }
