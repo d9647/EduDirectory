@@ -545,7 +545,7 @@ export default function Admin() {
               Edit Listings
             </TabsTrigger>
             <TabsTrigger value="import" className="px-2 sm:px-3">
-              Import
+              Import Data
             </TabsTrigger>
             <TabsTrigger value="users" className="px-2 sm:px-3">
               Users
