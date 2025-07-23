@@ -530,8 +530,8 @@ export default function Guides() {
     {
       subheader: "Other Resources",
       links: [
-        { label: "Templates", url: "https://drive.google.com/drive/folders/1AHG6r2FsnRprWJaWADc_ObQW7XQOF94W?usp=sharing", description: "Sample templates for college applications, resumes, and more." },
-        { label: "Teacher Brag Sheet", url: "https://www.acalanes.k12.ca.us/Page/3806", description: "Template for teacher recommendations." }
+        { label: "Templates", url: "https://drive.google.com/drive/folders/1AHG6r2FsnRprWJaWADc_ObQW7XQOF94W?usp=drive_link", description: "Sample templates for college applications, resumes, and more." },
+        { label: "Specific Group Information", url: "https://docs.google.com/document/d/1Zq79xmKhOEB0oBEf3gx0oJAhJPdgfQ4swb6SCDDPMxY/edit?usp=sharing", description: "Information for Military, ROTC, and other groups." }
       ]
     }
   ];
