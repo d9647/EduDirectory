@@ -523,7 +523,7 @@ export default function Admin() {
         <Tabs defaultValue="approvals" className="w-full">
           <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 gap-1 text-xs sm:text-sm">
             <TabsTrigger value="approvals" className="px-2 sm:px-3">
-              <span className="hidden sm:inline">Pending  </span>Approvals
+              <span className="hidden sm:inline">Pending </span> Approvals
               {pendingApprovals && (
                 <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs">
                   {(pendingApprovals.tutoringProviders?.length || 0) +
@@ -542,7 +542,7 @@ export default function Admin() {
               )}
             </TabsTrigger>
             <TabsTrigger value="edit-listings" className="px-2 sm:px-3">
-              <span className="hidden sm:inline">Edit  </span>Listings
+              <span className="hidden sm:inline">Edit </span> Listings
             </TabsTrigger>
             <TabsTrigger value="import" className="px-2 sm:px-3">
               Import
