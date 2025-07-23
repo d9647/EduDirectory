@@ -333,7 +333,7 @@ const timelineData: TimelineItem[] = [
           "Check your high school transcripts and make sure they are accurate",
           "Take the ACT/SAT one more time, if needed",
           "Update your activities resume. Keep records of the activities you participated in over the summer",
-          "Update the MaiaLearning \"Considering\" list and move colleges over to the \"Applying\" section",
+          "Update \"Considering\" list and move colleges over to the \"Applying\" list",
           "Request/Confirm teacher recommendations verbally and send formal requests to them",
           "Order official transcripts from your high school",
           "Send official transcripts from any other schools you have taken coursework to colleges that require official transcripts at the time of application",
