@@ -428,15 +428,15 @@ export default function Guides() {
     {
       subheader: "Local HS Counseling Departments",
       links: [
-        { label: "Amador Valley HS (Pleasanton)", url: "https://sites.google.com/pleasantonusd.net/amadorhighschoolcounseling/home", description: "Amador Valley High School Counseling (Google Sites)===" },
-        { label: "Foothill HS (Pleasanton)", url: "https://sites.google.com/pleasantonusd.net/fhscounseling/home", description: "Foothill High School Counseling (Google Sites)" },
-        { label: "Dublin HS (Dublin)", url: "https://dhs.dublinusd.org/apps/pages/index.jsp?type=d&uREC_ID=448385", description: "Dublin High School Counseling (dhs.dublinusd.org)" },
-        { label: "Granada HS (Livermore)", url: "https://granadahigh.livermoreschools.org/academics/counseling/counseling-center", description: "Granada High School Counseling (granadahigh.livermoreschools.org)" },
-        { label: "Livermore HS (Livermore)", url: "https://livermorehigh.livermoreschools.org/student-life/counseling-services/general-information", description: "Livermore High School Counseling (livermorehigh.livermoreschools.org)" },
-        { label: "California HS (San Ramon)", url: "https://sites.google.com/srvusd.net/chscounseling/home", description: "California High School Counseling (Google Sites)" },
-        { label: "Dougherty Valley HS (San Ramon)", url: "https://dvhs.srvusd.net/School-Info/Counseling/Wildcat-Counseling/index.html", description: "Dougherty Valley High School Counseling (dvhs.srvusd.net)" },
-        { label: "Monte Vista HS (Danville)", url: "https://mvhs.srvusd.net/School-Info/About-Us/Counseling--Wellness-Center/index.html", description: "Monte Vista High School Counseling (mvhs.srvusd.net)" },
-        { label: "San Ramon Valley HS (Danville)", url: "https://srvhs.srvusd.net/School-Info/Departments/Wolves-Counseling-Home-Page/index.html", description: "San Ramon Valley High School Counseling (srvhs.srvusd.net)" }
+        { label: "Amador Valley HS (Pleasanton)", url: "https://sites.google.com/pleasantonusd.net/amadorhighschoolcounseling/home", description: "Amador Valley High School Counseling" },
+        { label: "Foothill HS (Pleasanton)", url: "https://sites.google.com/pleasantonusd.net/fhscounseling/home", description: "Foothill High School Counseling" },
+        { label: "Dublin HS (Dublin)", url: "https://dhs.dublinusd.org/apps/pages/index.jsp?type=d&uREC_ID=448385", description: "Dublin High School Counseling" },
+        { label: "Granada HS (Livermore)", url: "https://granadahigh.livermoreschools.org/academics/counseling/counseling-center", description: "Granada High School Counseling)" },
+        { label: "Livermore HS (Livermore)", url: "https://livermorehigh.livermoreschools.org/student-life/counseling-services/general-information", description: "Livermore High School Counseling" },
+        { label: "California HS (San Ramon)", url: "https://sites.google.com/srvusd.net/chscounseling/home", description: "California High School Counseling" },
+        { label: "Dougherty Valley HS (San Ramon)", url: "https://dvhs.srvusd.net/School-Info/Counseling/Wildcat-Counseling/index.html", description: "Dougherty Valley High School Counseling" },
+        { label: "Monte Vista HS (Danville)", url: "https://mvhs.srvusd.net/School-Info/About-Us/Counseling--Wellness-Center/index.html", description: "Monte Vista High School Counseling " },
+        { label: "San Ramon Valley HS (Danville)", url: "https://srvhs.srvusd.net/School-Info/Departments/Wolves-Counseling-Home-Page/index.html", description: "San Ramon Valley High School Counseling" }
       ]
     },
     {
