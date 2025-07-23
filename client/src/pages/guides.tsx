@@ -165,6 +165,15 @@ const timelineData: TimelineItem[] = [
       "College summer programs",
       "Community service organizations",
       "College guidebooks and websites"
+    ],
+    extraNotes: [
+      {
+        subheader: "All Summer",
+        bullets: [
+          "Try a new hobby or skill—summer is a great time to explore!",
+          "Keep a journal of your summer experiences to reflect on your growth."
+        ]
+      }
     ]
   },
   {
@@ -226,13 +235,13 @@ const timelineData: TimelineItem[] = [
         bullets: [
           "Continue to draft your college application essays.",
           "Revisit your four-year plan course plan and make adjustments where you feel they are needed",
-          "Take the SAT/ACT. Test prep resources are available in the C&CC and on the MHS Website",
+          "Take the SAT/ACT.",
           "Spend time search engines researching potential colleges and their admission requirements",
           "Continue to add schools to \"Considering\" in your college list",
           "Visit and tour college campuses during breaks or take an online virtual tour",
           "Start to research college scholarships",
           "Request letters of recommendation from two academic teachers after Spring Break",
-          "Investigate and secure summer experiences. See <a href='https://www.miramonte.org/page/view/1000000000000000000000000000000000000000' target='_blank' rel='noopener noreferrer' className='text-blue-700 underline'>MHS website</a> for a full list of ideas",
+          "Investigate and secure summer experiences.",
           "Athletes: Send your sports resume and video to college coaches and fill out athletic recruitment surveys on the college websites",
           "Fine and Performing Arts Students: Explore how the audition and portfolio process for college admissions. Continue to build your portfolio and audition videos"
         ]
@@ -269,7 +278,7 @@ const timelineData: TimelineItem[] = [
           "Participate in summer experiences: research, internships, college coursework, work, travel, volunteer work",
           "Finalize your college list. Make sure it reflects a balance of admissions possibilities (Likely, Target, Reach)",
           "Research the type of applications required for each school on your list. Understand the requirements and deadlines",
-          "Enter dates and deadlines into a college application spreadsheet to organize your information (see <a href='https://www.miramonte.org/page/view/1000000000000000000000000000000000000000' target='_blank' rel='noopener noreferrer' className='text-blue-700 underline'>Senior Resources page</a>)",
+          "Enter dates and deadlines into a college application spreadsheet to organize your information",
           "Create a scholarship spreadsheet",
           "Fill out your Counselor Brag sheet",
           "Continue to draft your Common App Personal Statement you began in your junior English class. or Personal Insight Questions (UC) and create summer drafts",
@@ -323,9 +332,9 @@ const timelineData: TimelineItem[] = [
           "Turn in your Brag sheet to your counselor. Due September 1st",
           "Check your high school transcripts and make sure they are accurate",
           "Take the ACT/SAT one more time, if needed",
-          "Update your activities resume. Add activities you participated in over the summer. Use this information to fill out the activities section of your various applications (see <a href='https://www.miramonte.org/page/view/1000000000000000000000000000000000000000' target='_blank' rel='noopener noreferrer' className='text-blue-700 underline'>Senior Resources page</a>)",
+          "Update your activities resume. Keep records of the activities you participated in over the summer",
           "Update the MaiaLearning \"Considering\" list and move colleges over to the \"Applying\" section",
-          "Request/Confirm teacher recommendations verbally and send formal requests through Maia Learning",
+          "Request/Confirm teacher recommendations verbally and send formal requests to them",
           "Order official transcripts from your high school",
           "Send official transcripts from any other schools you have taken coursework to colleges that require official transcripts at the time of application",
           "Send ACT/SAT scores through the College Board (SAT) or ACT official sites to colleges you are applying to, if applicable",
@@ -338,7 +347,7 @@ const timelineData: TimelineItem[] = [
           "Take the ACT/SAT for the final time",
           "Finish your college essay(s) and personal statements",
           "Complete and send out all EA and ED applications by late October (Typically Nov. 1 deadline)",
-          "Review and submit financial aid information. FAFSA opens on October 1st. Apply by your school deadlines and/or FAFSA deadline. ???MHS automatically uploads Cal Grant eligibility for you",
+          "Review and submit financial aid information. FAFSA opens on October 1st. Apply by your school deadlines and/or FAFSA deadline.",
           "Fill out the CSS Profile if needed for your colleges",
           "Submit CSU and UC applications by the November 30th deadline (good idea to send by Thanksgiving)"
         ]
@@ -373,7 +382,7 @@ const timelineData: TimelineItem[] = [
       {
         subheader: "May",
         bullets: [
-          "If you have been waitlisted, make sure to let the school know you are still interested by writing a Letter of Continued Interest (see <a href='https://www.miramonte.org/page/view/1000000000000000000000000000000000000000' target='_blank' rel='noopener noreferrer' className='text-blue-700 underline'>Senior Resources page</a>)",
+          "If you have been waitlisted, make sure to let the school know you are still interested by writing a Letter of Continued Interest",
           "Complete the your high school's Graduation Survey if any",
           "Complete the final transcript Google form sent by the Registrar if any",
           "Sign up for campus housing if you plan to live on campus and send a deposit, if required"
