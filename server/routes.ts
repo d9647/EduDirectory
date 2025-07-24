@@ -1006,6 +1006,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // View tracking endpoint
+  app.post('/api/views/track', isAuthenticated, async (req, res) => {
+    try {
+      const { listingType, listingId } = req.body;
+      const userId = req.user.claims.sub;
+      
+      console.log(`[DEBUG] API received: listingType=${listingType}, listingId=${listingId}, userId=${userId}`);
+      
+      // Convert listingType to table names and get IP address
+      const tableMapping = {
+        'tutoring': 'tutoring_providers',
+        'camp': 'summer_camps', 
+        'internship': 'internships',
+        'job': 'jobs'
+      };
+      
+      const tableName = tableMapping[listingType];
+      if (!tableName) {
+        console.log(`[DEBUG] Invalid listing type: ${listingType}`);
+        return res.status(400).json({ message: "Invalid listing type" });
+      }
+      
+      // Get client IP address for rate limiting
+      const clientIp = req.ip || req.connection.remoteAddress || 'unknown';
+      
+      console.log(`[DEBUG] Calling trackView with: tableName=${tableName}, listingId=${listingId}, userId=${userId}, clientIp=${clientIp}`);
+      const result = await storage.trackView(tableName, listingId, userId, clientIp);
+      console.log(`[DEBUG] trackView result:`, result);
+      res.json(result);
+    } catch (error) {
+      console.error("Error tracking view:", error);
+      res.status(500).json({ message: "Failed to track view" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
