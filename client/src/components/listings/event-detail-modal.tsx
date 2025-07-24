@@ -90,11 +90,15 @@ export function EventDetailModal({ event, open, onClose }: EventDetailModalProps
             {/* Event Poster */}
             {event.posterUrl && (
               <div className="w-full">
-                <img
-                  src={event.posterUrl}
-                  alt={`${event.title} poster`}
-                  className="w-full h-64 object-cover rounded-lg"
-                />
+                <h3 className="text-lg font-semibold mb-3">Event Poster</h3>
+                <div className="flex justify-center">
+                  <img
+                    src={event.posterUrl}
+                    alt={`${event.title} poster`}
+                    className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-lg border border-gray-200"
+                    style={{ maxHeight: 'min(70vh, 800px)' }}
+                  />
+                </div>
               </div>
             )}
 
