@@ -857,9 +857,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Photo upload endpoint
   app.post('/api/upload', upload.single('photo'), (req, res) => {
     try {
+      console.log('Upload request received');
+      console.log('Request headers:', req.headers);
+      console.log('Request file:', req.file);
+      console.log('Request body:', req.body);
+      
       if (!req.file) {
+        console.log('No file found in request');
         return res.status(400).json({ message: 'No file uploaded' });
       }
+
+      console.log('File details:', {
+        fieldname: req.file.fieldname,
+        originalname: req.file.originalname,
+        encoding: req.file.encoding,
+        mimetype: req.file.mimetype,
+        size: req.file.size,
+        filename: req.file.filename
+      });
 
       // For now, return a static URL. In a real app, you'd upload to a cloud service
       const photoUrl = `/uploads/${req.file.filename}`;
