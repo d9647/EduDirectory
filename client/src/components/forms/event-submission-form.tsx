@@ -169,7 +169,13 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
       
       const submitData = {
         ...data,
-        eventDate: data.eventDate.toISOString().split('T')[0],
+        eventDate: (() => {
+          // Format date as YYYY-MM-DD in local timezone to avoid UTC conversion issues
+          const year = data.eventDate.getFullYear();
+          const month = String(data.eventDate.getMonth() + 1).padStart(2, '0');
+          const day = String(data.eventDate.getDate()).padStart(2, '0');
+          return `${year}-${month}-${day}`;
+        })(),
         posterUrl,
         isApproved: false,
         isActive: false,
