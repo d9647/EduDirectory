@@ -1391,45 +1391,22 @@ export class DatabaseStorage implements IStorage {
         return { wasTracked: false };
       }
 
-      // Insert or update view tracking record
+      // Insert or update view tracking record using proper upsert
       console.log(`[DEBUG] Inserting/updating view tracking record`);
-      
-      // Check if record exists first
-      const existingRecord = await db
-        .select()
-        .from(viewTracking)
-        .where(
-          and(
-            eq(viewTracking.userId, userId),
-            eq(viewTracking.listingType, listingType),
-            eq(viewTracking.listingId, listingId)
-          )
-        )
-        .limit(1);
-        
-      if (existingRecord.length > 0) {
-        // Update existing record
-        await db
-          .update(viewTracking)
-          .set({ lastViewedAt: new Date() })
-          .where(
-            and(
-              eq(viewTracking.userId, userId),
-              eq(viewTracking.listingType, listingType),
-              eq(viewTracking.listingId, listingId)
-            )
-          );
-      } else {
-        // Insert new record
-        await db
-          .insert(viewTracking)
-          .values({
-            userId,
-            listingType,
-            listingId,
+      await db
+        .insert(viewTracking)
+        .values({
+          userId,
+          listingType,
+          listingId,
+          lastViewedAt: new Date(),
+        })
+        .onConflictDoUpdate({
+          target: [viewTracking.userId, viewTracking.listingType, viewTracking.listingId],
+          set: {
             lastViewedAt: new Date(),
-          });
-      }
+          },
+        });
 
       // Increment view count in the appropriate table
       console.log(`[DEBUG] Incrementing view count for ${tableName}`);
