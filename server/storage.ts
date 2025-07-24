@@ -1621,7 +1621,8 @@ export class DatabaseStorage implements IStorage {
         'tutoring_providers': 'tutoring',
         'summer_camps': 'camp',
         'internships': 'internship',
-        'jobs': 'job'
+        'jobs': 'job',
+        'events': 'event'
       };
       
       const listingType = listingTypeMapping[tableName as keyof typeof listingTypeMapping];
