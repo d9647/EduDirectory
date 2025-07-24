@@ -80,7 +80,7 @@ export function EventDetailModal({ event, open, onClose }: EventDetailModalProps
                   <Calendar className="h-5 w-5 mr-3" />
                   <div>
                     <div className="font-medium">Date</div>
-                    <div>{format(new Date(event.eventDate), "EEEE, MMMM d, yyyy")}</div>
+                    <div>{format(new Date(event.eventDate + 'T00:00:00'), "EEEE, MMMM d, yyyy")}</div>
                   </div>
                 </div>
 
