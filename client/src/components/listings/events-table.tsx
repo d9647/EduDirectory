@@ -1,8 +1,10 @@
+import { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, MapPin, Clock, Users2, DollarSign, Eye, ThumbsUp, Star } from "lucide-react";
 import { format } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
 
 interface Event {
   id: number;
@@ -29,9 +31,118 @@ interface EventsTableProps {
   events: Event[];
   isLoading: boolean;
   onEventClick: (event: Event) => void;
+  onThumbsUpChange?: () => void;
 }
 
-export function EventsTable({ events, isLoading, onEventClick }: EventsTableProps) {
+export function EventsTable({ events, isLoading, onEventClick, onThumbsUpChange }: EventsTableProps) {
+  const [thumbsUpStates, setThumbsUpStates] = useState<Record<number, { count: number; isLoading: boolean; hasThumbedUp: boolean }>>({});
+  const { toast } = useToast();
+
+  // Fetch thumbs up states for all visible events
+  useEffect(() => {
+    const fetchThumbsUpStates = async () => {
+      if (!events.length) return;
+
+      const statePromises = events.map(async (event) => {
+        try {
+          const response = await fetch(`/api/thumbs-up/event/${event.id}/user`);
+          if (response.ok) {
+            const result = await response.json();
+            return {
+              eventId: event.id,
+              hasThumbedUp: result.hasThumbedUp,
+              count: event.thumbsUpCount
+            };
+          }
+        } catch (error) {
+          console.error(`Error fetching thumbs up state for event ${event.id}:`, error);
+        }
+        return {
+          eventId: event.id,
+          hasThumbedUp: false,
+          count: event.thumbsUpCount
+        };
+      });
+
+      const states = await Promise.all(statePromises);
+      const statesMap = states.reduce((acc, state) => ({
+        ...acc,
+        [state.eventId]: {
+          count: state.count,
+          isLoading: false,
+          hasThumbedUp: state.hasThumbedUp
+        }
+      }), {});
+
+      setThumbsUpStates(statesMap);
+    };
+
+    fetchThumbsUpStates();
+  }, [events]);
+
+  const handleThumbsUp = async (eventId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent triggering the card click
+    
+    if (thumbsUpStates[eventId]?.isLoading) return;
+
+    setThumbsUpStates(prev => ({
+      ...prev,
+      [eventId]: { ...prev[eventId], isLoading: true }
+    }));
+
+    try {
+      const response = await fetch('/api/thumbs-up', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          listingType: 'event',
+          listingId: eventId,
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        
+        // Fetch the updated count
+        const countResponse = await fetch(`/api/thumbs-up/event/${eventId}`);
+        const countData = await countResponse.json();
+        
+        setThumbsUpStates(prev => ({
+          ...prev,
+          [eventId]: {
+            count: countData.count,
+            isLoading: false,
+            hasThumbedUp: result.isThumbedUp
+          }
+        }));
+
+        if (onThumbsUpChange) {
+          onThumbsUpChange();
+        }
+
+        toast({
+          title: result.isThumbedUp ? "👍 Thumbs up added!" : "Thumbs up removed",
+          duration: 2000,
+        });
+      } else {
+        throw new Error('Failed to toggle thumbs up');
+      }
+    } catch (error) {
+      console.error('Error toggling thumbs up:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update thumbs up. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setThumbsUpStates(prev => ({
+        ...prev,
+        [eventId]: { ...prev[eventId], isLoading: false }
+      }));
+    }
+  };
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -147,10 +258,22 @@ export function EventsTable({ events, isLoading, onEventClick }: EventsTableProp
                   <Eye className="h-4 w-4 mr-1" />
                   {event.viewCount}
                 </div>
-                <div className="flex items-center">
-                  <ThumbsUp className="h-4 w-4 mr-1" />
-                  {event.thumbsUpCount}
-                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => handleThumbsUp(event.id, e)}
+                  disabled={thumbsUpStates[event.id]?.isLoading}
+                  className={`flex items-center space-x-1 h-8 px-2 text-sm ${
+                    thumbsUpStates[event.id]?.hasThumbedUp ? 'text-blue-600' : 'text-gray-500'
+                  } hover:text-blue-600 hover:bg-blue-50`}
+                >
+                  <ThumbsUp className={`h-4 w-4 ${
+                    thumbsUpStates[event.id]?.hasThumbedUp ? 'fill-current' : ''
+                  }`} />
+                  <span>
+                    {thumbsUpStates[event.id]?.count ?? event.thumbsUpCount}
+                  </span>
+                </Button>
                 {event.reviewCount > 0 && (
                   <div className="flex items-center">
                     <Star className="h-4 w-4 mr-1" />
