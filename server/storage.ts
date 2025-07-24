@@ -1349,7 +1349,7 @@ export class DatabaseStorage implements IStorage {
     const RATE_LIMIT_MINUTES = 5; // Prevent rapid view increments for 5 minutes
     
     try {
-      console.log(`[DEBUG] Tracking view for ${tableName} ID ${listingId} by user ${userId}`);
+      console.log(`[DEBUG] Tracking view for table ${tableName}, listing ID ${listingId}, by user ${userId}`);
       
       // Convert table name back to listing type for the tracking table
       const listingTypeMapping = {
