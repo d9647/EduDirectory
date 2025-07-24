@@ -16,6 +16,7 @@ import { CalendarIcon, X, Upload } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { US_STATES } from "@/lib/constants";
 
 const eventCategories = [
   "Academic", "Sports", "Arts & Culture", "Community Service", "Technology",
@@ -345,11 +346,21 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
 
             <div>
               <Label htmlFor="state">State *</Label>
-              <Input
-                id="state"
-                {...form.register("state")}
-                placeholder="Enter state"
-              />
+              <Select
+                value={form.watch("state") || ""}
+                onValueChange={(value) => form.setValue("state", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select state" />
+                </SelectTrigger>
+                <SelectContent>
+                  {US_STATES.map((state) => (
+                    <SelectItem key={state.value} value={state.value}>
+                      {state.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               {form.formState.errors.state && (
                 <p className="text-red-500 text-sm mt-1">
                   {form.formState.errors.state.message}
