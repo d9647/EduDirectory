@@ -1258,7 +1258,7 @@ export class DatabaseStorage implements IStorage {
       cost: events.cost,
       registrationRequired: events.registrationRequired,
       registrationLink: events.registrationLink,
-      posterUrl: events.posterUrl,
+      photoUrl: events.photoUrl,
       contactInfo: events.contactInfo,
       specialInstructions: events.specialInstructions,
       viewCount: events.viewCount,

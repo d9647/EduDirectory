@@ -39,7 +39,7 @@ interface Event {
   cost: string;
   registrationRequired: boolean;
   registrationLink: string;
-  posterUrl: string;
+  photoUrl: string;
   contactInfo: string;
   specialInstructions: string;
   viewCount: number;
@@ -196,7 +196,7 @@ export default function Events() {
                   onSelect={setSelectedDate}
                   className="rounded-md w-full max-w-full"
                   classNames={{
-                    months: "flex flex-col space-y-4",
+                    months: "flex flex-col space-y-4 justify-center items-center",
                     month: "space-y-3",
                     caption: "flex justify-center pt-1 relative items-center",
                     caption_label: "text-sm font-medium",

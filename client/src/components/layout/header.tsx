@@ -77,7 +77,7 @@ export default function Header() {
             <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900 px-2 sm:px-3" asChild>
               <Link href="/bookmarks">
                 <Bookmark className="h-4 w-4 sm:mr-1" />
-                <span className="hidden md:inline">Saved</span>
+                <span className="hidden md:inline"></span>
               </Link>
             </Button>
 
