@@ -146,18 +146,36 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
       
       // Upload photo if selected
       if (photoFile) {
+        console.log('Uploading photo file:', photoFile);
+        console.log('File details:', {
+          name: photoFile.name,
+          size: photoFile.size,
+          type: photoFile.type
+        });
+        
         const formData = new FormData();
         formData.append('photo', photoFile);
+        
+        // Debug FormData
+        console.log('FormData entries:');
+        for (let [key, value] of formData.entries()) {
+          console.log(key, value);
+        }
         
         const uploadResponse = await fetch('/api/upload', {
           method: 'POST',
           body: formData,
         });
         
+        console.log('Upload response status:', uploadResponse.status);
+        
         if (uploadResponse.ok) {
           const uploadResult = await uploadResponse.json();
           photoUrl = uploadResult.url;
+          console.log('Upload successful, URL:', photoUrl);
         } else {
+          const errorText = await uploadResponse.text();
+          console.error('Upload failed:', errorText);
           toast({
             title: "Upload failed",
             description: "Failed to upload photo image.",
