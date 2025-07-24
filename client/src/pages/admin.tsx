@@ -105,7 +105,8 @@ export default function Admin() {
     'tutoring-providers': '',
     'summer-camps': '',
     'internships': '',
-    'jobs': ''
+    'jobs': '',
+    'events': ''
   });
 
   // Search results
@@ -113,7 +114,8 @@ export default function Admin() {
     'tutoring-providers': [],
     'summer-camps': [],
     'internships': [],
-    'jobs': []
+    'jobs': [],
+    'events': []
   });
 
   // User management pagination and search state
@@ -145,7 +147,8 @@ export default function Admin() {
     'tutoring-providers': false,
     'summer-camps': false,
     'internships': false,
-    'jobs': false
+    'jobs': false,
+    'events': false
   });
 
   // Import states
@@ -1117,6 +1120,86 @@ export default function Admin() {
                               )}
                               <Button
                                 onClick={() => deleteMutation.mutate({ type: "job", id: job.id })}
+                                disabled={deleteMutation.isPending}
+                                variant="destructive"
+                                size="sm"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* Search-based Live Events */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Live Events</CardTitle>
+                  <CardDescription>
+                    Search for approved events to edit
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        placeholder="Search events by title, organizer, or location..."
+                        value={searchQueries['events']}
+                        onChange={(e) => debounceSearch('events', e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+                    {searchLoading['events'] && (
+                      <div className="text-center py-4">Searching...</div>
+                    )}
+                    {searchResults['events'].length > 0 && (
+                      <div className="space-y-2">
+                        {searchResults['events'].map((event: any) => (
+                          <div key={event.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-2 w-full max-w-full" style={{ overflowX: 'auto' }}>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <h3 className="font-medium">{event.title}</h3>
+                                {!event.isActive && (
+                                  <Badge variant="secondary">Deactivated</Badge>
+                                )}
+                              </div>
+                              <p className="text-sm text-gray-600">
+                                <Calendar className="h-4 w-4 inline mr-1" />
+                                {new Date(event.eventDate).toLocaleDateString()} • {event.venue} • {event.city}, {event.state}
+                              </p>
+                              <p className="text-sm text-gray-500 mt-1">{event.description?.substring(0, 100)}...</p>
+                            </div>
+                            <div className="flex gap-2">
+                              <AdminEditModal type="event" listing={event} />
+                              {event.isActive ? (
+                                <Button
+                                  onClick={() => deactivateMutation.mutate({ type: "event", id: event.id })}
+                                  disabled={deactivateMutation.isPending}
+                                  variant="outline"
+                                  size="sm"
+                                >
+                                  <EyeOff className="h-4 w-4 mr-2" />
+                                  Deactivate
+                                </Button>
+                              ) : (
+                                <Button
+                                  onClick={() => activateMutation.mutate({ type: "event", id: event.id })}
+                                  disabled={activateMutation.isPending}
+                                  variant="outline"
+                                  size="sm"
+                                >
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  Activate
+                                </Button>
+                              )}
+                              <Button
+                                onClick={() => deleteMutation.mutate({ type: "event", id: event.id })}
                                 disabled={deleteMutation.isPending}
                                 variant="destructive"
                                 size="sm"
