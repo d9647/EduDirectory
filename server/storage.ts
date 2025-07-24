@@ -1531,6 +1531,8 @@ export class DatabaseStorage implements IStorage {
     const RATE_LIMIT_MINUTES = 5; // Prevent rapid view increments for 5 minutes
     
     try {
+      console.log(`[DEBUG] Tracking view for ${tableName} ID ${listingId} by user ${userId}`);
+      
       // Convert table name back to listing type for the tracking table
       const listingTypeMapping = {
         'tutoring_providers': 'tutoring',
@@ -1541,12 +1543,14 @@ export class DatabaseStorage implements IStorage {
       
       const listingType = listingTypeMapping[tableName];
       if (!listingType) {
+        console.log(`[DEBUG] Invalid listing type for table: ${tableName}`);
         return { wasTracked: false };
       }
       
       // Calculate time threshold for rate limiting
       const rateThreshold = new Date();
       rateThreshold.setMinutes(rateThreshold.getMinutes() - RATE_LIMIT_MINUTES);
+      console.log(`[DEBUG] Rate limit threshold: ${rateThreshold.toISOString()}`);
       
       // Check if user viewed this listing recently using simple date comparison
       const recentView = await db
@@ -1562,12 +1566,15 @@ export class DatabaseStorage implements IStorage {
         )
         .limit(1);
 
+      console.log(`[DEBUG] Recent view check: found ${recentView.length} recent views`);
       if (recentView.length > 0) {
+        console.log(`[DEBUG] Recent view found at: ${recentView[0].lastViewedAt}`);
         // User viewed this recently, don't increment view count
         return { wasTracked: false };
       }
 
       // Insert or update view tracking record
+      console.log(`[DEBUG] Inserting/updating view tracking record`);
       await db
         .insert(viewTracking)
         .values({
@@ -1584,6 +1591,7 @@ export class DatabaseStorage implements IStorage {
         });
 
       // Increment view count in the appropriate table
+      console.log(`[DEBUG] Incrementing view count for ${tableName}`);
       switch (tableName) {
         case 'tutoring_providers':
           await db
@@ -1622,9 +1630,11 @@ export class DatabaseStorage implements IStorage {
             .where(eq(jobs.id, listingId));
           break;
         default:
+          console.log(`[DEBUG] Unknown table name: ${tableName}`);
           return { wasTracked: false };
       }
 
+      console.log(`[DEBUG] View successfully tracked and incremented`);
       return { wasTracked: true }; // View was successfully tracked
     } catch (error) {
       console.error('Error tracking view:', error);
