@@ -1150,9 +1150,9 @@ export class DatabaseStorage implements IStorage {
       );
     }
 
-    // Date filters
+    // Date filters - convert date column to string for accurate comparison
     if (filters.eventDate) {
-      conditions.push(eq(events.eventDate, filters.eventDate));
+      conditions.push(sql`DATE(${events.eventDate}) = ${filters.eventDate}`);
     }
 
     if (filters.dateRange) {
