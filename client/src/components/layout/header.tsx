@@ -15,6 +15,7 @@ export default function Header() {
     { href: "/summer-camps", label: "Camps" },
     { href: "/internships", label: "Internships" },
     { href: "/jobs", label: "Jobs" },
+    { href: "/events", label: "Events" },
     { href: "/guides", label: "Guides" },
   ];
 

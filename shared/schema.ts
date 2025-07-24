@@ -10,6 +10,7 @@ import {
   boolean,
   decimal,
   date,
+  time,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
@@ -230,12 +231,48 @@ export const reports = pgTable("reports", {
 export const viewTracking = pgTable("view_tracking", {
   id: serial("id").primaryKey(),
   userId: varchar("user_id").notNull(),
-  listingType: varchar("listing_type").notNull(), // "tutoring", "camp", "internship", "job"
+  listingType: varchar("listing_type").notNull(), // "tutoring", "camp", "internship", "job", "event"
   listingId: integer("listing_id").notNull(),
   lastViewedAt: timestamp("last_viewed_at").defaultNow(),
 }, (table) => [
   index("idx_view_tracking_user_listing").on(table.userId, table.listingType, table.listingId),
 ]);
+
+// Community Events
+export const events = pgTable("events", {
+  id: serial("id").primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  description: text("description"),
+  organizer: varchar("organizer", { length: 255 }).notNull(),
+  organizerEmail: varchar("organizer_email"),
+  organizerPhone: varchar("organizer_phone"),
+  eventDate: date("event_date").notNull(),
+  startTime: time("start_time"),
+  endTime: time("end_time"),
+  venue: varchar("venue", { length: 255 }),
+  address: text("address"),
+  city: varchar("city"),
+  state: varchar("state"),
+  zipcode: varchar("zipcode"),
+  latitude: decimal("latitude", { precision: 10, scale: 8 }), // For map integration
+  longitude: decimal("longitude", { precision: 11, scale: 8 }), // For map integration
+  categories: text("categories").array(), // Academic, Sports, Arts, Community Service, etc.
+  targetAudience: text("target_audience").array(), // High School, College, Young Adults
+  ageRange: varchar("age_range"), // "14-18", "18-25", "All ages"
+  cost: varchar("cost"), // "Free", "$10", "$25-50"
+  registrationRequired: boolean("registration_required").default(false),
+  registrationLink: varchar("registration_link"),
+  posterUrl: varchar("poster_url"), // Event poster/flyer image
+  contactInfo: text("contact_info"),
+  specialInstructions: text("special_instructions"),
+  viewCount: integer("view_count").default(0),
+  isApproved: boolean("is_approved").default(false),
+  isActive: boolean("is_active").default(true),
+  submittedAt: timestamp("submitted_at").defaultNow(),
+  approvedAt: timestamp("approved_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
 
 
 
@@ -313,6 +350,17 @@ export const insertJobSchema = createInsertSchema(jobs).omit({
   updatedAt: true,
 });
 
+export const insertEventSchema = createInsertSchema(events).omit({
+  id: true,
+  isApproved: true,
+  submittedAt: true,
+  approvedAt: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  eventDate: z.string(), // HTML date input sends strings
+});
+
 export const insertReviewSchema = createInsertSchema(reviews).omit({
   id: true,
   createdAt: true,
@@ -349,6 +397,7 @@ export type TutoringProvider = typeof tutoringProviders.$inferSelect;
 export type SummerCamp = typeof summerCamps.$inferSelect;
 export type Internship = typeof internships.$inferSelect;
 export type Job = typeof jobs.$inferSelect;
+export type Event = typeof events.$inferSelect;
 export type Review = typeof reviews.$inferSelect;
 export type ThumbsUp = typeof thumbsUp.$inferSelect;
 export type Bookmark = typeof bookmarks.$inferSelect;
@@ -359,6 +408,7 @@ export type InsertTutoringProvider = z.infer<typeof insertTutoringProviderSchema
 export type InsertSummerCamp = z.infer<typeof insertSummerCampSchema>;
 export type InsertInternship = z.infer<typeof insertInternshipSchema>;
 export type InsertJob = z.infer<typeof insertJobSchema>;
+export type InsertEvent = z.infer<typeof insertEventSchema>;
 export type InsertReview = z.infer<typeof insertReviewSchema>;
 export type InsertReport = z.infer<typeof insertReportSchema>;
 

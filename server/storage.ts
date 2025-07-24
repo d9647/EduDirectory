@@ -4,6 +4,7 @@ import {
   summerCamps,
   internships,
   jobs,
+  events,
   reviews,
   thumbsUp,
   bookmarks,
@@ -19,6 +20,8 @@ import {
   type InsertInternship,
   type Job,
   type InsertJob,
+  type Event,
+  type InsertEvent,
   type Review,
   type InsertReview,
   type ThumbsUp,
@@ -125,6 +128,30 @@ export interface IStorage {
   approveJob(id: number): Promise<void>;
   deleteJob(id: number): Promise<void>;
 
+  // Events
+  getEvents(filters?: {
+    search?: string;
+    categories?: string[];
+    targetAudience?: string[];
+    eventDate?: string;
+    dateRange?: { start: string; end: string };
+    city?: string;
+    state?: string;
+    zipcode?: string;
+    distance?: number; // miles from zipcode
+    cost?: string[];
+    registrationRequired?: boolean;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+    limit?: number;
+    offset?: number;
+  }): Promise<{ events: Event[]; total: number }>;
+  getEvent(id: number): Promise<Event | undefined>;
+  createEvent(event: InsertEvent): Promise<Event>;
+  updateEvent(id: number, event: Partial<InsertEvent>): Promise<Event>;
+  approveEvent(id: number): Promise<void>;
+  deleteEvent(id: number): Promise<void>;
+
   // Reviews
   getReviews(listingType: string, listingId: number): Promise<Review[]>;
   getReviewById(id: number): Promise<Review | undefined>;
@@ -156,12 +183,14 @@ export interface IStorage {
     summerCamps: SummerCamp[];
     internships: Internship[];
     jobs: Job[];
+    events: Event[];
   }>;
   getLiveListings(): Promise<{
     tutoringProviders: TutoringProvider[];
     summerCamps: SummerCamp[];
     internships: Internship[];
     jobs: Job[];
+    events: Event[];
   }>;
   searchListings(type: string, query: string): Promise<any[]>;
   deactivateListing(type: string, id: number): Promise<void>;
@@ -1063,6 +1092,242 @@ export class DatabaseStorage implements IStorage {
       .where(eq(jobs.id, id));
   }
 
+  // Events
+  async getEvents(filters: {
+    search?: string;
+    categories?: string[];
+    targetAudience?: string[];
+    eventDate?: string;
+    dateRange?: { start: string; end: string };
+    city?: string;
+    state?: string;
+    zipcode?: string;
+    distance?: number;
+    cost?: string[];
+    registrationRequired?: boolean;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+    limit?: number;
+    offset?: number;
+  } = {}): Promise<{ events: Event[]; total: number }> {
+    const conditions = [];
+
+    // Only show approved and active events
+    conditions.push(eq(events.isApproved, true));
+    conditions.push(eq(events.isActive, true));
+
+    // Search filters
+    if (filters.search) {
+      conditions.push(
+        or(
+          ilike(events.title, `%${filters.search}%`),
+          ilike(events.description, `%${filters.search}%`),
+          ilike(events.organizer, `%${filters.search}%`),
+          ilike(events.venue, `%${filters.search}%`)
+        )
+      );
+    }
+
+    // Category filters
+    if (filters.categories && filters.categories.length > 0) {
+      conditions.push(
+        or(
+          ...filters.categories.map((category) =>
+            sql`${events.categories} && ARRAY[${category}]::text[]`
+          )
+        )
+      );
+    }
+
+    // Target audience filters
+    if (filters.targetAudience && filters.targetAudience.length > 0) {
+      conditions.push(
+        or(
+          ...filters.targetAudience.map((audience) =>
+            sql`${events.targetAudience} && ARRAY[${audience}]::text[]`
+          )
+        )
+      );
+    }
+
+    // Date filters
+    if (filters.eventDate) {
+      conditions.push(eq(events.eventDate, filters.eventDate));
+    }
+
+    if (filters.dateRange) {
+      conditions.push(
+        and(
+          sql`${events.eventDate} >= ${filters.dateRange.start}`,
+          sql`${events.eventDate} <= ${filters.dateRange.end}`
+        )
+      );
+    }
+
+    // Location filters
+    if (filters.city) {
+      conditions.push(ilike(events.city, `%${filters.city}%`));
+    }
+
+    if (filters.state) {
+      conditions.push(ilike(events.state, `%${filters.state}%`));
+    }
+
+    if (filters.zipcode) {
+      conditions.push(eq(events.zipcode, filters.zipcode));
+    }
+
+    // Cost filters
+    if (filters.cost && filters.cost.length > 0) {
+      conditions.push(
+        or(
+          ...filters.cost.map((costRange) => ilike(events.cost, `%${costRange}%`))
+        )
+      );
+    }
+
+    // Registration required filter
+    if (filters.registrationRequired !== undefined) {
+      conditions.push(eq(events.registrationRequired, filters.registrationRequired));
+    }
+
+    const whereClause = conditions.length > 1 ? and(...conditions) : conditions[0];
+
+    // Build sorting
+    let orderBy = asc(events.eventDate); // Default sort by event date ascending
+    if (filters.sortBy) {
+      const order = filters.sortOrder === "desc" ? desc : asc;
+      switch (filters.sortBy) {
+        case "title":
+          orderBy = order(events.title);
+          break;
+        case "eventDate":
+          orderBy = order(events.eventDate);
+          break;
+        case "organizer":
+          orderBy = order(events.organizer);
+          break;
+        case "createdAt":
+          orderBy = order(events.createdAt);
+          break;
+        case "thumbsUp":
+          orderBy = order(sql`(
+            SELECT COUNT(*)
+            FROM ${thumbsUp}
+            WHERE ${thumbsUp.listingType} = 'event'
+              AND ${thumbsUp.listingId} = ${events.id}
+          )`);
+          break;
+        case "rating":
+          orderBy = order(sql`(
+            SELECT AVG(rating)
+            FROM ${reviews}
+            WHERE ${reviews.listingType} = 'event'
+              AND ${reviews.listingId} = ${events.id}
+          )`);
+          break;
+        case "viewCount":
+          orderBy = order(events.viewCount);
+          break;
+        default:
+          orderBy = asc(events.eventDate);
+      }
+    }
+
+    // Execute main query with thumbs up count
+    const mainQuery = db.select({
+      id: events.id,
+      title: events.title,
+      description: events.description,
+      organizer: events.organizer,
+      organizerEmail: events.organizerEmail,
+      organizerPhone: events.organizerPhone,
+      eventDate: events.eventDate,
+      startTime: events.startTime,
+      endTime: events.endTime,
+      venue: events.venue,
+      address: events.address,
+      city: events.city,
+      state: events.state,
+      zipcode: events.zipcode,
+      latitude: events.latitude,
+      longitude: events.longitude,
+      categories: events.categories,
+      targetAudience: events.targetAudience,
+      ageRange: events.ageRange,
+      cost: events.cost,
+      registrationRequired: events.registrationRequired,
+      registrationLink: events.registrationLink,
+      posterUrl: events.posterUrl,
+      contactInfo: events.contactInfo,
+      specialInstructions: events.specialInstructions,
+      viewCount: events.viewCount,
+      isApproved: events.isApproved,
+      isActive: events.isActive,
+      submittedAt: events.submittedAt,
+      approvedAt: events.approvedAt,
+      createdAt: events.createdAt,
+      updatedAt: events.updatedAt,
+      thumbsUpCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM thumbs_up WHERE listing_type = 'event' AND listing_id = events.id), 0) AS INTEGER)`,
+      averageRating: sql<number>`CAST(COALESCE((SELECT AVG(rating::NUMERIC) FROM reviews WHERE listing_type = 'event' AND listing_id = events.id), 0) AS NUMERIC(3,1))`,
+      reviewCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM reviews WHERE listing_type = 'event' AND listing_id = events.id), 0) AS INTEGER)`
+    }).from(events);
+
+    const eventsQuery = whereClause 
+      ? mainQuery.where(whereClause)
+      : mainQuery;
+
+    const eventsList = await eventsQuery
+      .orderBy(orderBy)
+      .limit(filters.limit || 5)
+      .offset(filters.offset || 0);
+
+    // Execute count query
+    const countQuery = db.select({ count: count() }).from(events);
+    const totalQuery = whereClause 
+      ? countQuery.where(whereClause)
+      : countQuery;
+
+    const totalResult = await totalQuery;
+
+    return {
+      events: eventsList,
+      total: totalResult[0]?.count || 0
+    };
+  }
+
+  async getEvent(id: number): Promise<Event | undefined> {
+    const [event] = await db.select().from(events).where(eq(events.id, id));
+    return event;
+  }
+
+  async createEvent(event: InsertEvent): Promise<Event> {
+    const [newEvent] = await db.insert(events).values(event).returning();
+    return newEvent;
+  }
+
+  async updateEvent(id: number, event: Partial<InsertEvent>): Promise<Event> {
+    const [updatedEvent] = await db
+      .update(events)
+      .set(event)
+      .where(eq(events.id, id))
+      .returning();
+    return updatedEvent;
+  }
+
+  async approveEvent(id: number): Promise<void> {
+    await db
+      .update(events)
+      .set({ isApproved: true, approvedAt: new Date() })
+      .where(eq(events.id, id));
+  }
+
+  async deleteEvent(id: number): Promise<void> {
+    await db
+      .delete(events)
+      .where(eq(events.id, id));
+  }
+
   // Reviews
   async getReviews(listingType: string, listingId: number): Promise<any[]> {
     try {
@@ -1447,6 +1712,15 @@ export class DatabaseStorage implements IStorage {
             })
             .where(eq(jobs.id, listingId));
           break;
+        case 'events':
+          await db
+            .update(events)
+            .set({ 
+              viewCount: sql`${events.viewCount} + 1`,
+              updatedAt: new Date()
+            })
+            .where(eq(events.id, listingId));
+          break;
         default:
           console.log(`[DEBUG] Unknown table name: ${tableName}`);
           return { wasTracked: false };
@@ -1466,17 +1740,20 @@ export class DatabaseStorage implements IStorage {
     summerCamps: SummerCamp[];
     internships: Internship[];
     jobs: Job[];
+    events: Event[];
   }> {
     const [
       pendingTutoringProviders,
       pendingSummerCamps,
       pendingInternships,
       pendingJobs,
+      pendingEvents,
     ] = await Promise.all([
       db.select().from(tutoringProviders).where(eq(tutoringProviders.isApproved, false)),
       db.select().from(summerCamps).where(eq(summerCamps.isApproved, false)),
       db.select().from(internships).where(eq(internships.isApproved, false)),
       db.select().from(jobs).where(eq(jobs.isApproved, false)),
+      db.select().from(events).where(eq(events.isApproved, false)),
     ]);
 
     return {
@@ -1484,6 +1761,7 @@ export class DatabaseStorage implements IStorage {
       summerCamps: pendingSummerCamps,
       internships: pendingInternships,
       jobs: pendingJobs,
+      events: pendingEvents,
     };
   }
 
@@ -1492,17 +1770,20 @@ export class DatabaseStorage implements IStorage {
     summerCamps: SummerCamp[];
     internships: Internship[];
     jobs: Job[];
+    events: Event[];
   }> {
     const [
       liveTutoringProviders,
       liveSummerCamps,
       liveInternships,
       liveJobs,
+      liveEvents,
     ] = await Promise.all([
       db.select().from(tutoringProviders).where(eq(tutoringProviders.isApproved, true)).limit(50),
       db.select().from(summerCamps).where(eq(summerCamps.isApproved, true)).limit(50),
       db.select().from(internships).where(eq(internships.isApproved, true)).limit(50),
       db.select().from(jobs).where(eq(jobs.isApproved, true)).limit(50),
+      db.select().from(events).where(eq(events.isApproved, true)).limit(50),
     ]);
 
     return {
@@ -1510,6 +1791,7 @@ export class DatabaseStorage implements IStorage {
       summerCamps: liveSummerCamps,
       internships: liveInternships,
       jobs: liveJobs,
+      events: liveEvents,
     };
   }
 
@@ -1579,6 +1861,23 @@ export class DatabaseStorage implements IStorage {
           ))
           .limit(20);
 
+      case 'events':
+        return await db
+          .select()
+          .from(events)
+          .where(and(
+            eq(events.isApproved, true),
+            or(
+              ilike(events.title, searchTerm),
+              ilike(events.organizer, searchTerm),
+              ilike(events.description, searchTerm),
+              ilike(events.venue, searchTerm),
+              ilike(events.city, searchTerm),
+              ilike(events.state, searchTerm)
+            )
+          ))
+          .limit(20);
+
       default:
         return [];
     }
@@ -1610,6 +1909,12 @@ export class DatabaseStorage implements IStorage {
           .set({ isActive: false, updatedAt: new Date() })
           .where(eq(jobs.id, id));
         break;
+      case 'event':
+        await db
+          .update(events)
+          .set({ isActive: false, updatedAt: new Date() })
+          .where(eq(events.id, id));
+        break;
     }
   }
 
@@ -1638,6 +1943,12 @@ export class DatabaseStorage implements IStorage {
           .update(jobs)
           .set({ isActive: true, updatedAt: new Date() })
           .where(eq(jobs.id, id));
+        break;
+      case 'event':
+        await db
+          .update(events)
+          .set({ isActive: true, updatedAt: new Date() })
+          .where(eq(events.id, id));
         break;
     }
   }
