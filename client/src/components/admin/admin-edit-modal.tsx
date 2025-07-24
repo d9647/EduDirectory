@@ -31,7 +31,7 @@ import {
 } from "@/lib/constants";
 
 interface AdminEditModalProps {
-  type: "tutoring-provider" | "summer-camp" | "internship" | "job";
+  type: "tutoring-provider" | "summer-camp" | "internship" | "job" | "event";
   listing: any;
 }
 
@@ -80,6 +80,14 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
     Array.isArray(listing.deliveryMode) ? listing.deliveryMode : []
   );
   
+  // Event-specific state
+  const [selectedEventCategories, setSelectedEventCategories] = useState<string[]>(
+    Array.isArray(listing.categories) ? listing.categories : []
+  );
+  const [selectedTargetAudience, setSelectedTargetAudience] = useState<string[]>(
+    Array.isArray(listing.targetAudience) ? listing.targetAudience : []
+  );
+  
   // Photo upload state
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(
@@ -104,7 +112,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
       // Prepare data with checkbox selections
       const updatedData = {
         ...data,
-        categories: selectedCategories,
+        categories: type === 'event' ? selectedEventCategories : selectedCategories,
         subjects: selectedSubjects,
         types: selectedTypes,
         tags: selectedTags,
@@ -112,6 +120,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
         jobType: selectedJobTypes,
         schedule: selectedSchedule,
         deliveryMode: selectedDeliveryModes,
+        targetAudience: selectedTargetAudience,
         photoUrl: photoUrl,
       };
       
@@ -124,6 +133,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
       queryClient.invalidateQueries({ queryKey: ["/api/summer-camps"] });
       queryClient.invalidateQueries({ queryKey: ["/api/internships"] });
       queryClient.invalidateQueries({ queryKey: ["/api/jobs"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/events"] });
       toast({
         title: "Success",
         description: "Listing updated successfully",
@@ -1328,6 +1338,327 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
                     onChange={(e) => handleChange("minimumAge", parseInt(e.target.value) || undefined)}
                   />
                 </div>
+              </div>
+            </div>
+          </>
+        );
+
+      case "event":
+        return (
+          <>
+            {/* Basic Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Basic Information</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Event Title *</Label>
+                  <Input
+                    id="title"
+                    value={formData.title || ""}
+                    onChange={(e) => handleChange("title", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="organizer">Organizer Name *</Label>
+                  <Input
+                    id="organizer"
+                    value={formData.organizer || ""}
+                    onChange={(e) => handleChange("organizer", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="description">Description *</Label>
+                <Textarea
+                  id="description"
+                  value={formData.description || ""}
+                  onChange={(e) => handleChange("description", e.target.value)}
+                  rows={4}
+                />
+              </div>
+            </div>
+
+            {/* Contact Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Contact Information</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="organizerEmail">Email *</Label>
+                  <Input
+                    id="organizerEmail"
+                    type="email"
+                    value={formData.organizerEmail || ""}
+                    onChange={(e) => handleChange("organizerEmail", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="organizerPhone">Phone</Label>
+                  <Input
+                    id="organizerPhone"
+                    value={formData.organizerPhone || ""}
+                    onChange={(e) => handleChange("organizerPhone", e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Categories */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Categories</h3>
+              
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">Event Categories *</Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
+                  {["Academic", "Sports", "Arts & Culture", "Community Service", "Technology", "Career Development", "Social", "Health & Wellness", "Environment", "Music", "Drama & Theater", "Science", "Leadership", "Volunteer", "Competition"].map((category) => (
+                    <div key={category} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={category}
+                        checked={selectedEventCategories.includes(category)}
+                        onCheckedChange={() => {
+                          const newCategories = selectedEventCategories.includes(category)
+                            ? selectedEventCategories.filter(c => c !== category)
+                            : [...selectedEventCategories, category];
+                          setSelectedEventCategories(newCategories);
+                          handleChange("categories", newCategories);
+                        }}
+                      />
+                      <Label htmlFor={category} className="text-sm">
+                        {category}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                {selectedEventCategories.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedEventCategories.map((category) => (
+                      <Badge key={category} variant="secondary">
+                        {category}
+                        <X
+                          className="ml-1 h-3 w-3 cursor-pointer"
+                          onClick={() => {
+                            const newCategories = selectedEventCategories.filter(c => c !== category);
+                            setSelectedEventCategories(newCategories);
+                            handleChange("categories", newCategories);
+                          }}
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Target Audience */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Target Audience</h3>
+              
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-3 block">Target Audience *</Label>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+                  {["High School", "College", "Young Adults", "All Ages"].map((audience) => (
+                    <div key={audience} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={audience}
+                        checked={selectedTargetAudience.includes(audience)}
+                        onCheckedChange={() => {
+                          const newAudience = selectedTargetAudience.includes(audience)
+                            ? selectedTargetAudience.filter(a => a !== audience)
+                            : [...selectedTargetAudience, audience];
+                          setSelectedTargetAudience(newAudience);
+                          handleChange("targetAudience", newAudience);
+                        }}
+                      />
+                      <Label htmlFor={audience} className="text-sm">
+                        {audience}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                {selectedTargetAudience.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedTargetAudience.map((audience) => (
+                      <Badge key={audience} variant="secondary">
+                        {audience}
+                        <X
+                          className="ml-1 h-3 w-3 cursor-pointer"
+                          onClick={() => {
+                            const newAudience = selectedTargetAudience.filter(a => a !== audience);
+                            setSelectedTargetAudience(newAudience);
+                            handleChange("targetAudience", newAudience);
+                          }}
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Event Details */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Event Details</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="eventDate">Event Date *</Label>
+                  <Input
+                    id="eventDate"
+                    type="date"
+                    value={formData.eventDate || ""}
+                    onChange={(e) => handleChange("eventDate", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="startTime">Start Time</Label>
+                  <Input
+                    id="startTime"
+                    type="time"
+                    value={formData.startTime || ""}
+                    onChange={(e) => handleChange("startTime", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="endTime">End Time</Label>
+                  <Input
+                    id="endTime"
+                    type="time"
+                    value={formData.endTime || ""}
+                    onChange={(e) => handleChange("endTime", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="venue">Venue *</Label>
+                <Input
+                  id="venue"
+                  value={formData.venue || ""}
+                  onChange={(e) => handleChange("venue", e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Location */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Location</h3>
+              
+              <div className="space-y-2">
+                <Label htmlFor="address">Street Address</Label>
+                <Input
+                  id="address"
+                  value={formData.address || ""}
+                  onChange={(e) => handleChange("address", e.target.value)}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="city">City *</Label>
+                  <Input
+                    id="city"
+                    value={formData.city || ""}
+                    onChange={(e) => handleChange("city", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="state">State *</Label>
+                  <Select value={formData.state || ""} onValueChange={(value) => handleChange("state", value)}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select state" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {US_STATES.map((state) => (
+                        <SelectItem key={state.value} value={state.value}>
+                          {state.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="zipcode">Zipcode</Label>
+                  <Input
+                    id="zipcode"
+                    value={formData.zipcode || ""}
+                    onChange={(e) => handleChange("zipcode", e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Information */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-gray-900">Additional Information</h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="cost">Cost *</Label>
+                  <Input
+                    id="cost"
+                    value={formData.cost || ""}
+                    onChange={(e) => handleChange("cost", e.target.value)}
+                    placeholder="Free, $10, $5-$20, etc."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="ageRange">Age Range</Label>
+                  <Input
+                    id="ageRange"
+                    value={formData.ageRange || ""}
+                    onChange={(e) => handleChange("ageRange", e.target.value)}
+                    placeholder="13-18, 16+, All ages, etc."
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Registration Required</Label>
+                <div className="flex items-center space-x-3 rounded-md border p-4">
+                  <Checkbox
+                    id="registrationRequired"
+                    checked={formData.registrationRequired === true}
+                    onCheckedChange={(checked) => handleChange("registrationRequired", checked)}
+                  />
+                  <Label htmlFor="registrationRequired" className="text-sm">
+                    Registration Required
+                  </Label>
+                </div>
+              </div>
+
+              {formData.registrationRequired && (
+                <div className="space-y-2">
+                  <Label htmlFor="registrationLink">Registration Link</Label>
+                  <Input
+                    id="registrationLink"
+                    type="url"
+                    value={formData.registrationLink || ""}
+                    onChange={(e) => handleChange("registrationLink", e.target.value)}
+                    placeholder="https://..."
+                  />
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Label htmlFor="contactInfo">Additional Contact Info</Label>
+                <Textarea
+                  id="contactInfo"
+                  value={formData.contactInfo || ""}
+                  onChange={(e) => handleChange("contactInfo", e.target.value)}
+                  rows={2}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="specialInstructions">Special Instructions</Label>
+                <Textarea
+                  id="specialInstructions"
+                  value={formData.specialInstructions || ""}
+                  onChange={(e) => handleChange("specialInstructions", e.target.value)}
+                  rows={2}
+                />
               </div>
             </div>
           </>
