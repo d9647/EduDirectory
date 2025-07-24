@@ -459,6 +459,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // View Tracking
+  app.post('/api/views/track', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { listingType, listingId } = req.body;
+      const wasTracked = await storage.trackView(userId, listingType, parseInt(listingId));
+      res.json({ wasTracked });
+    } catch (error) {
+      console.error("Error tracking view:", error);
+      res.status(500).json({ message: "Failed to track view" });
+    }
+  });
+
   // Bookmarks
   app.post('/api/bookmarks', isAuthenticated, async (req: any, res) => {
     try {
@@ -977,6 +990,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error deleting job:", error);
       res.status(500).json({ message: "Failed to delete job" });
+    }
+  });
+
+  // View tracking endpoint
+  app.post('/api/views/track', isAuthenticated, async (req, res) => {
+    try {
+      const { listingType, listingId } = req.body;
+      const userId = req.user.claims.sub;
+      
+      // Convert listingType to table names and get IP address
+      const tableMapping = {
+        'tutoring': 'tutoring_providers',
+        'camp': 'summer_camps', 
+        'internship': 'internships',
+        'job': 'jobs'
+      };
+      
+      const tableName = tableMapping[listingType];
+      if (!tableName) {
+        return res.status(400).json({ message: "Invalid listing type" });
+      }
+      
+      // Get client IP address for rate limiting
+      const clientIp = req.ip || req.connection.remoteAddress || 'unknown';
+      
+      const result = await storage.trackView(tableName, listingId, userId, clientIp);
+      res.json(result);
+    } catch (error) {
+      console.error("Error tracking view:", error);
+      res.status(500).json({ message: "Failed to track view" });
     }
   });
 
