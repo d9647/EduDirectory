@@ -1318,7 +1318,7 @@ export class DatabaseStorage implements IStorage {
   async approveEvent(id: number): Promise<void> {
     await db
       .update(events)
-      .set({ isApproved: true, approvedAt: new Date() })
+      .set({ isApproved: true, isActive: true, approvedAt: new Date() })
       .where(eq(events.id, id));
   }
 
