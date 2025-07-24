@@ -11,6 +11,7 @@ import {
   decimal,
   date,
   time,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
@@ -235,7 +236,7 @@ export const viewTracking = pgTable("view_tracking", {
   listingId: integer("listing_id").notNull(),
   lastViewedAt: timestamp("last_viewed_at").defaultNow(),
 }, (table) => [
-  index("idx_view_tracking_user_listing").on(table.userId, table.listingType, table.listingId),
+  uniqueIndex("unique_view_tracking_user_listing").on(table.userId, table.listingType, table.listingId),
 ]);
 
 // Community Events
