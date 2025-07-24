@@ -148,7 +148,7 @@ export interface IStorage {
   resolveReport(id: number): Promise<void>;
 
   // View Tracking
-  trackView(userId: string, listingType: string, listingId: number): Promise<boolean>;
+  trackView(tableName: string, listingId: number, userId: string, clientIp: string): Promise<{ wasTracked: boolean }>;
 
   // Admin
   getPendingApprovals(): Promise<{
@@ -1344,6 +1344,122 @@ export class DatabaseStorage implements IStorage {
       .where(eq(reports.id, id));
   }
 
+  // View Tracking Implementation
+  async trackView(tableName: string, listingId: number, userId: string, clientIp: string): Promise<{ wasTracked: boolean }> {
+    const RATE_LIMIT_MINUTES = 5; // Prevent rapid view increments for 5 minutes
+    
+    try {
+      console.log(`[DEBUG] Tracking view for table ${tableName}, listing ID ${listingId}, by user ${userId}`);
+      
+      // Convert table name back to listing type for the tracking table
+      const listingTypeMapping = {
+        'tutoring_providers': 'tutoring',
+        'summer_camps': 'camp',
+        'internships': 'internship',
+        'jobs': 'job'
+      };
+      
+      const listingType = listingTypeMapping[tableName as keyof typeof listingTypeMapping];
+      if (!listingType) {
+        console.log(`[DEBUG] Invalid listing type for table: ${tableName}`);
+        return { wasTracked: false };
+      }
+      
+      // Calculate time threshold for rate limiting
+      const rateThreshold = new Date();
+      rateThreshold.setMinutes(rateThreshold.getMinutes() - RATE_LIMIT_MINUTES);
+      console.log(`[DEBUG] Rate limit threshold: ${rateThreshold.toISOString()}`);
+      
+      // Check if user viewed this listing recently using simple date comparison
+      const recentView = await db
+        .select()
+        .from(viewTracking)
+        .where(
+          and(
+            eq(viewTracking.userId, userId),
+            eq(viewTracking.listingType, listingType),
+            eq(viewTracking.listingId, listingId),
+            sql`${viewTracking.lastViewedAt} > ${rateThreshold}`
+          )
+        )
+        .limit(1);
+
+      console.log(`[DEBUG] Recent view check: found ${recentView.length} recent views`);
+      if (recentView.length > 0) {
+        console.log(`[DEBUG] Recent view found at: ${recentView[0].lastViewedAt}`);
+        // User viewed this recently, don't increment view count
+        return { wasTracked: false };
+      }
+
+      // Insert or update view tracking record
+      console.log(`[DEBUG] Inserting/updating view tracking record`);
+      await db
+        .insert(viewTracking)
+        .values({
+          userId,
+          listingType,
+          listingId,
+          lastViewedAt: new Date(),
+        })
+        .onConflictDoUpdate({
+          target: [viewTracking.userId, viewTracking.listingType, viewTracking.listingId],
+          set: {
+            lastViewedAt: new Date(),
+          },
+        });
+
+      // Increment view count in the appropriate table
+      console.log(`[DEBUG] Incrementing view count for ${tableName}`);
+      switch (tableName) {
+        case 'tutoring_providers':
+          await db
+            .update(tutoringProviders)
+            .set({ 
+              viewCount: sql`${tutoringProviders.viewCount} + 1`,
+              updatedAt: new Date()
+            })
+            .where(eq(tutoringProviders.id, listingId));
+          break;
+        case 'summer_camps':
+          await db
+            .update(summerCamps)
+            .set({ 
+              viewCount: sql`${summerCamps.viewCount} + 1`,
+              updatedAt: new Date()
+            })
+            .where(eq(summerCamps.id, listingId));
+          break;
+        case 'internships':
+          await db
+            .update(internships)
+            .set({ 
+              viewCount: sql`${internships.viewCount} + 1`,
+              updatedAt: new Date()
+            })
+            .where(eq(internships.id, listingId));
+          break;
+        case 'jobs':
+          await db
+            .update(jobs)
+            .set({ 
+              viewCount: sql`${jobs.viewCount} + 1`,
+              updatedAt: new Date()
+            })
+            .where(eq(jobs.id, listingId));
+          break;
+        default:
+          console.log(`[DEBUG] Unknown table name: ${tableName}`);
+          return { wasTracked: false };
+      }
+
+      console.log(`[DEBUG] View successfully tracked and incremented`);
+      return { wasTracked: true }; // View was successfully tracked
+    } catch (error) {
+      console.error('Error tracking view:', error);
+      return { wasTracked: false };
+    }
+  }
+
   // Admin
   async getPendingApprovals(): Promise<{
     tutoringProviders: TutoringProvider[];
@@ -1523,122 +1639,6 @@ export class DatabaseStorage implements IStorage {
           .set({ isActive: true, updatedAt: new Date() })
           .where(eq(jobs.id, id));
         break;
-    }
-  }
-
-  // View Tracking Implementation
-  async trackView(tableName: string, listingId: number, userId: string, clientIp: string): Promise<{ wasTracked: boolean }> {
-    const RATE_LIMIT_MINUTES = 5; // Prevent rapid view increments for 5 minutes
-    
-    try {
-      console.log(`[DEBUG] Tracking view for ${tableName} ID ${listingId} by user ${userId}`);
-      
-      // Convert table name back to listing type for the tracking table
-      const listingTypeMapping = {
-        'tutoring_providers': 'tutoring',
-        'summer_camps': 'camp',
-        'internships': 'internship',
-        'jobs': 'job'
-      };
-      
-      const listingType = listingTypeMapping[tableName];
-      if (!listingType) {
-        console.log(`[DEBUG] Invalid listing type for table: ${tableName}`);
-        return { wasTracked: false };
-      }
-      
-      // Calculate time threshold for rate limiting
-      const rateThreshold = new Date();
-      rateThreshold.setMinutes(rateThreshold.getMinutes() - RATE_LIMIT_MINUTES);
-      console.log(`[DEBUG] Rate limit threshold: ${rateThreshold.toISOString()}`);
-      
-      // Check if user viewed this listing recently using simple date comparison
-      const recentView = await db
-        .select()
-        .from(viewTracking)
-        .where(
-          and(
-            eq(viewTracking.userId, userId),
-            eq(viewTracking.listingType, listingType),
-            eq(viewTracking.listingId, listingId),
-            sql`${viewTracking.lastViewedAt} > ${rateThreshold}`
-          )
-        )
-        .limit(1);
-
-      console.log(`[DEBUG] Recent view check: found ${recentView.length} recent views`);
-      if (recentView.length > 0) {
-        console.log(`[DEBUG] Recent view found at: ${recentView[0].lastViewedAt}`);
-        // User viewed this recently, don't increment view count
-        return { wasTracked: false };
-      }
-
-      // Insert or update view tracking record
-      console.log(`[DEBUG] Inserting/updating view tracking record`);
-      await db
-        .insert(viewTracking)
-        .values({
-          userId,
-          listingType,
-          listingId,
-          lastViewedAt: new Date(),
-        })
-        .onConflictDoUpdate({
-          target: [viewTracking.userId, viewTracking.listingType, viewTracking.listingId],
-          set: {
-            lastViewedAt: new Date(),
-          },
-        });
-
-      // Increment view count in the appropriate table
-      console.log(`[DEBUG] Incrementing view count for ${tableName}`);
-      switch (tableName) {
-        case 'tutoring_providers':
-          await db
-            .update(tutoringProviders)
-            .set({ 
-              viewCount: sql`${tutoringProviders.viewCount} + 1`,
-              updatedAt: new Date()
-            })
-            .where(eq(tutoringProviders.id, listingId));
-          break;
-        case 'summer_camps':
-          await db
-            .update(summerCamps)
-            .set({ 
-              viewCount: sql`${summerCamps.viewCount} + 1`,
-              updatedAt: new Date()
-            })
-            .where(eq(summerCamps.id, listingId));
-          break;
-        case 'internships':
-          await db
-            .update(internships)
-            .set({ 
-              viewCount: sql`${internships.viewCount} + 1`,
-              updatedAt: new Date()
-            })
-            .where(eq(internships.id, listingId));
-          break;
-        case 'jobs':
-          await db
-            .update(jobs)
-            .set({ 
-              viewCount: sql`${jobs.viewCount} + 1`,
-              updatedAt: new Date()
-            })
-            .where(eq(jobs.id, listingId));
-          break;
-        default:
-          console.log(`[DEBUG] Unknown table name: ${tableName}`);
-          return { wasTracked: false };
-      }
-
-      console.log(`[DEBUG] View successfully tracked and incremented`);
-      return { wasTracked: true }; // View was successfully tracked
-    } catch (error) {
-      console.error('Error tracking view:', error);
-      return { wasTracked: false };
     }
   }
 }

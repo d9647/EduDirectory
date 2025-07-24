@@ -26,7 +26,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
       res.json(user);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
     }
@@ -47,7 +47,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       next();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error checking admin status:", error);
       res.status(500).json({ message: "Failed to verify admin status" });
     }
@@ -65,7 +65,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const updatedUser = await storage.updateUserRole(userId, role);
       res.json(updatedUser);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating user role:", error);
       if (error.message === "User not found") {
         return res.status(404).json({ message: "User not found" });
@@ -84,7 +84,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const result = await storage.getUsersWithPagination(page, limit, search);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching users:", error);
       res.status(500).json({ message: "Failed to fetch users" });
     }
@@ -101,7 +101,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const updatedUser = await storage.updateUserProfile(userId, profileData);
       res.json(updatedUser);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating user profile:", error);
       if (error.message === "User not found") {
         return res.status(404).json({ message: "User not found" });
@@ -131,7 +131,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const result = await storage.getTutoringProviders(filters);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching tutoring providers:", error);
       res.status(500).json({ message: "Failed to fetch tutoring providers" });
     }
@@ -145,7 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Provider not found" });
       }
       res.json(provider);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching tutoring provider:", error);
       res.status(500).json({ message: "Failed to fetch tutoring provider" });
     }
@@ -156,7 +156,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertTutoringProviderSchema.parse(req.body);
       const provider = await storage.createTutoringProvider(validatedData);
       res.status(201).json(provider);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating tutoring provider:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid data", errors: error.errors });
@@ -187,7 +187,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const result = await storage.getSummerCamps(filters);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching summer camps:", error);
       res.status(500).json({ message: "Failed to fetch summer camps" });
     }
@@ -201,7 +201,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Camp not found" });
       }
       res.json(camp);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching summer camp:", error);
       res.status(500).json({ message: "Failed to fetch summer camp" });
     }
@@ -212,7 +212,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertSummerCampSchema.parse(req.body);
       const camp = await storage.createSummerCamp(validatedData);
       res.status(201).json(camp);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating summer camp:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid data", errors: error.errors });
@@ -241,7 +241,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const result = await storage.getInternships(filters);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching internships:", error);
       res.status(500).json({ message: "Failed to fetch internships" });
     }
@@ -255,7 +255,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Internship not found" });
       }
       res.json(internship);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching internship:", error);
       res.status(500).json({ message: "Failed to fetch internship" });
     }
@@ -266,7 +266,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertInternshipSchema.parse(req.body);
       const internship = await storage.createInternship(validatedData);
       res.status(201).json(internship);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating internship:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid data", errors: error.errors });
@@ -295,7 +295,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const result = await storage.getJobs(filters);
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching jobs:", error);
       res.status(500).json({ message: "Failed to fetch jobs" });
     }
@@ -309,7 +309,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Job not found" });
       }
       res.json(job);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching job:", error);
       res.status(500).json({ message: "Failed to fetch job" });
     }
@@ -320,7 +320,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertJobSchema.parse(req.body);
       const job = await storage.createJob(validatedData);
       res.status(201).json(job);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating job:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid data", errors: error.errors });
@@ -335,7 +335,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { listingType, listingId } = req.params;
       const reviews = await storage.getReviews(listingType, parseInt(listingId));
       res.json(reviews);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching reviews:", error);
       res.status(500).json({ message: "Failed to fetch reviews" });
     }
@@ -347,7 +347,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.claims.sub;
       const hasReviewed = await storage.hasUserReviewed(userId, listingType, parseInt(listingId));
       res.json({ hasReviewed });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error checking user review status:", error);
       res.status(500).json({ message: "Failed to check review status" });
     }
@@ -359,7 +359,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertReviewSchema.parse({ ...req.body, userId });
       const review = await storage.createReview(validatedData);
       res.status(201).json(review);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating review:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid data", errors: error.errors });
@@ -390,7 +390,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertReviewSchema.partial().parse(req.body);
       const review = await storage.updateReview(id, validatedData);
       res.json(review);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating review:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid data", errors: error.errors });
@@ -417,7 +417,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       await storage.deleteReview(id, userId);
       res.status(204).send();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting review:", error);
       res.status(500).json({ message: "Failed to delete review" });
     }
@@ -430,7 +430,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { listingType, listingId } = req.body;
       const isThumbedUp = await storage.toggleThumbsUp(userId, listingType, parseInt(listingId));
       res.json({ isThumbedUp });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error toggling thumbs up:", error);
       res.status(500).json({ message: "Failed to toggle thumbs up" });
     }
@@ -441,7 +441,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { listingType, listingId } = req.params;
       const count = await storage.getThumbsUpCount(listingType, parseInt(listingId));
       res.json({ count });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching thumbs up count:", error);
       res.status(500).json({ message: "Failed to fetch thumbs up count" });
     }
@@ -453,7 +453,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { listingType, listingId } = req.params;
       const hasThumbedUp = await storage.hasUserThumbedUp(userId, listingType, parseInt(listingId));
       res.json({ hasThumbedUp });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error checking thumbs up status:", error);
       res.status(500).json({ message: "Failed to check thumbs up status" });
     }
@@ -463,10 +463,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/views/track', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const { listingType, listingId } = req.body;
-      const wasTracked = await storage.trackView(userId, listingType, parseInt(listingId));
+      const { listingType, listingId } = req.body as { listingType: string; listingId: string };
+      const clientIp = req.ip;
+
+      // Map listingType to table name
+      const typeToTable: Record<string, string> = {
+        'tutoring': 'tutoring_providers',
+        'camp': 'summer_camps',
+        'internship': 'internships',
+        'job': 'jobs'
+      };
+      const tableName = typeToTable[listingType as string];
+      if (!tableName) return res.status(400).json({ error: 'Invalid listing type' });
+
+      // Correct argument order!
+      const wasTracked = await storage.trackView(tableName, parseInt(listingId), userId, clientIp);
       res.json({ wasTracked });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error tracking view:", error);
       res.status(500).json({ message: "Failed to track view" });
     }
@@ -479,7 +492,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { listingType, listingId } = req.body;
       const isBookmarked = await storage.toggleBookmark(userId, listingType, parseInt(listingId));
       res.json({ isBookmarked });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error toggling bookmark:", error);
       res.status(500).json({ message: "Failed to toggle bookmark" });
     }
@@ -493,7 +506,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const result = await storage.getUserBookmarks(userId, { limit, offset });
       res.json(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching bookmarks:", error);
       res.status(500).json({ message: "Failed to fetch bookmarks" });
     }
@@ -505,7 +518,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { listingType, listingId } = req.params;
       const isBookmarked = await storage.hasUserBookmarked(userId, listingType, parseInt(listingId));
       res.json({ isBookmarked });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error checking bookmark status:", error);
       res.status(500).json({ message: "Failed to check bookmark status" });
     }
@@ -518,7 +531,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertReportSchema.parse({ ...req.body, userId });
       const report = await storage.createReport(validatedData);
       res.status(201).json(report);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating report:", error);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid data", errors: error.errors });
@@ -533,7 +546,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // TODO: Add admin role check
       const pendingApprovals = await storage.getPendingApprovals();
       res.json(pendingApprovals);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching pending approvals:", error);
       res.status(500).json({ message: "Failed to fetch pending approvals" });
     }
@@ -544,7 +557,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // TODO: Add admin role check
       const liveListings = await storage.getLiveListings();
       res.json(liveListings);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching live listings:", error);
       res.status(500).json({ message: "Failed to fetch live listings" });
     }
@@ -562,7 +575,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const results = await storage.searchListings(type, query);
       res.json(results);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error searching listings:", error);
       res.status(500).json({ message: "Failed to search listings" });
     }
@@ -574,7 +587,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { type, id } = req.params;
       await storage.deactivateListing(type, parseInt(id));
       res.json({ message: "Listing deactivated successfully" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deactivating listing:", error);
       res.status(500).json({ message: "Failed to deactivate listing" });
     }
@@ -586,7 +599,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { type, id } = req.params;
       await storage.activateListing(type, parseInt(id));
       res.json({ message: "Listing activated successfully" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error activating listing:", error);
       res.status(500).json({ message: "Failed to activate listing" });
     }
@@ -616,7 +629,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       res.json({ message: "Approved successfully" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error approving listing:", error);
       res.status(500).json({ message: "Failed to approve listing" });
     }
@@ -627,7 +640,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // TODO: Add admin role check
       const reports = await storage.getReports();
       res.json(reports);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching reports:", error);
       res.status(500).json({ message: "Failed to fetch reports" });
     }
@@ -639,7 +652,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       await storage.resolveReport(id);
       res.json({ message: "Report resolved successfully" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error resolving report:", error);
       res.status(500).json({ message: "Failed to resolve report" });
     }
@@ -742,7 +755,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       res.json(updatedListing);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating listing:", error);
       res.status(500).json({ message: "Failed to update listing" });
     }
@@ -784,7 +797,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const photoUrl = `/uploads/${req.file.filename}`;
 
       res.json({ url: photoUrl });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading photo:', error);
       res.status(500).json({ message: 'Failed to upload photo' });
     }
@@ -828,7 +841,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: result.success,
         errors: result.errors
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error importing tutoring providers:", error);
       console.error("Error stack:", error.stack);
       res.status(500).json({ message: "Failed to import tutoring providers", error: error.message });
@@ -863,7 +876,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: result.success,
         errors: result.errors
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error importing summer camps:", error);
       console.error("Error stack:", error.stack);
       res.status(500).json({ message: "Failed to import summer camps", error: error.message });
@@ -898,7 +911,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: result.success,
         errors: result.errors
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error importing internships:", error);
       console.error("Error stack:", error.stack);
       res.status(500).json({ message: "Failed to import internships", error: error.message });
@@ -933,7 +946,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         success: result.success,
         errors: result.errors
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error importing jobs:", error);
       console.error("Error stack:", error.stack);
       res.status(500).json({ message: "Failed to import jobs", error: error.message });
@@ -948,7 +961,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.deleteTutoringProvider(id);
       console.log(`Successfully deleted tutoring provider ${id}`);
       res.json({ message: "Tutoring provider deleted successfully" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting tutoring provider:", error);
       res.status(500).json({ message: "Failed to delete tutoring provider" });
     }
@@ -961,7 +974,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.deleteSummerCamp(id);
       console.log(`Successfully deleted summer camp ${id}`);
       res.json({ message: "Summer camp deleted successfully" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting summer camp:", error);
       res.status(500).json({ message: "Failed to delete summer camp" });
     }
@@ -974,7 +987,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.deleteInternship(id);
       console.log(`Successfully deleted internship ${id}`);
       res.json({ message: "Internship deleted successfully" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting internship:", error);
       res.status(500).json({ message: "Failed to delete internship" });
     }
@@ -987,44 +1000,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.deleteJob(id);
       console.log(`Successfully deleted job ${id}`);
       res.json({ message: "Job deleted successfully" });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting job:", error);
       res.status(500).json({ message: "Failed to delete job" });
-    }
-  });
-
-  // View tracking endpoint
-  app.post('/api/views/track', isAuthenticated, async (req, res) => {
-    try {
-      const { listingType, listingId } = req.body;
-      const userId = req.user.claims.sub;
-      
-      console.log(`[DEBUG] API received: listingType=${listingType}, listingId=${listingId}, userId=${userId}`);
-      
-      // Convert listingType to table names and get IP address
-      const tableMapping = {
-        'tutoring': 'tutoring_providers',
-        'camp': 'summer_camps', 
-        'internship': 'internships',
-        'job': 'jobs'
-      };
-      
-      const tableName = tableMapping[listingType];
-      if (!tableName) {
-        console.log(`[DEBUG] Invalid listing type: ${listingType}`);
-        return res.status(400).json({ message: "Invalid listing type" });
-      }
-      
-      // Get client IP address for rate limiting
-      const clientIp = req.ip || req.connection.remoteAddress || 'unknown';
-      
-      console.log(`[DEBUG] Calling trackView with: tableName=${tableName}, listingId=${listingId}, userId=${userId}, clientIp=${clientIp}`);
-      const result = await storage.trackView(tableName, listingId, userId, clientIp);
-      console.log(`[DEBUG] trackView result:`, result);
-      res.json(result);
-    } catch (error) {
-      console.error("Error tracking view:", error);
-      res.status(500).json({ message: "Failed to track view" });
     }
   });
 
