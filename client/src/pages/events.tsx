@@ -437,6 +437,7 @@ export default function Events() {
               events={events}
               isLoading={isLoading}
               onEventClick={setSelectedEvent}
+              onThumbsUpChange={refetch}
             />
 
             {/* Pagination */}
