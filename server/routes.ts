@@ -1100,7 +1100,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'tutoring': 'tutoring_providers',
         'camp': 'summer_camps', 
         'internship': 'internships',
-        'job': 'jobs'
+        'job': 'jobs',
+        'event': 'events'
       };
       
       const tableName = tableMapping[listingType];

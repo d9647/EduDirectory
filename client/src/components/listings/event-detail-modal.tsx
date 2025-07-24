@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -51,6 +52,30 @@ export function EventDetailModal({ event, open, onClose }: EventDetailModalProps
   const mapUrl = event.latitude && event.longitude 
     ? `https://www.google.com/maps?q=${event.latitude},${event.longitude}`
     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
+
+  // Track view when modal opens
+  useEffect(() => {
+    if (open && event?.id) {
+      const trackView = async () => {
+        try {
+          await fetch('/api/views/track', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              listingType: 'event',
+              listingId: event.id,
+            }),
+          });
+        } catch (error) {
+          console.error('Failed to track view:', error);
+        }
+      };
+      
+      trackView();
+    }
+  }, [open, event?.id]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
