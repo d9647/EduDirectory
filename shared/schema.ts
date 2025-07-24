@@ -263,7 +263,7 @@ export const events = pgTable("events", {
   cost: varchar("cost"), // "Free", "$10", "$25-50"
   registrationRequired: boolean("registration_required").default(false),
   registrationLink: varchar("registration_link"),
-  posterUrl: varchar("poster_url"), // Event poster/flyer image
+  posterUrl: varchar("photo_url"), // Event poster/flyer image
   contactInfo: text("contact_info"),
   specialInstructions: text("special_instructions"),
   viewCount: integer("view_count").default(0),
