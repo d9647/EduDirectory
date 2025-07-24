@@ -815,6 +815,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         case 'job':
           updatedListing = await storage.updateJob(listingId, updateData);
           break;
+        case 'event':
+          updatedListing = await storage.updateEvent(listingId, updateData);
+          break;
         default:
           return res.status(400).json({ message: "Invalid listing type" });
       }
