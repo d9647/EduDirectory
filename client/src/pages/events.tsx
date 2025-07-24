@@ -6,12 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, MapPin, Clock, Users2, DollarSign, Search, Plus } from "lucide-react";
+import { Calendar, MapPin, Clock, Users2, DollarSign, Search } from "lucide-react";
 import Header from "@/components/layout/header";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { EventsTable } from "@/components/listings/events-table";
 import { EventDetailModal } from "@/components/listings/event-detail-modal";
-import { EventSubmissionForm } from "@/components/forms/event-submission-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -76,7 +75,6 @@ export default function Events() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [showSubmissionForm, setShowSubmissionForm] = useState(false);
 
   const pageSize = 10;
 
@@ -171,23 +169,7 @@ export default function Events() {
             </p>
           </div>
           
-          <Dialog open={showSubmissionForm} onOpenChange={setShowSubmissionForm}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Submit Event
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Submit Community Event</DialogTitle>
-              </DialogHeader>
-              <EventSubmissionForm onSuccess={() => {
-                setShowSubmissionForm(false);
-                refetch();
-              }} />
-            </DialogContent>
-          </Dialog>
+
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
