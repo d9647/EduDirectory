@@ -88,7 +88,13 @@ export default function Events() {
     if (selectedCosts.length > 0) params.set("cost", selectedCosts.join(","));
     if (zipcode) params.set("zipcode", zipcode);
     if (distance) params.set("distance", distance.toString());
-    if (selectedDate) params.set("eventDate", selectedDate.toISOString().split('T')[0]);
+    if (selectedDate) {
+      // Format date as YYYY-MM-DD in local timezone to avoid UTC conversion issues
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(selectedDate.getDate()).padStart(2, '0');
+      params.set("eventDate", `${year}-${month}-${day}`);
+    }
     if (registrationFilter !== "all") {
       params.set("registrationRequired", registrationFilter === "required" ? "true" : "false");
     }
