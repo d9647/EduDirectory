@@ -686,6 +686,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         case 'job':
           await storage.approveJob(listingId);
           break;
+        case 'event':
+          await storage.approveEvent(listingId);
+          break;
         default:
           return res.status(400).json({ message: "Invalid listing type" });
       }
@@ -1065,6 +1068,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("Error deleting job:", error);
       res.status(500).json({ message: "Failed to delete job" });
+    }
+  });
+
+  app.delete('/api/admin/delete/event/:id', isAuthenticated, requireAdmin, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      console.log(`Deleting event with ID: ${id}`);
+      await storage.deleteEvent(id);
+      console.log(`Successfully deleted event ${id}`);
+      res.json({ message: "Event deleted successfully" });
+    } catch (error: any) {
+      console.error("Error deleting event:", error);
+      res.status(500).json({ message: "Failed to delete event" });
     }
   });
 
