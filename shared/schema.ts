@@ -60,6 +60,7 @@ export const tutoringProviders = pgTable("tutoring_providers", {
   subjects: text("subjects").array(), // Algebra, SAT Prep, etc.
   deliveryMode: text("delivery_mode").array(), // In-person, Remote, Hybrid (multiple selection)
   photoUrl: varchar("photo_url"),
+  viewCount: integer("view_count").default(0),
   isApproved: boolean("is_approved").default(false),
   isActive: boolean("is_active").default(true),
   submittedAt: timestamp("submitted_at").defaultNow(),
@@ -93,6 +94,7 @@ export const summerCamps = pgTable("summer_camps", {
   deliveryMode: text("delivery_mode").array(), // In-person, Remote, Hybrid (multiple selection)
   website: varchar("website"),
   photoUrl: varchar("photo_url"),
+  viewCount: integer("view_count").default(0),
   isApproved: boolean("is_approved").default(false),
   isActive: boolean("is_active").default(true),
   submittedAt: timestamp("submitted_at").defaultNow(),
@@ -128,6 +130,7 @@ export const internships = pgTable("internships", {
   eligibility: text("eligibility"),
   website: varchar("website"),
   hasMentorship: boolean("has_mentorship").default(false),
+  viewCount: integer("view_count").default(0),
   isApproved: boolean("is_approved").default(false),
   isActive: boolean("is_active").default(true),
   submittedAt: timestamp("submitted_at").defaultNow(),
@@ -169,6 +172,7 @@ export const jobs = pgTable("jobs", {
   hasAdvancement: boolean("has_advancement").default(false),
   requiresTransportation: boolean("requires_transportation").default(false),
   requiresResume: boolean("requires_resume").default(false),
+  viewCount: integer("view_count").default(0),
   isApproved: boolean("is_approved").default(false),
   isActive: boolean("is_active").default(true),
   submittedAt: timestamp("submitted_at").defaultNow(),
@@ -221,6 +225,17 @@ export const reports = pgTable("reports", {
   isResolved: boolean("is_resolved").default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+// View Tracking - to prevent rapid view count increments from same user
+export const viewTracking = pgTable("view_tracking", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull(),
+  listingType: varchar("listing_type").notNull(), // "tutoring", "camp", "internship", "job"
+  listingId: integer("listing_id").notNull(),
+  lastViewedAt: timestamp("last_viewed_at").defaultNow(),
+}, (table) => [
+  index("idx_view_tracking_user_listing").on(table.userId, table.listingType, table.listingId),
+]);
 
 
 

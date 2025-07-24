@@ -85,6 +85,7 @@ export default function Internships() {
               { key: "title", label: "Title", sortable: true },
               { key: "rating", label: "Rating", sortable: true },
               { key: "thumbsUpCount", label: "👍", sortable: true },
+              { key: "viewCount", label: "Views", sortable: true },
               { key: "compensation", label: "Compensation", sortable: false },
               { key: "types", label: "Categories", sortable: false },
               { key: "selectivityLevel", label: "Selectivity", sortable: false },

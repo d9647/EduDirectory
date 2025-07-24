@@ -8,6 +8,7 @@ import {
   thumbsUp,
   bookmarks,
   reports,
+  viewTracking,
   type User,
   type UpsertUser,
   type TutoringProvider,
@@ -145,6 +146,9 @@ export interface IStorage {
   createReport(report: InsertReport): Promise<Report>;
   getReports(): Promise<Report[]>;
   resolveReport(id: number): Promise<void>;
+
+  // View Tracking
+  trackView(userId: string, listingType: string, listingId: number): Promise<boolean>;
 
   // Admin
   getPendingApprovals(): Promise<{
@@ -381,6 +385,9 @@ export class DatabaseStorage implements IStorage {
               AND ${reviews.listingId} = ${tutoringProviders.id}
           )`);
           break;
+        case "viewCount":
+          orderBy = order(tutoringProviders.viewCount);
+          break;
         default:
           orderBy = desc(tutoringProviders.createdAt);
       }
@@ -408,6 +415,7 @@ export class DatabaseStorage implements IStorage {
       approvedAt: tutoringProviders.approvedAt,
       createdAt: tutoringProviders.createdAt,
       updatedAt: tutoringProviders.updatedAt,
+      viewCount: tutoringProviders.viewCount,
       thumbsUpCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM thumbs_up WHERE listing_type = 'tutoring' AND listing_id = tutoring_providers.id), 0) AS INTEGER)`,
       averageRating: sql<number>`CAST(COALESCE((SELECT AVG(rating::NUMERIC) FROM reviews WHERE listing_type = 'tutoring' AND listing_id = tutoring_providers.id), 0) AS NUMERIC(3,1))`,
       reviewCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM reviews WHERE listing_type = 'tutoring' AND listing_id = tutoring_providers.id), 0) AS INTEGER)`
@@ -583,6 +591,9 @@ export class DatabaseStorage implements IStorage {
         case "costRange":
           orderBy = order(summerCamps.costRange);
           break;
+        case "viewCount":
+          orderBy = order(summerCamps.viewCount);
+          break;
         default:
           orderBy = desc(summerCamps.createdAt);
       }
@@ -618,6 +629,7 @@ export class DatabaseStorage implements IStorage {
       approvedAt: summerCamps.approvedAt,
       createdAt: summerCamps.createdAt,
       updatedAt: summerCamps.updatedAt,
+      viewCount: summerCamps.viewCount,
       thumbsUpCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM thumbs_up WHERE listing_type = 'camp' AND listing_id = summer_camps.id), 0) AS INTEGER)`,
       averageRating: sql<number>`CAST(COALESCE((SELECT AVG(rating::NUMERIC) FROM reviews WHERE listing_type = 'camp' AND listing_id = summer_camps.id), 0) AS NUMERIC(3,1))`,
       reviewCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM reviews WHERE listing_type = 'camp' AND listing_id = summer_camps.id), 0) AS INTEGER)`
@@ -761,6 +773,9 @@ export class DatabaseStorage implements IStorage {
               AND ${reviews.listingId} = ${internships.id}
           )`);
           break;
+        case "viewCount":
+          orderBy = order(internships.viewCount);
+          break;
         default:
           orderBy = desc(internships.createdAt);
       }
@@ -799,6 +814,7 @@ export class DatabaseStorage implements IStorage {
       approvedAt: internships.approvedAt,
       createdAt: internships.createdAt,
       updatedAt: internships.updatedAt,
+      viewCount: internships.viewCount,
       thumbsUpCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM thumbs_up WHERE listing_type = 'internship' AND listing_id = internships.id), 0) AS INTEGER)`,
       averageRating: sql<number>`CAST(COALESCE((SELECT AVG(rating::NUMERIC) FROM reviews WHERE listing_type = 'internship' AND listing_id = internships.id), 0) AS NUMERIC(3,1))`,
       reviewCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM reviews WHERE listing_type = 'internship' AND listing_id = internships.id), 0) AS INTEGER)`
@@ -942,6 +958,9 @@ export class DatabaseStorage implements IStorage {
               AND ${reviews.listingId} = ${jobs.id}
           )`);
           break;
+        case "viewCount":
+          orderBy = order(jobs.viewCount);
+          break;
         default:
           orderBy = desc(jobs.createdAt);
       }
@@ -984,6 +1003,7 @@ export class DatabaseStorage implements IStorage {
       approvedAt: jobs.approvedAt,
       createdAt: jobs.createdAt,
       updatedAt: jobs.updatedAt,
+      viewCount: jobs.viewCount,
       thumbsUpCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM thumbs_up WHERE listing_type = 'job' AND listing_id = jobs.id), 0) AS INTEGER)`,
       averageRating: sql<number>`CAST(COALESCE((SELECT AVG(rating::NUMERIC) FROM reviews WHERE listing_type = 'job' AND listing_id = jobs.id), 0) AS NUMERIC(3,1))`,
       reviewCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM reviews WHERE listing_type = 'job' AND listing_id = jobs.id), 0) AS INTEGER)`
@@ -1503,6 +1523,112 @@ export class DatabaseStorage implements IStorage {
           .set({ isActive: true, updatedAt: new Date() })
           .where(eq(jobs.id, id));
         break;
+    }
+  }
+
+  // View Tracking Implementation
+  async trackView(tableName: string, listingId: number, userId: string, clientIp: string): Promise<{ wasTracked: boolean }> {
+    const RATE_LIMIT_MINUTES = 5; // Prevent rapid view increments for 5 minutes
+    
+    try {
+      // Convert table name back to listing type for the tracking table
+      const listingTypeMapping = {
+        'tutoring_providers': 'tutoring',
+        'summer_camps': 'camp',
+        'internships': 'internship',
+        'jobs': 'job'
+      };
+      
+      const listingType = listingTypeMapping[tableName];
+      if (!listingType) {
+        return { wasTracked: false };
+      }
+      
+      // Calculate time threshold for rate limiting
+      const rateThreshold = new Date();
+      rateThreshold.setMinutes(rateThreshold.getMinutes() - RATE_LIMIT_MINUTES);
+      
+      // Check if user viewed this listing recently using simple date comparison
+      const recentView = await db
+        .select()
+        .from(viewTracking)
+        .where(
+          and(
+            eq(viewTracking.userId, userId),
+            eq(viewTracking.listingType, listingType),
+            eq(viewTracking.listingId, listingId),
+            sql`${viewTracking.lastViewedAt} > ${rateThreshold}`
+          )
+        )
+        .limit(1);
+
+      if (recentView.length > 0) {
+        // User viewed this recently, don't increment view count
+        return { wasTracked: false };
+      }
+
+      // Insert or update view tracking record
+      await db
+        .insert(viewTracking)
+        .values({
+          userId,
+          listingType,
+          listingId,
+          lastViewedAt: new Date(),
+        })
+        .onConflictDoUpdate({
+          target: [viewTracking.userId, viewTracking.listingType, viewTracking.listingId],
+          set: {
+            lastViewedAt: new Date(),
+          },
+        });
+
+      // Increment view count in the appropriate table
+      switch (tableName) {
+        case 'tutoring_providers':
+          await db
+            .update(tutoringProviders)
+            .set({ 
+              viewCount: sql`${tutoringProviders.viewCount} + 1`,
+              updatedAt: new Date()
+            })
+            .where(eq(tutoringProviders.id, listingId));
+          break;
+        case 'summer_camps':
+          await db
+            .update(summerCamps)
+            .set({ 
+              viewCount: sql`${summerCamps.viewCount} + 1`,
+              updatedAt: new Date()
+            })
+            .where(eq(summerCamps.id, listingId));
+          break;
+        case 'internships':
+          await db
+            .update(internships)
+            .set({ 
+              viewCount: sql`${internships.viewCount} + 1`,
+              updatedAt: new Date()
+            })
+            .where(eq(internships.id, listingId));
+          break;
+        case 'jobs':
+          await db
+            .update(jobs)
+            .set({ 
+              viewCount: sql`${jobs.viewCount} + 1`,
+              updatedAt: new Date()
+            })
+            .where(eq(jobs.id, listingId));
+          break;
+        default:
+          return { wasTracked: false };
+      }
+
+      return { wasTracked: true }; // View was successfully tracked
+    } catch (error) {
+      console.error('Error tracking view:', error);
+      return { wasTracked: false };
     }
   }
 }

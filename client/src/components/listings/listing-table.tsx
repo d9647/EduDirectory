@@ -48,6 +48,7 @@ export default function ListingTable({
     { value: "name", label: "Name (A-Z)" },
     { value: "rating", label: "Rating" },
     { value: "thumbsUp", label: "Most Thumbs Up" },
+    { value: "viewCount", label: "Most Views" },
     ...(listingType === "camps" ? [{ value: "costRange", label: "Cost Range" }] : []),
   ];
 
@@ -153,6 +154,28 @@ export default function ListingTable({
     },
   });
 
+  // View tracking mutation
+  const viewTrackingMutation = useMutation({
+    mutationFn: async ({ listingId }: { listingId: number }) => {
+      const response = await apiRequest("POST", "/api/views/track", {
+        listingType: listingType === "tutoring" ? "tutoring" : 
+                     listingType === "camps" ? "camp" :
+                     listingType === "internships" ? "internship" :
+                     listingType === "jobs" ? "job" :
+                     listingType,
+        listingId,
+      });
+      return response.json();
+    },
+    onSuccess: () => {
+      // Invalidate queries to refresh view count
+      queryClient.invalidateQueries({ queryKey: [`/api/${listingType === "tutoring" ? "tutoring-providers" : listingType === "camps" ? "summer-camps" : listingType}`] });
+    },
+    onError: (error) => {
+      console.error("Failed to track view:", error);
+    },
+  });
+
   // Get user interactions for a listing
   const { data: userInteractions } = useQuery({
     queryKey: [`/api/thumbs-up/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType}`, selectedListing?.id, "user"],
@@ -251,6 +274,10 @@ export default function ListingTable({
   const handleViewDetails = (listing: any) => {
     setSelectedListing(listing);
     setDetailModalOpen(true);
+    // Track view when user opens detail modal
+    if (isAuthenticated) {
+      viewTrackingMutation.mutate({ listingId: listing.id });
+    }
   };
 
   const handleShare = (listing: any) => {
@@ -351,6 +378,15 @@ export default function ListingTable({
           <div className="flex items-center justify-center">
             <span className="text-sm font-medium text-gray-900">
               {Math.floor(listing.thumbsUpCount) || 0}
+            </span>
+          </div>
+        );
+
+      case "viewCount":
+        return (
+          <div className="flex items-center justify-center">
+            <span className="text-sm font-medium text-gray-900">
+              {Math.floor(listing.viewCount) || 0}
             </span>
           </div>
         );

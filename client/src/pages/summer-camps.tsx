@@ -81,15 +81,13 @@ export default function SummerCamps() {
             columns={[
               { key: "name", label: "Camp Name", sortable: true },
               { key: "selectivityLevel", label: "Selectivity", sortable: true },
-              { key: "costRange", label: "Cost Range", sortable: true },
               { key: "rating", label: "Rating", sortable: true },
               { key: "thumbsUpCount", label: "👍", sortable: true },
+              { key: "viewCount", label: "Views", sortable: true },
+              { key: "costRange", label: "Cost Range", sortable: true },
               { key: "categories", label: "Categories", sortable: false },
               { key: "tags", label: "Tags", sortable: false },
               { key: "location", label: "Location", sortable: true },
-              { key: "applicationOpen", label: "Application Open", sortable: true },
-              { key: "applicationDeadline", label: "Application Deadline", sortable: true },
-              { key: "minimumAge", label: "Min Age", sortable: true },
               { key: "actions", label: "Actions", sortable: false },
             ]}
             filters={filters}
