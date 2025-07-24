@@ -285,6 +285,29 @@ export function EventDetailModal({ event, open, onClose }: EventDetailModalProps
                   <p className="font-medium">{event.venue}</p>
                   <p>{fullAddress}</p>
                 </div>
+                
+                {/* Embedded Map */}
+                <div className="w-full h-48 rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
+                  {event.latitude && event.longitude ? (
+                    <iframe
+                      src={`https://www.openstreetmap.org/export/embed.html?bbox=${parseFloat(event.longitude) - 0.01},${parseFloat(event.latitude) - 0.01},${parseFloat(event.longitude) + 0.01},${parseFloat(event.latitude) + 0.01}&layer=mapnik&marker=${event.latitude},${event.longitude}`}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      title={`Map showing ${event.venue}`}
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-center p-4">
+                      <div className="text-gray-600">
+                        <MapPin className="h-8 w-8 mx-auto mb-2" />
+                        <p className="text-sm font-medium">{event.venue}</p>
+                        <p className="text-xs">{fullAddress}</p>
+                        <p className="text-xs mt-2">Click "Open in Google Maps" below to view location</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
                 <Button
                   variant="outline"
                   size="sm"
@@ -297,7 +320,7 @@ export function EventDetailModal({ event, open, onClose }: EventDetailModalProps
                     rel="noopener noreferrer"
                   >
                     <ExternalLink className="h-4 w-4 mr-2" />
-                    View on Map
+                    Open in Google Maps
                   </a>
                 </Button>
               </div>
