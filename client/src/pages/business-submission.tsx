@@ -3,6 +3,7 @@ import Header from "@/components/layout/header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BusinessSubmissionForm from "@/components/forms/business-submission-form";
+import { EventSubmissionForm } from "@/components/forms/event-submission-form";
 
 export default function BusinessSubmission() {
   const [activeTab, setActiveTab] = useState("tutoring");
@@ -28,11 +29,12 @@ export default function BusinessSubmission() {
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="flex flex-wrap w-full h-auto p-1 gap-1 sm:grid sm:grid-cols-4 sm:h-10">
+              <TabsList className="flex flex-wrap w-full h-auto p-1 gap-1 sm:grid sm:grid-cols-5 sm:h-10">
                 <TabsTrigger value="tutoring" className="flex-1 min-w-[120px] sm:min-w-0">Tutoring Service</TabsTrigger>
                 <TabsTrigger value="camp" className="flex-1 min-w-[120px] sm:min-w-0">Summer Camp</TabsTrigger>
                 <TabsTrigger value="internship" className="flex-1 min-w-[120px] sm:min-w-0">Internship</TabsTrigger>
                 <TabsTrigger value="job" className="flex-1 min-w-[120px] sm:min-w-0">Job Opportunity</TabsTrigger>
+                <TabsTrigger value="event" className="flex-1 min-w-[120px] sm:min-w-0">Event</TabsTrigger>
               </TabsList>
               
               <TabsContent value="tutoring" className="mt-6">
@@ -49,6 +51,12 @@ export default function BusinessSubmission() {
               
               <TabsContent value="job" className="mt-6">
                 <BusinessSubmissionForm type="job" />
+              </TabsContent>
+              
+              <TabsContent value="event" className="mt-6">
+                <EventSubmissionForm onSuccess={() => {
+                  // Show success message and optionally redirect
+                }} />
               </TabsContent>
             </Tabs>
           </CardContent>
