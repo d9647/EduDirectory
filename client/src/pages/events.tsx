@@ -39,7 +39,7 @@ interface Event {
   cost: string;
   registrationRequired: boolean;
   registrationLink: string;
-  posterUrl: string;
+  photoUrl: string;
   contactInfo: string;
   specialInstructions: string;
   viewCount: number;
