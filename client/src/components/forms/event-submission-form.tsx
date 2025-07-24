@@ -67,6 +67,8 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedAudiences, setSelectedAudiences] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [posterFile, setPosterFile] = useState<File | null>(null);
+  const [posterPreview, setPosterPreview] = useState<string | null>(null);
   const { toast } = useToast();
 
   const form = useForm<EventFormData>({
@@ -96,13 +98,79 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
     form.setValue("targetAudience", newAudiences);
   };
 
+  // Handle poster upload
+  const handlePosterUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Check file size (limit to 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "Please select an image under 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        toast({
+          title: "Invalid file type",
+          description: "Please select an image file.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setPosterFile(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPosterPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removePoster = () => {
+    setPosterFile(null);
+    setPosterPreview(null);
+  };
+
   const onSubmit = async (data: EventFormData) => {
     setIsSubmitting(true);
     
     try {
+      let posterUrl = "";
+      
+      // Upload poster if selected
+      if (posterFile) {
+        const formData = new FormData();
+        formData.append('photo', posterFile);
+        
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (uploadResponse.ok) {
+          const uploadResult = await uploadResponse.json();
+          posterUrl = uploadResult.url;
+        } else {
+          toast({
+            title: "Upload failed",
+            description: "Failed to upload poster image.",
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+      
       const submitData = {
         ...data,
         eventDate: data.eventDate.toISOString().split('T')[0],
+        posterUrl,
         isApproved: false,
         isActive: false,
         viewCount: 0,
@@ -526,12 +594,49 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="posterUrl">Event Poster URL (Optional)</Label>
-            <Input
-              id="posterUrl"
-              {...form.register("posterUrl")}
-              placeholder="https://example.com/poster.jpg"
-            />
+            <Label className="text-sm font-medium text-gray-700 mb-3 block">
+              Event Poster Upload (Optional)
+            </Label>
+            <div className="space-y-3">
+              <div className="flex items-center space-x-4">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePosterUpload}
+                  className="hidden"
+                  id="poster-upload"
+                />
+                <Label
+                  htmlFor="poster-upload"
+                  className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  {posterPreview ? "Replace Poster" : "Choose Poster"}
+                </Label>
+                <span className="text-sm text-gray-500">
+                  Max size: 5MB. Supported: JPG, PNG, GIF
+                </span>
+              </div>
+              
+              {posterPreview && (
+                <div className="relative inline-block">
+                  <img
+                    src={posterPreview}
+                    alt="Poster preview"
+                    className="w-32 h-32 object-cover rounded-lg border"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    onClick={removePoster}
+                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
 
           <div>
