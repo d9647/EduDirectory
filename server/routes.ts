@@ -9,6 +9,7 @@ import {
   insertSummerCampSchema,
   insertInternshipSchema,
   insertJobSchema,
+  insertEventSchema,
   insertReviewSchema,
   insertReportSchema,
 } from "@shared/schema";
@@ -329,6 +330,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Events
+  app.get('/api/events', async (req, res) => {
+    try {
+      const filters = {
+        search: req.query.search as string,
+        categories: req.query.categories ? (req.query.categories as string).split(',') : undefined,
+        targetAudience: req.query.targetAudience ? (req.query.targetAudience as string).split(',') : undefined,
+        eventDate: req.query.eventDate as string,
+        dateRange: req.query.startDate && req.query.endDate ? {
+          start: req.query.startDate as string,
+          end: req.query.endDate as string
+        } : undefined,
+        city: req.query.city as string,
+        state: req.query.state as string,
+        zipcode: req.query.zipcode as string,
+        distance: req.query.distance ? parseInt(req.query.distance as string) : undefined,
+        cost: req.query.cost ? (req.query.cost as string).split(',') : undefined,
+        registrationRequired: req.query.registrationRequired === 'true' ? true : req.query.registrationRequired === 'false' ? false : undefined,
+        sortBy: req.query.sortBy as string,
+        sortOrder: (req.query.sortOrder as "asc" | "desc") || "asc",
+        limit: req.query.limit ? parseInt(req.query.limit as string) : 5,
+        offset: req.query.offset ? parseInt(req.query.offset as string) : 0,
+      };
+
+      const result = await storage.getEvents(filters);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error fetching events:", error);
+      res.status(500).json({ message: "Failed to fetch events" });
+    }
+  });
+
+  app.get('/api/events/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const event = await storage.getEvent(id);
+      if (!event) {
+        return res.status(404).json({ message: "Event not found" });
+      }
+      res.json(event);
+    } catch (error: any) {
+      console.error("Error fetching event:", error);
+      res.status(500).json({ message: "Failed to fetch event" });
+    }
+  });
+
+  app.post('/api/events', async (req, res) => {
+    try {
+      const validatedData = insertEventSchema.parse(req.body);
+      const event = await storage.createEvent(validatedData);
+      res.status(201).json(event);
+    } catch (error: any) {
+      console.error("Error creating event:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create event" });
+    }
+  });
+
   // Reviews
   app.get('/api/reviews/:listingType/:listingId', async (req, res) => {
     try {
@@ -471,7 +532,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'tutoring': 'tutoring_providers',
         'camp': 'summer_camps',
         'internship': 'internships',
-        'job': 'jobs'
+        'job': 'jobs',
+        'event': 'events'
       };
       const tableName = typeToTable[listingType as string];
       if (!tableName) return res.status(400).json({ error: 'Invalid listing type' });
