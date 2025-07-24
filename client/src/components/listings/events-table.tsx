@@ -90,7 +90,7 @@ export function EventsTable({ events, isLoading, onEventClick }: EventsTableProp
               <div className="flex items-center text-sm text-gray-600">
                 <Calendar className="h-4 w-4 mr-2" />
                 <span>
-                  {format(new Date(event.eventDate), "MMM d, yyyy")}
+                  {format(new Date(event.eventDate + 'T00:00:00'), "MMM d, yyyy")}
                 </span>
               </div>
               

@@ -1171,7 +1171,7 @@ export default function Admin() {
                               </div>
                               <p className="text-sm text-gray-600">
                                 <Calendar className="h-4 w-4 inline mr-1" />
-                                {new Date(event.eventDate).toLocaleDateString()} • {event.venue} • {event.city}, {event.state}
+                                {new Date(event.eventDate + 'T00:00:00').toLocaleDateString()} • {event.venue} • {event.city}, {event.state}
                               </p>
                               <p className="text-sm text-gray-500 mt-1">{event.description?.substring(0, 100)}...</p>
                             </div>
