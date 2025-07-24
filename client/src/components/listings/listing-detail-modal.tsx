@@ -260,18 +260,24 @@ export default function ListingDetailModal({
                    listingType === "camps" ? "Summer Camp" :
                    listingType === "internships" ? "Internship" : "Job"}
                 </DialogDescription>
-                <div className="flex items-center mt-1">
-                  <div className="flex text-yellow-400 mr-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star 
-                        key={star} 
-                        className={`h-3 w-3 sm:h-4 sm:w-4 ${star <= Math.floor(averageRating) ? "fill-current" : ""}`}
-                      />
-                    ))}
+                <div className="flex items-center mt-1 space-x-4">
+                  <div className="flex items-center">
+                    <div className="flex text-yellow-400 mr-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star 
+                          key={star} 
+                          className={`h-3 w-3 sm:h-4 sm:w-4 ${star <= Math.floor(averageRating) ? "fill-current" : ""}`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-xs sm:text-sm text-gray-600">
+                      {averageRating.toFixed(1)} ({(reviews as any)?.length || 0} reviews)
+                    </span>
                   </div>
-                  <span className="text-xs sm:text-sm text-gray-600">
-                    {averageRating.toFixed(1)} ({reviews?.length || 0} reviews)
-                  </span>
+                  <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                    <Monitor className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                    {listing.viewCount || 0} views
+                  </div>
                 </div>
               </div>
             </div>
@@ -289,9 +295,9 @@ export default function ListingDetailModal({
                   thumbsUpMutation.mutate();
                 }}
                 disabled={thumbsUpMutation.isPending}
-                variant={userInteractions?.hasThumbedUp ? "default" : "outline"}
+                variant={(userInteractions as any)?.hasThumbedUp ? "default" : "outline"}
               >
-                <ThumbsUp className={`h-4 w-4 mr-2 ${userInteractions?.hasThumbedUp ? "fill-current" : ""}`} />
+                <ThumbsUp className={`h-4 w-4 mr-2 ${(userInteractions as any)?.hasThumbedUp ? "fill-current" : ""}`} />
                 Thumbs Up ({listing.thumbsUpCount || 0})
               </Button>
               <Button
@@ -303,10 +309,10 @@ export default function ListingDetailModal({
                   bookmarkMutation.mutate();
                 }}
                 disabled={bookmarkMutation.isPending}
-                variant={userBookmark?.isBookmarked ? "default" : "outline"}
+                variant={(userBookmark as any)?.isBookmarked ? "default" : "outline"}
               >
-                <Bookmark className={`h-4 w-4 mr-2 ${userBookmark?.isBookmarked ? "fill-current" : ""}`} />
-                {userBookmark?.isBookmarked ? "Saved" : "Save"}
+                <Bookmark className={`h-4 w-4 mr-2 ${(userBookmark as any)?.isBookmarked ? "fill-current" : ""}`} />
+                {(userBookmark as any)?.isBookmarked ? "Saved" : "Save"}
               </Button>
               <Button variant="outline" onClick={handleShare}>
                 <Share2 className="h-4 w-4 mr-2" />
@@ -638,7 +644,7 @@ export default function ListingDetailModal({
             <div>
               <div className="flex items-center justify-between mb-4">
                 <h4 className="font-semibold text-gray-900">
-                  Reviews ({reviews?.length || 0})
+                  Reviews ({(reviews as any)?.length || 0})
                 </h4>
                 <Button
                   onClick={() => {
@@ -655,7 +661,7 @@ export default function ListingDetailModal({
               </div>
 
               {/* Review Summary */}
-              {reviews && reviews.length > 0 && (
+              {reviews && (reviews as any).length > 0 && (
                 <div className="bg-gray-50 rounded-lg p-4 mb-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
@@ -671,7 +677,7 @@ export default function ListingDetailModal({
                             />
                           ))}
                         </div>
-                        <p className="text-sm text-gray-600">Based on {reviews.length} reviews</p>
+                        <p className="text-sm text-gray-600">Based on {(reviews as any).length} reviews</p>
                       </div>
                     </div>
                     <div className="text-right">
@@ -683,7 +689,7 @@ export default function ListingDetailModal({
                               <div 
                                 className="bg-yellow-400 h-2 rounded-full" 
                                 style={{ 
-                                  width: `${reviews.length > 0 ? (ratingDistribution[rating - 1] / reviews.length) * 100 : 0}%` 
+                                  width: `${(reviews as any).length > 0 ? (ratingDistribution[rating - 1] / (reviews as any).length) * 100 : 0}%` 
                                 }}
                               ></div>
                             </div>
@@ -702,8 +708,8 @@ export default function ListingDetailModal({
               <div className="space-y-4">
                 {reviewsLoading ? (
                   <div className="text-center py-4">Loading reviews...</div>
-                ) : reviews && reviews.length > 0 ? (
-                  reviews.map((review: any) => (
+                ) : reviews && (reviews as any).length > 0 ? (
+                  (reviews as any).map((review: any) => (
                     <div key={review.id} className="border border-gray-200 rounded-lg p-4">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center">
@@ -741,7 +747,7 @@ export default function ListingDetailModal({
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          {(user?.id === review.userId || user?.role === 'admin') && (
+                          {((user as any)?.id === review.userId || (user as any)?.role === 'admin') && (
                             <Button
                               variant="ghost"
                               size="sm"
