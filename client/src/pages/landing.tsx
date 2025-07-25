@@ -2,6 +2,43 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GraduationCap, Users, MapPin, Star, Calendar, BookOpen } from "lucide-react";
 import Footer from "@/components/layout/footer";
+import { useState } from "react";
+
+// FeatureShowcase carousel for previewing 5 pages/features
+const previewImages = [
+  { src: "/preview1.png", alt: "Tutoring Providers", caption: "Find top tutors" },
+  { src: "/preview2.png", alt: "Summer Camps", caption: "Explore summer camps" },
+  { src: "/preview3.png", alt: "Internships", caption: "Discover internships" },
+  { src: "/preview4.png", alt: "Jobs", caption: "Find jobs opportunities" },
+  { src: "/preview5.png", alt: "Events", caption: "Join community events" },
+  { src: "/preview6.png", alt: "Planning Guides", caption: "Navigate your high school journey" },
+];
+
+function FeatureShowcase() {
+  const [index, setIndex] = useState(0);
+  return (
+    <div className="flex flex-col items-center my-8">
+      <div className="relative w-64 h-40 bg-gray-200 rounded-lg flex items-center justify-center">
+        <img
+          src={previewImages[index].src}
+          alt={previewImages[index].alt}
+          className="object-contain w-full h-full rounded"
+        />
+        <button
+          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1"
+          onClick={() => setIndex((index - 1 + previewImages.length) % previewImages.length)}
+          aria-label="Previous"
+        >&#8592;</button>
+        <button
+          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1"
+          onClick={() => setIndex((index + 1) % previewImages.length)}
+          aria-label="Next"
+        >&#8594;</button>
+      </div>
+      <div className="mt-2 text-sm text-gray-700">{previewImages[index].caption}</div>
+    </div>
+  );
+}
 
 export default function Landing() {
   return (
@@ -56,6 +93,8 @@ export default function Landing() {
                   </div>
                 </div>
               </div>
+              {/* Feature Showcase Carousel */}
+              <FeatureShowcase />
             </main>
           </div>
         </div>
