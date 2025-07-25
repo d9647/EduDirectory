@@ -313,18 +313,12 @@ export default function Settings() {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div className="bg-blue-50 p-3 rounded-lg">
-                    <div className="text-lg font-semibold text-blue-600">
-                      {contributionStats.reviewsCount}
+                <div className="text-center">
+                  <div className="bg-green-50 p-4 rounded-lg">
+                    <div className="text-2xl font-semibold text-green-600">
+                      {contributionStats.listingsCount + contributionStats.reviewsCount}
                     </div>
-                    <div className="text-xs text-gray-600">Reviews</div>
-                  </div>
-                  <div className="bg-green-50 p-3 rounded-lg">
-                    <div className="text-lg font-semibold text-green-600">
-                      {contributionStats.listingsCount}
-                    </div>
-                    <div className="text-xs text-gray-600">Listings</div>
+                    <div className="text-sm text-gray-600">Total Contributions</div>
                   </div>
                 </div>
 
