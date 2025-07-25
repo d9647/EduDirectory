@@ -388,3 +388,35 @@ export const US_STATES = [
   { value: "WI", label: "Wisconsin" },
   { value: "WY", label: "Wyoming" },
 ];
+
+// Event Age Range Options
+export const AGE_RANGE_OPTIONS = [
+  { value: "6-10", label: "6-10" },
+  { value: "11-13", label: "11-13" },
+  { value: "14-18", label: "14-18" },
+  { value: "18+", label: "18+" },
+  { value: "All ages", label: "All ages" },
+];
+
+// Event Category Options
+export const EVENT_CATEGORIES = [
+  { value: "Academic", label: "Academic" },
+  { value: "STEM", label: "STEM" },
+  { value: "Arts & Culture", label: "Arts & Culture" },
+  { value: "Sports & Recreation", label: "Sports & Recreation" },
+  { value: "Community Service", label: "Community Service" },
+  { value: "Leadership", label: "Leadership" },
+  { value: "College & Career", label: "College & Career" },
+  { value: "Social & Networking", label: "Social & Networking" },
+  { value: "Health & Wellness", label: "Health & Wellness" },
+  { value: "Technology", label: "Technology" },
+];
+
+// Event Target Audience Options
+export const TARGET_AUDIENCE_OPTIONS = [
+  { value: "Middle School", label: "Middle School" },
+  { value: "High School", label: "High School" },
+  { value: "College Students", label: "College Students" },
+  { value: "Young Adults", label: "Young Adults" },
+  { value: "All Students", label: "All Students" },
+];

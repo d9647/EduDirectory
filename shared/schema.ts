@@ -259,7 +259,7 @@ export const events = pgTable("events", {
   longitude: decimal("longitude", { precision: 11, scale: 8 }), // For map integration
   categories: text("categories").array(), // Academic, Sports, Arts, Community Service, etc.
   targetAudience: text("target_audience").array(), // High School, College, Young Adults
-  ageRange: varchar("age_range"), // "14-18", "18-25", "All ages"
+  ageRange: text("age_range").array(), // ["14-18", "18-25", "All ages"]
   cost: varchar("cost"), // "Free", "$10", "$25-50"
   registrationRequired: boolean("registration_required").default(false),
   registrationLink: varchar("registration_link"),
