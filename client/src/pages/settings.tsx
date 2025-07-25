@@ -16,6 +16,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 import { Upload, User, Save, Camera, Star, Award } from "lucide-react";
 import { getDisplayName, getContributionStats } from "@shared/utils";
+import { UserBadge } from "@/components/common/user-badge";
 
 const profileSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -30,45 +31,7 @@ const profileSchema = z.object({
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
-function renderContributionBadge(user: any, contributionStats: any) {
-  if (!user?.createdAt || !contributionStats) return null;
-  
-  const stats = getContributionStats(
-    contributionStats.listingsCount, 
-    contributionStats.reviewsCount, 
-    user.createdAt
-  );
-  
-  if (stats.isNewUser) {
-    return (
-      <div className="text-center bg-blue-50 p-3 rounded-lg">
-        <div className="text-sm font-medium text-blue-800">Welcome!</div>
-        <div className="text-xs text-blue-600">New member</div>
-      </div>
-    );
-  }
-  
-  if (stats.totalContributions > 0) {
-    const levelColors = {
-      contributor: "bg-orange-50 text-orange-800",
-      active: "bg-purple-50 text-purple-800",
-      top: "bg-yellow-50 text-yellow-800"
-    };
-    
-    const colorClass = levelColors[stats.level as keyof typeof levelColors] || "bg-gray-50 text-gray-800";
-    
-    return (
-      <div className={`text-center p-3 rounded-lg ${colorClass}`}>
-        <div className="text-sm font-medium">{stats.levelName}</div>
-        <div className="text-xs opacity-75">
-          {stats.totalContributions} total contributions
-        </div>
-      </div>
-    );
-  }
-  
-  return null;
-}
+
 
 export default function Settings() {
   const { toast } = useToast();
@@ -311,6 +274,12 @@ export default function Settings() {
                   <div className="text-sm text-gray-500 mt-1">
                     {user?.location && `📍 ${user.location}`}
                   </div>
+                  {/* User Badge Display */}
+                  {contributionStats && (
+                    <div className="mt-2 flex justify-center">
+                      <UserBadge user={user} contributionStats={contributionStats} />
+                    </div>
+                  )}
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4 text-center">
@@ -328,7 +297,16 @@ export default function Settings() {
                   </div>
                 </div>
 
-                {renderContributionBadge(user, contributionStats)}
+                {/* Badge Criteria */}
+                <div className="bg-gray-50 p-3 rounded-lg text-xs text-gray-600">
+                  <div className="font-medium mb-1">Badge Criteria</div>
+                  <div className="space-y-1">
+                    <div>🆕 <strong>New:</strong> Joined within 30 days</div>
+                    <div>🥉 <strong>Contributor:</strong> 1-4 total contributions</div>
+                    <div>🥈 <strong>Active Member:</strong> 5-14 total contributions</div>
+                    <div>🥇 <strong>Top Contributor:</strong> 15+ total contributions</div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           )}
