@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { GraduationCap, Users, MapPin, Star } from "lucide-react";
+import { GraduationCap, Users, MapPin, Star, Calendar, BookOpen } from "lucide-react";
 import Footer from "@/components/layout/footer";
 
 export default function Landing() {
@@ -27,12 +27,12 @@ export default function Landing() {
             <main className="mt-6 sm:mt-10 mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
               <div className="text-center lg:text-left">
                 <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-gray-900">
-                  <span className="block xl:inline">Find the best</span>{' '}
-                  <span className="block text-primary xl:inline">educational services</span>
+                  <span className="block xl:inline">Your complete</span>{' '}
+                  <span className="block text-primary xl:inline">educational journey</span>
                 </h1>
                 <p className="mt-3 text-sm xs:text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:text-xl lg:mx-0">
-                  Discover tutoring providers, summer camps, internships, and job opportunities. 
-                  Connect with the educational community and advance your learning journey.
+                  Discover opportunities, connect with your community, and plan your path to success. 
+                  From tutoring and events to career guidance - everything you need in one place.
                 </p>
                 <div className="mt-5 sm:mt-8 flex flex-col xs:flex-row gap-3 xs:gap-3 sm:justify-center lg:justify-start">
                   <div className="rounded-md shadow">
@@ -72,19 +72,19 @@ export default function Landing() {
           <div className="text-center lg:text-center">
             <h2 className="text-sm sm:text-base text-primary font-semibold tracking-wide uppercase">Features</h2>
             <p className="mt-2 text-xl xs:text-2xl sm:text-3xl lg:text-4xl leading-tight font-extrabold tracking-tight text-gray-900">
-              Everything you need to find educational services
+              Your all-in-one educational resource hub
             </p>
             <p className="mt-4 max-w-2xl text-base xs:text-lg sm:text-xl text-gray-500 mx-auto">
-              Our comprehensive platform connects students, parents, and educators with the best educational opportunities.
+              From finding tutors to planning your high school journey, discover community events, and career opportunities - all in one platform.
             </p>
           </div>
 
           <div className="mt-8 sm:mt-10">
-            <div className="grid grid-cols-1 gap-6 xs:grid-cols-2 lg:grid-cols-4 sm:gap-8 lg:gap-10">
+            <div className="grid grid-cols-1 gap-6 xs:grid-cols-2 lg:grid-cols-3 sm:gap-8 lg:gap-10">
               <Card>
                 <CardHeader>
                   <Users className="h-8 w-8 text-primary" />
-                  <CardTitle>Tutoring Services</CardTitle>
+                  <CardTitle>Tutoring & Learning</CardTitle>
                   <CardDescription>
                     Find qualified tutors and educational service providers across all subjects and grade levels.
                   </CardDescription>
@@ -94,9 +94,9 @@ export default function Landing() {
               <Card>
                 <CardHeader>
                   <GraduationCap className="h-8 w-8 text-primary" />
-                  <CardTitle>Summer Camps</CardTitle>
+                  <CardTitle>Camps & Programs</CardTitle>
                   <CardDescription>
-                    Discover enriching summer camp opportunities in STEM, arts, leadership, and more.
+                    Discover summer camps, after-school programs, and enrichment opportunities in STEM, arts, and leadership.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -104,9 +104,29 @@ export default function Landing() {
               <Card>
                 <CardHeader>
                   <MapPin className="h-8 w-8 text-primary" />
-                  <CardTitle>Internships</CardTitle>
+                  <CardTitle>Internships & Jobs</CardTitle>
                   <CardDescription>
-                    Explore internship opportunities to gain real-world experience in various fields.
+                    Explore internships and career opportunities to gain real-world experience and build your future.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <Calendar className="h-8 w-8 text-primary" />
+                  <CardTitle>Community Events</CardTitle>
+                  <CardDescription>
+                    Stay connected with local educational events, workshops, competitions, and networking opportunities.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <BookOpen className="h-8 w-8 text-primary" />
+                  <CardTitle>Planning Guides</CardTitle>
+                  <CardDescription>
+                    Navigate your high school journey with comprehensive planning resources and milestone guidance.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -114,9 +134,9 @@ export default function Landing() {
               <Card>
                 <CardHeader>
                   <Star className="h-8 w-8 text-primary" />
-                  <CardTitle>Job Opportunities</CardTitle>
+                  <CardTitle>Reviews & Ratings</CardTitle>
                   <CardDescription>
-                    Find part-time jobs and career opportunities perfect for students and young professionals.
+                    Make informed decisions with community reviews, ratings, and recommendations from other students.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -129,11 +149,11 @@ export default function Landing() {
       <div className="bg-primary">
         <div className="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-            <span className="block">Ready to get started?</span>
-            <span className="block">Join our educational community today.</span>
+            <span className="block">Ready to begin your journey?</span>
+            <span className="block">Join thousands of students succeeding together.</span>
           </h2>
           <p className="mt-4 text-lg leading-6 text-primary-100">
-            Create your account and start discovering amazing educational opportunities.
+            Create your account and unlock access to opportunities, events, guidance, and your local educational community.
           </p>
           <Button 
             onClick={() => window.location.href = "/api/login"}
