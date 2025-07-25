@@ -18,14 +18,18 @@ export function UserBadge({ user, contributionStats, className = "" }: UserBadge
     ? getContributionStats(contributionStats.listingsCount, contributionStats.reviewsCount, user.createdAt)
     : null;
 
-  // Show "NEW" badge for new users
-  if (stats?.isNewUser) {
-    return (
-      <TooltipProvider>
+  if (!stats) return null;
+
+  const badges = [];
+
+  // Always show "NEW" badge for new users (if applicable)
+  if (stats.isNewUser) {
+    badges.push(
+      <TooltipProvider key="new">
         <Tooltip>
           <TooltipTrigger>
-            <Badge variant="secondary" className={`bg-blue-100 text-blue-800 hover:bg-blue-200 text-xs ${className}`}>
-              NEW
+            <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-200 text-xs">
+              🆕 NEW
             </Badge>
           </TooltipTrigger>
           <TooltipContent>
@@ -36,8 +40,8 @@ export function UserBadge({ user, contributionStats, className = "" }: UserBadge
     );
   }
 
-  // Show contribution level badge
-  if (stats && stats.totalContributions > 0) {
+  // Always show contribution level badge (if applicable)
+  if (stats.totalContributions > 0) {
     const badgeColors = {
       contributor: "bg-orange-100 text-orange-800 hover:bg-orange-200", // Bronze
       active: "bg-slate-100 text-slate-800 hover:bg-slate-200", // Silver
@@ -53,11 +57,11 @@ export function UserBadge({ user, contributionStats, className = "" }: UserBadge
     const badgeColor = badgeColors[stats.level as keyof typeof badgeColors] || "bg-gray-100 text-gray-800 hover:bg-gray-200";
     const badgeIcon = badgeIcons[stats.level as keyof typeof badgeIcons] || "";
 
-    return (
-      <TooltipProvider>
+    badges.push(
+      <TooltipProvider key="contribution">
         <Tooltip>
           <TooltipTrigger>
-            <Badge variant="secondary" className={`${badgeColor} text-xs ${className}`}>
+            <Badge variant="secondary" className={`${badgeColor} text-xs`}>
               {badgeIcon} {stats.levelName}
             </Badge>
           </TooltipTrigger>
@@ -73,5 +77,11 @@ export function UserBadge({ user, contributionStats, className = "" }: UserBadge
     );
   }
 
-  return null;
+  if (badges.length === 0) return null;
+
+  return (
+    <div className={`flex items-center gap-1 ${className}`}>
+      {badges}
+    </div>
+  );
 }
