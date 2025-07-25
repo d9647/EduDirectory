@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { GraduationCap, Briefcase, MapPin, Users, Calendar, BookOpen } from "lucide-react";
 import { Link } from "wouter";
+import { getDisplayName } from "@shared/utils";
 
 export default function Home() {
   const { user } = useAuth() as { user: User | undefined };
@@ -17,7 +18,7 @@ export default function Home() {
         {/* Welcome Section */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Welcome back, {user?.firstName || user?.email}!
+            Welcome back, {getDisplayName(user)}!
           </h1>
           <p className="text-gray-600">
             Discover educational opportunities and connect with service providers in your area.
