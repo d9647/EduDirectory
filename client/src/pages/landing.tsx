@@ -89,8 +89,6 @@ export default function Landing() {
                   </div>
                 </div>
               </div>
-              {/* Feature Showcase Carousel */}
-              <FeatureShowcase />
             </main>
           </div>
         </div>
