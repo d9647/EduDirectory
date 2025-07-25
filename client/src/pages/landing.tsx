@@ -92,10 +92,8 @@ export default function Landing() {
             </main>
           </div>
         </div>
-        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-          <div className="h-40 xs:h-48 sm:h-56 md:h-72 lg:h-96 w-full bg-gradient-to-br from-primary/20 to-primary/40 lg:w-full lg:h-full flex items-center justify-center">
-            <FeatureShowcase />
-          </div>
+        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 flex items-center justify-end pr-4">
+          <FeatureShowcase />
         </div>
       </div>
 
