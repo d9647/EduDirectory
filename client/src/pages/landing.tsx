@@ -2,6 +2,39 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GraduationCap, Users, MapPin, Star, Calendar, BookOpen } from "lucide-react";
 import Footer from "@/components/layout/footer";
+import { useState } from "react";
+
+// FeatureShowcase carousel for previewing 5 pages/features
+const previewImages = [
+  { src: "/preview1.png", alt: "Tutoring Providers", caption: "" },
+  { src: "/preview2.png", alt: "Planning Guides", caption: "" },
+];
+
+function FeatureShowcase() {
+  const [index, setIndex] = useState(0);
+  return (
+    <div className="flex flex-col items-center w-full h-full justify-center">
+      <div className="relative w-64 h-40 xs:w-80 xs:h-56 sm:w-96 sm:h-64 md:w-[28rem] md:h-80 lg:w-[32rem] lg:h-96 bg-gray-200 rounded-lg flex items-center justify-center transition-all duration-300">
+        <img
+          src={previewImages[index].src}
+          alt={previewImages[index].alt}
+          className="object-contain w-full h-full rounded"
+        />
+        <button
+          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1"
+          onClick={() => setIndex((index - 1 + previewImages.length) % previewImages.length)}
+          aria-label="Previous"
+        >&#8592;</button>
+        <button
+          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-1"
+          onClick={() => setIndex((index + 1) % previewImages.length)}
+          aria-label="Next"
+        >&#8594;</button>
+      </div>
+      <div className="mt-4 text-base sm:text-lg md:text-xl text-gray-700 text-center max-w-lg">{previewImages[index].caption}</div>
+    </div>
+  );
+}
 
 export default function Landing() {
   return (
@@ -23,45 +56,47 @@ export default function Landing() {
       {/* Hero Section */}
       <div className="relative bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
-            <main className="mt-6 sm:mt-10 mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-              <div className="text-center lg:text-left">
-                <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-gray-900">
-                  <span className="block xl:inline">Your complete</span>{' '}
-                  <span className="block text-primary xl:inline">educational journey</span>
-                </h1>
-                <p className="mt-3 text-sm xs:text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:text-xl lg:mx-0">
-                  Discover opportunities, connect with your community, and plan your path to success. 
-                  From tutoring and events to career guidance - everything you need in one place.
-                </p>
-                <div className="mt-5 sm:mt-8 flex flex-col xs:flex-row gap-3 xs:gap-3 sm:justify-center lg:justify-start">
-                  <div className="rounded-md shadow">
-                    <Button 
-                      onClick={() => window.location.href = "/api/login"}
-                      size="lg"
-                      className="w-full flex items-center justify-center px-6 sm:px-8 py-3 text-sm sm:text-base font-medium bg-primary hover:bg-primary/90"
-                    >
-                      Get Started
-                    </Button>
-                  </div>
-                  <div>
-                    <Button 
-                      variant="outline" 
-                      size="lg"
-                      onClick={() => window.location.href = "/learn-more"}
-                      className="w-full flex items-center justify-center px-6 sm:px-8 py-3 text-sm sm:text-base font-medium"
-                    >
-                      Learn More
-                    </Button>
+          <div className="flex flex-col lg:flex-row">
+            {/* Left: Hero Text */}
+            <div className="w-full lg:w-1/2 z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:pb-28 xl:pb-32">
+              <main className="mt-6 sm:mt-10 mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+                <div className="text-center lg:text-left">
+                  <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-gray-900">
+                    <span className="block xl:inline">Your complete</span>{' '}
+                    <span className="block text-primary xl:inline">educational journey</span>
+                  </h1>
+                  <p className="mt-3 text-sm xs:text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:text-xl lg:mx-0">
+                    Discover opportunities, connect with your community, and plan your path to success. 
+                    From tutoring and events to career guidance - everything you need in one place.
+                  </p>
+                  <div className="mt-5 sm:mt-8 flex flex-col xs:flex-row gap-3 xs:gap-3 sm:justify-center lg:justify-start">
+                    <div className="rounded-md shadow">
+                      <Button 
+                        onClick={() => window.location.href = "/api/login"}
+                        size="lg"
+                        className="w-full flex items-center justify-center px-6 sm:px-8 py-3 text-sm sm:text-base font-medium bg-primary hover:bg-primary/90"
+                      >
+                        Get Started
+                      </Button>
+                    </div>
+                    <div>
+                      <Button 
+                        variant="outline" 
+                        size="lg"
+                        onClick={() => window.location.href = "/learn-more"}
+                        className="w-full flex items-center justify-center px-6 sm:px-8 py-3 text-sm sm:text-base font-medium"
+                      >
+                        Learn More
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </main>
-          </div>
-        </div>
-        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-          <div className="h-40 xs:h-48 sm:h-56 md:h-72 lg:h-96 w-full bg-gradient-to-br from-primary/20 to-primary/40 lg:w-full lg:h-full flex items-center justify-center">
-            <GraduationCap size={80} className="xs:w-24 xs:h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-primary opacity-60" />
+              </main>
+            </div>
+            {/* Right: Carousel */}
+            <div className="w-full lg:w-1/2 flex items-center justify-end pr-4 bg-gradient-to-br from-primary/20 to-primary/40">
+              <FeatureShowcase />
+            </div>
           </div>
         </div>
       </div>
