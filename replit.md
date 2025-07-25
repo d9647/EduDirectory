@@ -170,10 +170,6 @@ Preferred UI design style: Clean, minimal layouts without redundant headers.
 - All listings now show complete contributor details: user_id = '39065410', nickname = 'Happy Fish', first_name = 'Admin', last_name = 'User'
 - Updated getUserContributionStats method to properly count listings by user across all categories (tutoring, camps, internships, jobs)
 - Admin User contribution stats now correctly show 40 listings total (9+16+6+9) and 0 reviews
-- Enhanced profile contribution stats display with organized breakdown instead of adjacent numbers:
-  - Total contributions summary at top with gradient background
-  - Detailed breakdown with individual rows for listings and reviews
-  - Visual indicators with colored dots and clear labels for better readability
 - Enhanced database queries include contributor fields (userId, contributorNickname, contributorFirstName, contributorLastName)
 - System balances transparency (showing contributors in detail views) with clean table layouts (no contributor columns in main tables)
 
