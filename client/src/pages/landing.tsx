@@ -7,7 +7,7 @@ import { useState } from "react";
 // FeatureShowcase carousel for previewing 5 pages/features
 const previewImages = [
   { src: "/preview1.png", alt: "Tutoring Providers", caption: "Find top tutors" },
-  { src: "/preview6.png", alt: "Planning Guides", caption: "Navigate your high school journey" },
+  { src: "/preview2.png", alt: "Planning Guides", caption: "Navigate your high school journey" },
 ];
 
 function FeatureShowcase() {
@@ -96,7 +96,7 @@ export default function Landing() {
         </div>
         <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
           <div className="h-40 xs:h-48 sm:h-56 md:h-72 lg:h-96 w-full bg-gradient-to-br from-primary/20 to-primary/40 lg:w-full lg:h-full flex items-center justify-center">
-            <GraduationCap size={80} className="xs:w-24 xs:h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 text-primary opacity-60" />
+            <FeatureShowcase />
           </div>
         </div>
       </div>
