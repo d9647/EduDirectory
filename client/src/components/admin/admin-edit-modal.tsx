@@ -90,10 +90,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
   const [selectedTargetAudience, setSelectedTargetAudience] = useState<string[]>(
     Array.isArray(listing.targetAudience) ? listing.targetAudience : []
   );
-  const [selectedAgeRanges, setSelectedAgeRanges] = useState<string[]>(
-    Array.isArray(listing.ageRange) ? listing.ageRange : 
-    (listing.ageRange ? [listing.ageRange] : [])
-  );
+
   
   // Photo upload state
   const [photoFile, setPhotoFile] = useState<File | null>(null);
@@ -137,7 +134,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
         schedule: selectedSchedule,
         deliveryMode: selectedDeliveryModes,
         targetAudience: selectedTargetAudience,
-        ageRange: selectedAgeRanges,
+
         photoUrl: photoUrl,
       };
       
@@ -1621,43 +1618,13 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Age Range</Label>
-                  <div className="space-y-2">
-                    {AGE_RANGE_OPTIONS.map((ageRangeOption) => (
-                      <div key={ageRangeOption.value} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={`ageRange-${ageRangeOption.value}`}
-                          checked={selectedAgeRanges.includes(ageRangeOption.value)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setSelectedAgeRanges([...selectedAgeRanges, ageRangeOption.value]);
-                            } else {
-                              setSelectedAgeRanges(selectedAgeRanges.filter(a => a !== ageRangeOption.value));
-                            }
-                          }}
-                        />
-                        <Label htmlFor={`ageRange-${ageRangeOption.value}`} className="text-sm">
-                          {ageRangeOption.label}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                  {selectedAgeRanges.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {selectedAgeRanges.map((ageRange) => (
-                        <Badge key={ageRange} variant="secondary" className="text-xs">
-                          {ageRange}
-                          <button
-                            type="button"
-                            onClick={() => setSelectedAgeRanges(selectedAgeRanges.filter(a => a !== ageRange))}
-                            className="ml-1 text-gray-500 hover:text-gray-700"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
+                  <Label htmlFor="ageRange">Age Range (Optional)</Label>
+                  <Input
+                    id="ageRange"
+                    value={formData.ageRange || ""}
+                    onChange={(e) => handleChange("ageRange", e.target.value)}
+                    placeholder="e.g., 13-18, 16+, All ages"
+                  />
                 </div>
               </div>
 
