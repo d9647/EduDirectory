@@ -68,6 +68,17 @@ export default function ListingDetailModal({
     enabled: isOpen,
   });
 
+  // Fetch contributor stats for badge display
+  const { data: contributorStats } = useQuery({
+    queryKey: [`/api/auth/contribution-stats-${listing.userId}`],
+    queryFn: async () => {
+      if (!listing.userId) return null;
+      return await apiRequest("GET", `/api/auth/contribution-stats?userId=${listing.userId}`);
+    },
+    enabled: isOpen && !!listing.userId,
+    retry: false,
+  });
+
   // Fetch user interactions
   const { data: userInteractions } = useQuery({
     queryKey: [`/api/thumbs-up/${apiListingType}/${listing.id}/user`],
@@ -288,9 +299,11 @@ export default function ListingDetailModal({
                           nickname: listing.contributorNickname,
                           firstName: listing.contributorFirstName,
                           lastName: listing.contributorLastName,
-                          email: null
+                          email: null,
+                          createdAt: null
                         }} 
-                        showBadge={false}
+                        contributionStats={contributorStats}
+                        showBadge={true}
                         className="font-medium text-primary ml-1"
                       />
                     </div>

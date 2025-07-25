@@ -39,19 +39,26 @@ export function UserBadge({ user, contributionStats, className = "" }: UserBadge
   // Show contribution level badge
   if (stats && stats.totalContributions > 0) {
     const badgeColors = {
-      contributor: "bg-bronze-100 text-bronze-800 hover:bg-bronze-200",
-      active: "bg-silver-100 text-silver-800 hover:bg-silver-200", 
-      top: "bg-gold-100 text-gold-800 hover:bg-gold-200"
+      contributor: "bg-orange-100 text-orange-800 hover:bg-orange-200", // Bronze
+      active: "bg-slate-100 text-slate-800 hover:bg-slate-200", // Silver
+      top: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200" // Gold
+    };
+
+    const badgeIcons = {
+      contributor: "🥉", // Bronze medal
+      active: "🥈", // Silver medal
+      top: "🥇" // Gold medal
     };
 
     const badgeColor = badgeColors[stats.level as keyof typeof badgeColors] || "bg-gray-100 text-gray-800 hover:bg-gray-200";
+    const badgeIcon = badgeIcons[stats.level as keyof typeof badgeIcons] || "";
 
     return (
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger>
             <Badge variant="secondary" className={`${badgeColor} text-xs ${className}`}>
-              {stats.level.toUpperCase()}
+              {badgeIcon} {stats.levelName}
             </Badge>
           </TooltipTrigger>
           <TooltipContent>

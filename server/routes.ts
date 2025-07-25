@@ -137,7 +137,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // User contribution stats route
   app.get('/api/auth/contribution-stats', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      // Check if requesting stats for a specific user
+      const targetUserId = req.query.userId as string;
+      const userId = targetUserId || req.user.claims.sub;
+      
       const stats = await storage.getUserContributionStats(userId);
       res.json(stats);
     } catch (error: any) {
