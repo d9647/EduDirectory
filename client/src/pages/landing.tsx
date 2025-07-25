@@ -13,8 +13,8 @@ const previewImages = [
 function FeatureShowcase() {
   const [index, setIndex] = useState(0);
   return (
-    <div className="flex flex-col items-center my-8">
-      <div className="relative w-64 h-40 bg-gray-200 rounded-lg flex items-center justify-center">
+    <div className="flex flex-col items-center w-full h-full justify-center">
+      <div className="relative w-64 h-40 xs:w-80 xs:h-56 sm:w-96 sm:h-64 md:w-[28rem] md:h-80 lg:w-[32rem] lg:h-96 bg-gray-200 rounded-lg flex items-center justify-center transition-all duration-300">
         <img
           src={previewImages[index].src}
           alt={previewImages[index].alt}
@@ -31,7 +31,7 @@ function FeatureShowcase() {
           aria-label="Next"
         >&#8594;</button>
       </div>
-      <div className="mt-2 text-sm text-gray-700">{previewImages[index].caption}</div>
+      <div className="mt-4 text-base sm:text-lg md:text-xl text-gray-700 text-center max-w-lg">{previewImages[index].caption}</div>
     </div>
   );
 }
