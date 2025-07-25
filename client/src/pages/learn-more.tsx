@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, MessageSquare, Users, Heart, Shield, Star, CheckCircle } from "lucide-react";
+import { Search, MessageSquare, Users, Heart, Shield, Star, CheckCircle, Calendar, BookOpen, MapPin, GraduationCap } from "lucide-react";
 import SimpleHeader from "@/components/layout/simple-header";
 import Footer from "@/components/layout/footer";
 
@@ -13,12 +13,12 @@ export default function LearnMore() {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            It Takes a Village — Welcome to Ours
+            Your Complete Educational Journey Starts Here
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            Education Yellow Pages began with a simple idea: every parent has a story, every tutor has a talent, 
-            and every student deserves the chance to discover both. We're the online village green where those 
-            stories and talents meet—no gates, no fees, just a shared commitment to lift every learner a little higher.
+            We've built more than a directory—we've created a comprehensive educational ecosystem. From finding the perfect tutor 
+            to planning your high school journey, discovering community events, and connecting with career opportunities. 
+            Everything you need to succeed, all in one trusted platform where students, families, and educators thrive together.
           </p>
         </div>
 
@@ -33,8 +33,8 @@ export default function LearnMore() {
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base">
-                  Browse camps, classes, tutors, and community programs—all recommended by real families 
-                  and educators who've tried them first‑hand.
+                  Explore tutoring services, summer camps, internships, jobs, community events, and educational guides—all 
+                  curated and reviewed by real families and educators who've experienced them first-hand.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -46,8 +46,8 @@ export default function LearnMore() {
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base">
-                  Post a resource that helped your child thrive, leave a review, or answer a fellow parent's 
-                  question. Every contribution becomes another lantern along a young scholar's path.
+                  Share events, submit opportunities, leave reviews, and contribute to our planning guides. 
+                  Every contribution helps build a stronger educational community for everyone.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -60,6 +60,84 @@ export default function LearnMore() {
               <CardContent>
                 <CardDescription className="text-base">
                   Reach out to providers directly, and get your questions answered-send a quick inquiry to any listing and receive reply straight to your inbox.
+                </CardDescription>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* Platform Features */}
+        <div className="mb-16">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-8">Complete Educational Ecosystem</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="text-center">
+              <CardHeader>
+                <Users className="h-10 w-10 text-primary mx-auto mb-2" />
+                <CardTitle className="text-lg">Tutoring & Learning</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>
+                  Find qualified tutors across all subjects with verified reviews and ratings from the community.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <GraduationCap className="h-10 w-10 text-primary mx-auto mb-2" />
+                <CardTitle className="text-lg">Camps & Programs</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>
+                  Discover summer camps, after-school programs, and enrichment opportunities with detailed information.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <MapPin className="h-10 w-10 text-primary mx-auto mb-2" />
+                <CardTitle className="text-lg">Career Opportunities</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>
+                  Explore internships and job opportunities designed for students and young professionals.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <Calendar className="h-10 w-10 text-primary mx-auto mb-2" />
+                <CardTitle className="text-lg">Community Events</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>
+                  Stay connected with local educational events, workshops, competitions, and networking opportunities.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <BookOpen className="h-10 w-10 text-primary mx-auto mb-2" />
+                <CardTitle className="text-lg">Planning Guides</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>
+                  Navigate your high school journey with comprehensive timeline guides and milestone resources.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
+            <Card className="text-center">
+              <CardHeader>
+                <Star className="h-10 w-10 text-primary mx-auto mb-2" />
+                <CardTitle className="text-lg">Reviews & Community</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>
+                  Make informed decisions with honest reviews, ratings, and recommendations from real families.
                 </CardDescription>
               </CardContent>
             </Card>
