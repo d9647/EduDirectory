@@ -7,10 +7,6 @@ import { useState } from "react";
 // FeatureShowcase carousel for previewing 5 pages/features
 const previewImages = [
   { src: "/preview1.png", alt: "Tutoring Providers", caption: "Find top tutors" },
-  { src: "/preview2.png", alt: "Summer Camps", caption: "Explore summer camps" },
-  { src: "/preview3.png", alt: "Internships", caption: "Discover internships" },
-  { src: "/preview4.png", alt: "Jobs", caption: "Find jobs opportunities" },
-  { src: "/preview5.png", alt: "Events", caption: "Join community events" },
   { src: "/preview6.png", alt: "Planning Guides", caption: "Navigate your high school journey" },
 ];
 
