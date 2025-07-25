@@ -322,7 +322,7 @@ export default function Settings() {
                   </div>
                   <div className="bg-green-50 p-3 rounded-lg">
                     <div className="text-lg font-semibold text-green-600">
-                      {contributionStats.listingsCount}
+                      {Number(contributionStats.listingsCount)}
                     </div>
                     <div className="text-xs text-gray-600">Listings</div>
                   </div>
