@@ -134,6 +134,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User contribution stats route
+  app.get('/api/auth/contribution-stats', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const stats = await storage.getUserContributionStats(userId);
+      res.json(stats);
+    } catch (error: any) {
+      console.error("Error fetching contribution stats:", error);
+      res.status(500).json({ message: "Failed to fetch contribution stats" });
+    }
+  });
+
   // User profile update route
   app.put('/api/auth/profile', isAuthenticated, async (req: any, res) => {
     try {

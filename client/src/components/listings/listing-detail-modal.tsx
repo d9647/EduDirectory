@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import ReviewModal from "./review-modal";
+import { UserDisplayName } from "@/components/common/user-display-name";
 import { 
   ThumbsUp, 
   Bookmark, 
@@ -725,11 +726,16 @@ export default function ListingDetailModal({
                           </Avatar>
                           <div>
                             <h5 className="font-medium text-gray-900">
-                              {review.reviewerFirstName && review.reviewerLastName ? 
-                                `${review.reviewerFirstName} ${review.reviewerLastName.charAt(0)}.` :
-                                review.reviewerFirstName ||
-                                review.reviewerEmail?.split('@')[0] || "Anonymous"
-                              }
+                              <UserDisplayName 
+                                user={{
+                                  firstName: review.reviewerFirstName,
+                                  lastName: review.reviewerLastName,
+                                  nickname: review.reviewerNickname,
+                                  email: review.reviewerEmail,
+                                  createdAt: review.reviewerCreatedAt
+                                }}
+                                showBadge={true}
+                              />
                             </h5>
                             <div className="flex items-center">
                               <div className="flex text-yellow-400 text-sm">

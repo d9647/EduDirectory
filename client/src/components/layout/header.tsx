@@ -5,6 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Badge } from "@/components/ui/badge";
 import { Link, useLocation } from "wouter";
 import { Bookmark, Plus, ChevronDown, Settings, LogOut, Menu } from "lucide-react";
+import { getDisplayName } from "@shared/utils";
 
 export default function Header() {
   const { user, isAuthenticated, isAdmin } = useAuth();
@@ -98,7 +99,7 @@ export default function Header() {
                     </AvatarFallback>
                   </Avatar>
                   <span className="hidden sm:block text-sm text-gray-700">
-                    {user.firstName || user.email}
+                    {getDisplayName(user)}
                   </span>
                   <ChevronDown className="h-4 w-4 text-gray-400" />
                 </DropdownMenuTrigger>
