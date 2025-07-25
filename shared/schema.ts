@@ -360,6 +360,8 @@ export const insertEventSchema = createInsertSchema(events).omit({
   updatedAt: true,
 }).extend({
   eventDate: z.string(), // HTML date input sends strings
+  latitude: z.number().optional().nullable(), // Converted from string in API route
+  longitude: z.number().optional().nullable(), // Converted from string in API route
 });
 
 export const insertReviewSchema = createInsertSchema(reviews).omit({
