@@ -1,12 +1,13 @@
 import { useAuth } from "@/hooks/useAuth";
+import type { User } from "@shared/schema";
 import Header from "@/components/layout/header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Briefcase, MapPin, Users } from "lucide-react";
+import { GraduationCap, Briefcase, MapPin, Users, Calendar, BookOpen } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user } = useAuth() as { user: User | undefined };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -24,7 +25,7 @@ export default function Home() {
         </div>
 
         {/* Quick Navigation Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           <Link href="/tutoring-providers">
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardHeader className="text-center">
@@ -81,6 +82,36 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <Button className="w-full">Browse Jobs</Button>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/events">
+            <Card className="cursor-pointer hover:shadow-md transition-shadow">
+              <CardHeader className="text-center">
+                <Calendar className="h-12 w-12 text-primary mx-auto mb-2" />
+                <CardTitle>Community Events</CardTitle>
+                <CardDescription>
+                  Discover local educational events and workshops
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full">View Events</Button>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/guides">
+            <Card className="cursor-pointer hover:shadow-md transition-shadow">
+              <CardHeader className="text-center">
+                <BookOpen className="h-12 w-12 text-primary mx-auto mb-2" />
+                <CardTitle>Planning Guides</CardTitle>
+                <CardDescription>
+                  Navigate your high school journey with planning resources
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full">Explore Guides</Button>
               </CardContent>
             </Card>
           </Link>
