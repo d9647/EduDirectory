@@ -28,6 +28,9 @@ import {
   SALARY_TYPE_OPTIONS,
   SCHEDULE_OPTIONS,
   US_STATES,
+  AGE_RANGE_OPTIONS,
+  EVENT_CATEGORIES,
+  TARGET_AUDIENCE_OPTIONS,
 } from "@/lib/constants";
 
 interface AdminEditModalProps {
@@ -87,17 +90,12 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
   const [selectedTargetAudience, setSelectedTargetAudience] = useState<string[]>(
     Array.isArray(listing.targetAudience) ? listing.targetAudience : []
   );
+
   
   // Photo upload state
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(
     listing.photoUrl || null
-  );
-  
-  // Event poster upload state (separate from general photo upload)
-  const [posterFile, setPosterFile] = useState<File | null>(null);
-  const [posterPreview, setPosterPreview] = useState<string | null>(
-    listing.posterUrl || null
   );
   
   const { toast } = useToast();
@@ -111,18 +109,17 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
         const uploadFormData = new FormData();
         uploadFormData.append("photo", photoFile);
         
-        const uploadResponse = await apiRequest("POST", "/api/upload", uploadFormData);
-        photoUrl = uploadResponse.url;
-      }
-      
-      // Upload poster if there's a new file (for events)
-      let posterUrl = formData.posterUrl;
-      if (posterFile) {
-        const uploadFormData = new FormData();
-        uploadFormData.append("photo", posterFile);
+        const uploadResponse = await fetch("/api/upload", {
+          method: "POST",
+          body: uploadFormData,
+        });
         
-        const uploadResponse = await apiRequest("POST", "/api/upload", uploadFormData);
-        posterUrl = uploadResponse.url;
+        if (uploadResponse.ok) {
+          const uploadResult = await uploadResponse.json();
+          photoUrl = uploadResult.url;
+        } else {
+          throw new Error("Photo upload failed");
+        }
       }
       
       // Prepare data with checkbox selections
@@ -137,8 +134,8 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
         schedule: selectedSchedule,
         deliveryMode: selectedDeliveryModes,
         targetAudience: selectedTargetAudience,
+
         photoUrl: photoUrl,
-        posterUrl: posterUrl,
       };
       
       await apiRequest("PUT", `/api/admin/edit/${type}/${listing.id}`, updatedData);
@@ -317,47 +314,6 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
     setPhotoFile(null);
     setPhotoPreview(null);
     setFormData(prev => ({ ...prev, photoUrl: "" }));
-  };
-
-  // Handle poster upload (for events)
-  const handlePosterUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      // Check file size (limit to 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        toast({
-          title: "File too large",
-          description: "Please select an image under 5MB.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Check file type
-      if (!file.type.startsWith('image/')) {
-        toast({
-          title: "Invalid file type",
-          description: "Please select an image file.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      setPosterFile(file);
-      
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPosterPreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const removePoster = () => {
-    setPosterFile(null);
-    setPosterPreview(null);
-    setFormData(prev => ({ ...prev, posterUrl: "" }));
   };
 
   const renderFormFields = () => {
@@ -1570,7 +1526,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="startTime">Start Time</Label>
+                  <Label htmlFor="startTime">Start Time *</Label>
                   <Input
                     id="startTime"
                     type="time"
@@ -1579,7 +1535,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="endTime">End Time</Label>
+                  <Label htmlFor="endTime">End Time *</Label>
                   <Input
                     id="endTime"
                     type="time"
@@ -1662,12 +1618,12 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="ageRange">Age Range</Label>
+                  <Label htmlFor="ageRange">Age Range (Optional)</Label>
                   <Input
                     id="ageRange"
                     value={formData.ageRange || ""}
                     onChange={(e) => handleChange("ageRange", e.target.value)}
-                    placeholder="13-18, 16+, All ages, etc."
+                    placeholder="e.g., 13-18, 16+, All ages"
                   />
                 </div>
               </div>
@@ -1711,41 +1667,41 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
 
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-3 block">
-                  Event Poster Upload (Optional)
+                  Event Photo Upload (Optional)
                 </Label>
                 <div className="space-y-3">
                   <div className="flex items-center space-x-4">
                     <Input
                       type="file"
                       accept="image/*"
-                      onChange={handlePosterUpload}
+                      onChange={handlePhotoUpload}
                       className="hidden"
-                      id="poster-upload"
+                      id="photo-upload"
                     />
                     <Label
-                      htmlFor="poster-upload"
+                      htmlFor="photo-upload"
                       className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                     >
                       <Upload className="h-4 w-4 mr-2" />
-                      {posterPreview ? "Replace Poster" : "Choose Poster"}
+                      {photoPreview ? "Replace Photo" : "Choose Photo"}
                     </Label>
                     <span className="text-sm text-gray-500">
                       Max size: 5MB. Supported: JPG, PNG, GIF
                     </span>
                   </div>
                   
-                  {posterPreview && (
+                  {photoPreview && (
                     <div className="relative inline-block">
                       <img
-                        src={posterPreview}
-                        alt="Poster preview"
+                        src={photoPreview}
+                        alt="Photo preview"
                         className="w-32 h-32 object-cover rounded-lg border"
                       />
                       <Button
                         type="button"
                         variant="destructive"
                         size="sm"
-                        onClick={removePoster}
+                        onClick={removePhoto}
                         className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
                       >
                         <X className="h-3 w-3" />

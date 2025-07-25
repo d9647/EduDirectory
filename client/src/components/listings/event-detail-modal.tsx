@@ -29,7 +29,7 @@ interface Event {
   cost: string;
   registrationRequired: boolean;
   registrationLink: string;
-  posterUrl: string;
+  photoUrl: string;
   contactInfo: string;
   specialInstructions: string;
   viewCount: number;
@@ -87,14 +87,14 @@ export function EventDetailModal({ event, open, onClose }: EventDetailModalProps
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Event Poster */}
-            {event.posterUrl && (
+            {/* Event Photo */}
+            {event.photoUrl && (
               <div className="w-full">
                 <h3 className="text-lg font-semibold mb-3">Event Poster</h3>
                 <div className="flex justify-center">
                   <img
-                    src={event.posterUrl}
-                    alt={`${event.title} poster`}
+                    src={event.photoUrl}
+                    alt={`${event.title} photo`}
                     className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-lg border border-gray-200"
                     style={{ maxHeight: 'min(70vh, 800px)' }}
                   />
@@ -195,7 +195,7 @@ export function EventDetailModal({ event, open, onClose }: EventDetailModalProps
                     <Info className="h-4 w-4 mr-2" />
                     Special Instructions
                   </h4>
-                  <p className="text-gray-700 bg-blue-50 p-3 rounded-lg">
+                  <p className="text-gray-700 bg-blue-50 p-3 rounded-lg whitespace-pre-wrap">
                     {event.specialInstructions}
                   </p>
                 </div>

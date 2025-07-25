@@ -248,8 +248,8 @@ export const events = pgTable("events", {
   organizerEmail: varchar("organizer_email"),
   organizerPhone: varchar("organizer_phone"),
   eventDate: date("event_date").notNull(),
-  startTime: time("start_time"),
-  endTime: time("end_time"),
+  startTime: time("start_time").notNull(),
+  endTime: time("end_time").notNull(),
   venue: varchar("venue", { length: 255 }),
   address: text("address"),
   city: varchar("city"),
@@ -263,7 +263,7 @@ export const events = pgTable("events", {
   cost: varchar("cost"), // "Free", "$10", "$25-50"
   registrationRequired: boolean("registration_required").default(false),
   registrationLink: varchar("registration_link"),
-  posterUrl: varchar("poster_url"), // Event poster/flyer image
+  photoUrl: varchar("photo_url"), // Event poster/flyer image
   contactInfo: text("contact_info"),
   specialInstructions: text("special_instructions"),
   viewCount: integer("view_count").default(0),
@@ -360,6 +360,10 @@ export const insertEventSchema = createInsertSchema(events).omit({
   updatedAt: true,
 }).extend({
   eventDate: z.string(), // HTML date input sends strings
+  startTime: z.string().min(1, "Start time is required"), // HTML time input sends strings
+  endTime: z.string().min(1, "End time is required"), // HTML time input sends strings
+  latitude: z.number().optional().nullable(), // Converted from string in API route
+  longitude: z.number().optional().nullable(), // Converted from string in API route
 });
 
 export const insertReviewSchema = createInsertSchema(reviews).omit({

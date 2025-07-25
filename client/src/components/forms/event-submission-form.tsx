@@ -52,7 +52,7 @@ const eventSchema = z.object({
   cost: z.string().min(1, "Cost information is required"),
   registrationRequired: z.boolean(),
   registrationLink: z.string().optional(),
-  posterUrl: z.string().optional(),
+  photoUrl: z.string().optional(),
   contactInfo: z.string().optional(),
   specialInstructions: z.string().optional(),
 });
@@ -67,8 +67,8 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedAudiences, setSelectedAudiences] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [posterFile, setPosterFile] = useState<File | null>(null);
-  const [posterPreview, setPosterPreview] = useState<string | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const { toast } = useToast();
 
   const form = useForm<EventFormData>({
@@ -98,8 +98,8 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
     form.setValue("targetAudience", newAudiences);
   };
 
-  // Handle poster upload
-  const handlePosterUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // Handle photo upload
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       // Check file size (limit to 5MB)
@@ -122,45 +122,63 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
         return;
       }
 
-      setPosterFile(file);
+      setPhotoFile(file);
       
       // Create preview
       const reader = new FileReader();
       reader.onload = (e) => {
-        setPosterPreview(e.target?.result as string);
+        setPhotoPreview(e.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const removePoster = () => {
-    setPosterFile(null);
-    setPosterPreview(null);
+  const removePhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview(null);
   };
 
   const onSubmit = async (data: EventFormData) => {
     setIsSubmitting(true);
     
     try {
-      let posterUrl = "";
+      let photoUrl = "";
       
-      // Upload poster if selected
-      if (posterFile) {
+      // Upload photo if selected
+      if (photoFile) {
+        console.log('Uploading photo file:', photoFile);
+        console.log('File details:', {
+          name: photoFile.name,
+          size: photoFile.size,
+          type: photoFile.type
+        });
+        
         const formData = new FormData();
-        formData.append('photo', posterFile);
+        formData.append('photo', photoFile);
+        
+        // Debug FormData
+        console.log('FormData entries:');
+        for (let [key, value] of formData.entries()) {
+          console.log(key, value);
+        }
         
         const uploadResponse = await fetch('/api/upload', {
           method: 'POST',
           body: formData,
         });
         
+        console.log('Upload response status:', uploadResponse.status);
+        
         if (uploadResponse.ok) {
           const uploadResult = await uploadResponse.json();
-          posterUrl = uploadResult.url;
+          photoUrl = uploadResult.url;
+          console.log('Upload successful, URL:', photoUrl);
         } else {
+          const errorText = await uploadResponse.text();
+          console.error('Upload failed:', errorText);
           toast({
             title: "Upload failed",
-            description: "Failed to upload poster image.",
+            description: "Failed to upload photo image.",
             variant: "destructive",
           });
           return;
@@ -176,7 +194,7 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
           const day = String(data.eventDate.getDate()).padStart(2, '0');
           return `${year}-${month}-${day}`;
         })(),
-        posterUrl,
+        photoUrl,
         isApproved: false,
         isActive: false,
         viewCount: 0,
@@ -354,21 +372,31 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
             </div>
 
             <div>
-              <Label htmlFor="startTime">Start Time (Optional)</Label>
+              <Label htmlFor="startTime">Start Time *</Label>
               <Input
                 id="startTime"
                 type="time"
                 {...form.register("startTime")}
               />
+              {form.formState.errors.startTime && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.startTime.message}
+                </p>
+              )}
             </div>
 
             <div>
-              <Label htmlFor="endTime">End Time (Optional)</Label>
+              <Label htmlFor="endTime">End Time *</Label>
               <Input
                 id="endTime"
                 type="time"
                 {...form.register("endTime")}
               />
+              {form.formState.errors.endTime && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.endTime.message}
+                </p>
+              )}
             </div>
           </div>
         </CardContent>
@@ -608,34 +636,34 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
                 <Input
                   type="file"
                   accept="image/*"
-                  onChange={handlePosterUpload}
+                  onChange={handlePhotoUpload}
                   className="hidden"
-                  id="poster-upload"
+                  id="photo-upload"
                 />
                 <Label
-                  htmlFor="poster-upload"
+                  htmlFor="photo-upload"
                   className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                 >
                   <Upload className="h-4 w-4 mr-2" />
-                  {posterPreview ? "Replace Poster" : "Choose Poster"}
+                  {photoPreview ? "Replace Poster" : "Choose Poster"}
                 </Label>
                 <span className="text-sm text-gray-500">
                   Max size: 5MB. Supported: JPG, PNG, GIF
                 </span>
               </div>
               
-              {posterPreview && (
+              {photoPreview && (
                 <div className="relative inline-block">
                   <img
-                    src={posterPreview}
-                    alt="Poster preview"
+                    src={photoPreview}
+                    alt="Photo preview"
                     className="w-32 h-32 object-cover rounded-lg border"
                   />
                   <Button
                     type="button"
                     variant="destructive"
                     size="sm"
-                    onClick={removePoster}
+                    onClick={removePhoto}
                     className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
                   >
                     <X className="h-3 w-3" />
