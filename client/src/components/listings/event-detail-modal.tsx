@@ -195,7 +195,7 @@ export function EventDetailModal({ event, open, onClose }: EventDetailModalProps
                     <Info className="h-4 w-4 mr-2" />
                     Special Instructions
                   </h4>
-                  <p className="text-gray-700 bg-blue-50 p-3 rounded-lg">
+                  <p className="text-gray-700 bg-blue-50 p-3 rounded-lg whitespace-pre-wrap">
                     {event.specialInstructions}
                   </p>
                 </div>
