@@ -14,11 +14,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
-import { Upload, User, Save, Camera } from "lucide-react";
+import { Upload, User, Save, Camera, Star, Award } from "lucide-react";
+import { getDisplayName, getContributionStats } from "@shared/utils";
 
 const profileSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
+  nickname: z.string().optional(),
   phone: z.string().optional(),
   location: z.string().optional(),
   schoolName: z.string().optional(),
@@ -28,17 +30,64 @@ const profileSchema = z.object({
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
+function renderContributionBadge(user: any, contributionStats: any) {
+  if (!user?.createdAt || !contributionStats) return null;
+  
+  const stats = getContributionStats(
+    contributionStats.listingsCount, 
+    contributionStats.reviewsCount, 
+    user.createdAt
+  );
+  
+  if (stats.isNewUser) {
+    return (
+      <div className="text-center bg-blue-50 p-3 rounded-lg">
+        <div className="text-sm font-medium text-blue-800">Welcome!</div>
+        <div className="text-xs text-blue-600">New member</div>
+      </div>
+    );
+  }
+  
+  if (stats.totalContributions > 0) {
+    const levelColors = {
+      contributor: "bg-orange-50 text-orange-800",
+      active: "bg-purple-50 text-purple-800",
+      top: "bg-yellow-50 text-yellow-800"
+    };
+    
+    const colorClass = levelColors[stats.level as keyof typeof levelColors] || "bg-gray-50 text-gray-800";
+    
+    return (
+      <div className={`text-center p-3 rounded-lg ${colorClass}`}>
+        <div className="text-sm font-medium">{stats.levelName}</div>
+        <div className="text-xs opacity-75">
+          {stats.totalContributions} total contributions
+        </div>
+      </div>
+    );
+  }
+  
+  return null;
+}
+
 export default function Settings() {
   const { toast } = useToast();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const queryClient = useQueryClient();
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
+  // Fetch contribution stats
+  const { data: contributionStats } = useQuery({
+    queryKey: ["/api/auth/contribution-stats"],
+    enabled: isAuthenticated && !!user,
+  });
+
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
+      nickname: "",
       phone: "",
       location: "",
       schoolName: "",
@@ -53,6 +102,7 @@ export default function Settings() {
       form.reset({
         firstName: user.firstName || "",
         lastName: user.lastName || "",
+        nickname: user.nickname || "",
         phone: user.phone || "",
         location: user.location || "",
         schoolName: user.schoolName || "",
@@ -198,8 +248,10 @@ export default function Settings() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Avatar Section */}
-          <Card>
+          {/* Avatar and Contribution Stats */}
+          <div className="space-y-6">
+            {/* Avatar Section */}
+            <Card>
             <CardHeader>
               <CardTitle>Profile Picture</CardTitle>
               <CardDescription>
@@ -238,6 +290,49 @@ export default function Settings() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Contribution Stats */}
+          {contributionStats && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Award className="h-5 w-5" />
+                  Your Contributions
+                </CardTitle>
+                <CardDescription>
+                  Your activity on the platform
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600">
+                    {getDisplayName(user)}
+                  </div>
+                  <div className="text-sm text-gray-500 mt-1">
+                    {user?.location && `📍 ${user.location}`}
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4 text-center">
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <div className="text-lg font-semibold text-blue-600">
+                      {contributionStats.reviewsCount}
+                    </div>
+                    <div className="text-xs text-gray-600">Reviews</div>
+                  </div>
+                  <div className="bg-green-50 p-3 rounded-lg">
+                    <div className="text-lg font-semibold text-green-600">
+                      {contributionStats.listingsCount}
+                    </div>
+                    <div className="text-xs text-gray-600">Listings</div>
+                  </div>
+                </div>
+
+                {renderContributionBadge(user, contributionStats)}
+              </CardContent>
+            </Card>
+          )}
+          </div>
 
           {/* Profile Information */}
           <Card className="lg:col-span-2">
@@ -280,6 +375,24 @@ export default function Settings() {
                       )}
                     />
                   </div>
+
+                  {/* Nickname Field */}
+                  <FormField
+                    control={form.control}
+                    name="nickname"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Nickname (Optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter a display name" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                        <p className="text-xs text-gray-500">
+                          This will be shown instead of your first and last name if provided
+                        </p>
+                      </FormItem>
+                    )}
+                  />
 
                   {/* Contact Information */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -44,6 +44,9 @@ export interface IStorage {
   getUserRole(id: string): Promise<string | undefined>;
   getAllUsers(): Promise<User[]>;
   getUsersWithPagination(page: number, limit: number, search?: string): Promise<{ users: User[]; total: number; totalPages: number; currentPage: number }>;
+  
+  // User contribution tracking
+  getUserContributionStats(userId: string): Promise<{ listingsCount: number; reviewsCount: number }>;
 
   // Tutoring Providers
   getTutoringProviders(filters?: {
@@ -308,7 +311,7 @@ export class DatabaseStorage implements IStorage {
 
   async updateUserProfile(id: string, profileData: Partial<User>): Promise<User> {
     const allowedFields = [
-      'firstName', 'lastName', 'phone', 'location', 
+      'firstName', 'lastName', 'nickname', 'phone', 'location', 
       'schoolName', 'grade', 'address', 'profileImageUrl'
     ];
 
@@ -336,6 +339,27 @@ export class DatabaseStorage implements IStorage {
     }
 
     return updatedUser;
+  }
+
+  // User contribution tracking
+  async getUserContributionStats(userId: string): Promise<{ listingsCount: number; reviewsCount: number }> {
+    // Count reviews by user
+    const reviewsResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(reviews)
+      .where(eq(reviews.userId, userId));
+
+    // Note: Current listing tables don't have userId field to track who submitted them
+    // For now, we'll return 0 for listings count since there's no way to attribute listings to users
+    // This would need to be added to the schema if we want to track user submissions
+    const listingsCount = 0;
+
+    const reviewsCount = reviewsResult[0]?.count || 0;
+
+    return {
+      listingsCount,
+      reviewsCount
+    };
   }
 
   // Tutoring Providers
@@ -1344,8 +1368,10 @@ export class DatabaseStorage implements IStorage {
           r.updated_at as "updatedAt",
           u.first_name as "reviewerFirstName",
           u.last_name as "reviewerLastName", 
+          u.nickname as "reviewerNickname",
           u.email as "reviewerEmail",
-          u.profile_image_url as "reviewerProfileImageUrl"
+          u.profile_image_url as "reviewerProfileImageUrl",
+          u.created_at as "reviewerCreatedAt"
         FROM reviews r
         LEFT JOIN users u ON r.user_id = u.id
         WHERE r.listing_type = ${listingType} AND r.listing_id = ${listingId}
