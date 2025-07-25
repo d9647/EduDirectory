@@ -527,6 +527,33 @@ export default function ListingDetailModal({
                       </div>
                     </div>
                   )}
+                  
+                  {/* Contributor Information */}
+                  {(listing.contributorNickname || listing.contributorFirstName || listing.contributorLastName) && (
+                    <div className="flex items-center">
+                      <User className="h-4 w-4 text-gray-400 mr-3" />
+                      <span className="text-gray-700">
+                        Contributed by: {
+                          (() => {
+                            const contributorUser = {
+                              id: listing.userId,
+                              nickname: listing.contributorNickname,
+                              firstName: listing.contributorFirstName,
+                              lastName: listing.contributorLastName,
+                              email: null
+                            };
+                            return (
+                              <UserDisplayName 
+                                user={contributorUser} 
+                                showBadge={false}
+                                className="font-medium text-primary"
+                              />
+                            );
+                          })()
+                        }
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

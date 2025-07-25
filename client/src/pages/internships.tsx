@@ -91,7 +91,6 @@ export default function Internships() {
               { key: "selectivityLevel", label: "Selectivity", sortable: false },
               { key: "duration", label: "Duration", sortable: false },
               { key: "location", label: "Location", sortable: true },
-              { key: "contributor", label: "Contributor", sortable: false },
               { key: "actions", label: "Actions", sortable: false },
             ]}
             filters={filters}

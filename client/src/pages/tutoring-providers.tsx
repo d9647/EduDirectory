@@ -80,7 +80,6 @@ export default function TutoringProviders() {
               { key: "categories", label: "Categories", sortable: false },
               { key: "subjects", label: "Subjects", sortable: false },
               { key: "location", label: "Location", sortable: true },
-              { key: "contributor", label: "Contributor", sortable: false },
               { key: "actions", label: "Actions", sortable: false },
             ]}
             filters={filters}
