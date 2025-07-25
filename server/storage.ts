@@ -338,7 +338,61 @@ export class DatabaseStorage implements IStorage {
       throw new Error("User not found");
     }
 
+    // If nickname was updated, cascade the change to all reviews and listings
+    if (profileData.nickname !== undefined) {
+      await this.updateUserNicknameInReviewsAndListings(id, updatedUser.nickname, updatedUser.firstName, updatedUser.lastName);
+    }
+
     return updatedUser;
+  }
+
+  // Helper method to update nickname in all user's reviews and listings
+  private async updateUserNicknameInReviewsAndListings(userId: string, nickname: string | null, firstName: string | null, lastName: string | null): Promise<void> {
+    try {
+      // Update reviews - Note: reviews don't store denormalized user data, they join with users table
+      // So nickname updates will automatically reflect in reviews through the JOIN in getReviews()
+      
+      // Update tutoring providers
+      await db.execute(sql`
+        UPDATE tutoring_providers 
+        SET contributor_nickname = ${nickname},
+            contributor_first_name = ${firstName},
+            contributor_last_name = ${lastName}
+        WHERE user_id = ${userId}
+      `);
+
+      // Update summer camps
+      await db.execute(sql`
+        UPDATE summer_camps 
+        SET contributor_nickname = ${nickname},
+            contributor_first_name = ${firstName},
+            contributor_last_name = ${lastName}
+        WHERE user_id = ${userId}
+      `);
+
+      // Update internships
+      await db.execute(sql`
+        UPDATE internships 
+        SET contributor_nickname = ${nickname},
+            contributor_first_name = ${firstName},
+            contributor_last_name = ${lastName}
+        WHERE user_id = ${userId}
+      `);
+
+      // Update jobs
+      await db.execute(sql`
+        UPDATE jobs 
+        SET contributor_nickname = ${nickname},
+            contributor_first_name = ${firstName},
+            contributor_last_name = ${lastName}
+        WHERE user_id = ${userId}
+      `);
+
+      console.log(`Successfully updated nickname for user ${userId} across all listings`);
+    } catch (error) {
+      console.error("Error updating nickname in reviews and listings:", error);
+      throw error;
+    }
   }
 
   // User contribution tracking

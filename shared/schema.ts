@@ -49,6 +49,7 @@ export const users = pgTable("users", {
 // Tutoring Providers / Business Services
 export const tutoringProviders = pgTable("tutoring_providers", {
   id: serial("id").primaryKey(),
+  userId: varchar("user_id"), // Reference to the user who submitted this listing
   name: varchar("name", { length: 255 }).notNull(),
   type: varchar("type", { length: 50 }).notNull(), // "private_tutor" or "business"
   description: text("description"),
@@ -62,6 +63,10 @@ export const tutoringProviders = pgTable("tutoring_providers", {
   categories: text("categories").array(), // Mathematics, English, etc.
   subjects: text("subjects").array(), // Algebra, SAT Prep, etc.
   deliveryMode: text("delivery_mode").array(), // In-person, Remote, Hybrid (multiple selection)
+  // Contributor information (denormalized for performance)
+  contributorNickname: varchar("contributor_nickname"),
+  contributorFirstName: varchar("contributor_first_name"),
+  contributorLastName: varchar("contributor_last_name"),
   photoUrl: varchar("photo_url"),
   viewCount: integer("view_count").default(0),
   isApproved: boolean("is_approved").default(false),
@@ -75,6 +80,7 @@ export const tutoringProviders = pgTable("tutoring_providers", {
 // Summer Camps
 export const summerCamps = pgTable("summer_camps", {
   id: serial("id").primaryKey(),
+  userId: varchar("user_id"), // Reference to the user who submitted this listing
   name: varchar("name", { length: 255 }).notNull(),
   location: varchar("location"),
   address: varchar("address", { length: 255 }),
@@ -95,6 +101,10 @@ export const summerCamps = pgTable("summer_camps", {
   eligibility: text("eligibility"),
   description: text("description"),
   deliveryMode: text("delivery_mode").array(), // In-person, Remote, Hybrid (multiple selection)
+  // Contributor information (denormalized for performance)
+  contributorNickname: varchar("contributor_nickname"),
+  contributorFirstName: varchar("contributor_first_name"),
+  contributorLastName: varchar("contributor_last_name"),
   website: varchar("website"),
   photoUrl: varchar("photo_url"),
   viewCount: integer("view_count").default(0),
@@ -109,6 +119,7 @@ export const summerCamps = pgTable("summer_camps", {
 // Internships
 export const internships = pgTable("internships", {
   id: serial("id").primaryKey(),
+  userId: varchar("user_id"), // Reference to the user who submitted this listing
   companyName: varchar("company_name", { length: 255 }).notNull(),
   title: varchar("title", { length: 255 }).notNull(),
   location: varchar("location"),
@@ -133,6 +144,10 @@ export const internships = pgTable("internships", {
   eligibility: text("eligibility"),
   website: varchar("website"),
   hasMentorship: boolean("has_mentorship").default(false),
+  // Contributor information (denormalized for performance)
+  contributorNickname: varchar("contributor_nickname"),
+  contributorFirstName: varchar("contributor_first_name"),
+  contributorLastName: varchar("contributor_last_name"),
   viewCount: integer("view_count").default(0),
   isApproved: boolean("is_approved").default(false),
   isActive: boolean("is_active").default(true),
@@ -146,6 +161,7 @@ export const internships = pgTable("internships", {
 // Jobs
 export const jobs = pgTable("jobs", {
   id: serial("id").primaryKey(),
+  userId: varchar("user_id"), // Reference to the user who submitted this listing
   companyName: varchar("company_name", { length: 255 }).notNull(),
   title: varchar("title", { length: 255 }).notNull(),
   location: varchar("location"),
@@ -175,6 +191,10 @@ export const jobs = pgTable("jobs", {
   hasAdvancement: boolean("has_advancement").default(false),
   requiresTransportation: boolean("requires_transportation").default(false),
   requiresResume: boolean("requires_resume").default(false),
+  // Contributor information (denormalized for performance)
+  contributorNickname: varchar("contributor_nickname"),
+  contributorFirstName: varchar("contributor_first_name"),
+  contributorLastName: varchar("contributor_last_name"),
   viewCount: integer("view_count").default(0),
   isApproved: boolean("is_approved").default(false),
   isActive: boolean("is_active").default(true),
