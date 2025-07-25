@@ -1526,7 +1526,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="startTime">Start Time</Label>
+                  <Label htmlFor="startTime">Start Time *</Label>
                   <Input
                     id="startTime"
                     type="time"
@@ -1535,7 +1535,7 @@ export default function AdminEditModal({ type, listing }: AdminEditModalProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="endTime">End Time</Label>
+                  <Label htmlFor="endTime">End Time *</Label>
                   <Input
                     id="endTime"
                     type="time"

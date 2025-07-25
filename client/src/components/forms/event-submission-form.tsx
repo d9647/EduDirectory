@@ -372,21 +372,31 @@ export function EventSubmissionForm({ onSuccess }: EventSubmissionFormProps) {
             </div>
 
             <div>
-              <Label htmlFor="startTime">Start Time (Optional)</Label>
+              <Label htmlFor="startTime">Start Time *</Label>
               <Input
                 id="startTime"
                 type="time"
                 {...form.register("startTime")}
               />
+              {form.formState.errors.startTime && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.startTime.message}
+                </p>
+              )}
             </div>
 
             <div>
-              <Label htmlFor="endTime">End Time (Optional)</Label>
+              <Label htmlFor="endTime">End Time *</Label>
               <Input
                 id="endTime"
                 type="time"
                 {...form.register("endTime")}
               />
+              {form.formState.errors.endTime && (
+                <p className="text-red-500 text-sm mt-1">
+                  {form.formState.errors.endTime.message}
+                </p>
+              )}
             </div>
           </div>
         </CardContent>
