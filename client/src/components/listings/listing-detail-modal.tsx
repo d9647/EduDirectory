@@ -279,6 +279,22 @@ export default function ListingDetailModal({
                     <Monitor className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                     {listing.viewCount || 0} views
                   </div>
+                  {(listing.contributorNickname || listing.contributorFirstName || listing.contributorLastName) && (
+                    <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                      <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                      by <UserDisplayName 
+                        user={{
+                          id: listing.userId,
+                          nickname: listing.contributorNickname,
+                          firstName: listing.contributorFirstName,
+                          lastName: listing.contributorLastName,
+                          email: null
+                        }} 
+                        showBadge={false}
+                        className="font-medium text-primary ml-1"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -527,33 +543,7 @@ export default function ListingDetailModal({
                       </div>
                     </div>
                   )}
-                  
-                  {/* Contributor Information */}
-                  {(listing.contributorNickname || listing.contributorFirstName || listing.contributorLastName) && (
-                    <div className="flex items-center">
-                      <User className="h-4 w-4 text-gray-400 mr-3" />
-                      <span className="text-gray-700">
-                        Contributed by: {
-                          (() => {
-                            const contributorUser = {
-                              id: listing.userId,
-                              nickname: listing.contributorNickname,
-                              firstName: listing.contributorFirstName,
-                              lastName: listing.contributorLastName,
-                              email: null
-                            };
-                            return (
-                              <UserDisplayName 
-                                user={contributorUser} 
-                                showBadge={false}
-                                className="font-medium text-primary"
-                              />
-                            );
-                          })()
-                        }
-                      </span>
-                    </div>
-                  )}
+
                 </div>
               </div>
             </div>
