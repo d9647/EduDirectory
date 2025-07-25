@@ -56,44 +56,48 @@ export default function Landing() {
       {/* Hero Section */}
       <div className="relative bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
-            <main className="mt-6 sm:mt-10 mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-              <div className="text-center lg:text-left">
-                <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-gray-900">
-                  <span className="block xl:inline">Your complete</span>{' '}
-                  <span className="block text-primary xl:inline">educational journey</span>
-                </h1>
-                <p className="mt-3 text-sm xs:text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:text-xl lg:mx-0">
-                  Discover opportunities, connect with your community, and plan your path to success. 
-                  From tutoring and events to career guidance - everything you need in one place.
-                </p>
-                <div className="mt-5 sm:mt-8 flex flex-col xs:flex-row gap-3 xs:gap-3 sm:justify-center lg:justify-start">
-                  <div className="rounded-md shadow">
-                    <Button 
-                      onClick={() => window.location.href = "/api/login"}
-                      size="lg"
-                      className="w-full flex items-center justify-center px-6 sm:px-8 py-3 text-sm sm:text-base font-medium bg-primary hover:bg-primary/90"
-                    >
-                      Get Started
-                    </Button>
-                  </div>
-                  <div>
-                    <Button 
-                      variant="outline" 
-                      size="lg"
-                      onClick={() => window.location.href = "/learn-more"}
-                      className="w-full flex items-center justify-center px-6 sm:px-8 py-3 text-sm sm:text-base font-medium"
-                    >
-                      Learn More
-                    </Button>
+          <div className="flex flex-col lg:flex-row">
+            {/* Left: Hero Text */}
+            <div className="w-full lg:w-1/2 z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:pb-28 xl:pb-32">
+              <main className="mt-6 sm:mt-10 mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+                <div className="text-center lg:text-left">
+                  <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-gray-900">
+                    <span className="block xl:inline">Your complete</span>{' '}
+                    <span className="block text-primary xl:inline">educational journey</span>
+                  </h1>
+                  <p className="mt-3 text-sm xs:text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:text-xl lg:mx-0">
+                    Discover opportunities, connect with your community, and plan your path to success. 
+                    From tutoring and events to career guidance - everything you need in one place.
+                  </p>
+                  <div className="mt-5 sm:mt-8 flex flex-col xs:flex-row gap-3 xs:gap-3 sm:justify-center lg:justify-start">
+                    <div className="rounded-md shadow">
+                      <Button 
+                        onClick={() => window.location.href = "/api/login"}
+                        size="lg"
+                        className="w-full flex items-center justify-center px-6 sm:px-8 py-3 text-sm sm:text-base font-medium bg-primary hover:bg-primary/90"
+                      >
+                        Get Started
+                      </Button>
+                    </div>
+                    <div>
+                      <Button 
+                        variant="outline" 
+                        size="lg"
+                        onClick={() => window.location.href = "/learn-more"}
+                        className="w-full flex items-center justify-center px-6 sm:px-8 py-3 text-sm sm:text-base font-medium"
+                      >
+                        Learn More
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </main>
+              </main>
+            </div>
+            {/* Right: Carousel */}
+            <div className="w-full lg:w-1/2 flex items-center justify-end pr-4 bg-gradient-to-br from-primary/20 to-primary/40">
+              <FeatureShowcase />
+            </div>
           </div>
-        </div>
-        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 flex items-center justify-end pr-4">
-          <FeatureShowcase />
         </div>
       </div>
 
