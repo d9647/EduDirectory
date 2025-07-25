@@ -378,7 +378,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/events', async (req, res) => {
     try {
-      const validatedData = insertEventSchema.parse(req.body);
+      console.log("Received event data:", JSON.stringify(req.body, null, 2));
+      
+      // Convert string latitude/longitude to numbers for database
+      const processedData = {
+        ...req.body,
+        latitude: req.body.latitude ? parseFloat(req.body.latitude) : null,
+        longitude: req.body.longitude ? parseFloat(req.body.longitude) : null,
+      };
+      
+      console.log("Processed event data:", JSON.stringify(processedData, null, 2));
+      
+      const validatedData = insertEventSchema.parse(processedData);
       const event = await storage.createEvent(validatedData);
       res.status(201).json(event);
     } catch (error: any) {
@@ -789,6 +800,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       if (updateData.salaryMax !== undefined) {
         updateData.salaryMax = parseFloat(updateData.salaryMax) || null;
+      }
+
+      // Convert decimal fields for coordinates (events)
+      if (updateData.latitude !== undefined) {
+        updateData.latitude = updateData.latitude ? parseFloat(updateData.latitude) : null;
+      }
+      if (updateData.longitude !== undefined) {
+        updateData.longitude = updateData.longitude ? parseFloat(updateData.longitude) : null;
       }
 
       // Convert boolean fields
