@@ -12,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 import ListingDetailModal from "./listing-detail-modal";
+import { UserDisplayName } from "@/components/common/user-display-name";
 import { ThumbsUp, Bookmark, Share2, ChevronLeft, ChevronRight, ArrowUpDown, MapPin, Star } from "lucide-react";
 import type { FilterState, ListingData, TableColumn, UserInteractions } from "@/lib/types";
 import { formatArrayField, formatSalary, formatDate, formatBoolean } from "@/lib/textUtils";
@@ -491,6 +492,25 @@ export default function ListingTable({
           </div>
         ) : (
           <span className="text-sm text-gray-500">Any age</span>
+        );
+
+      case "contributor":
+        // Create a user object from contributor fields for display
+        const contributorUser = {
+          id: listing.userId,
+          nickname: listing.contributorNickname,
+          firstName: listing.contributorFirstName,
+          lastName: listing.contributorLastName,
+          email: null // We don't have email in listing data for privacy
+        };
+        return (
+          <div className="text-sm text-gray-700">
+            <UserDisplayName 
+              user={contributorUser} 
+              showBadge={false}
+              className="max-w-24 truncate"
+            />
+          </div>
         );
 
       case "actions":

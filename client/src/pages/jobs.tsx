@@ -89,6 +89,7 @@ export default function Jobs() {
               { key: "categories", label: "Categories", sortable: false },
               { key: "jobType", label: "Job Type", sortable: false },
               { key: "location", label: "Location", sortable: true },
+              { key: "contributor", label: "Contributor", sortable: false },
               { key: "actions", label: "Actions", sortable: false },
             ]}
             filters={filters}
