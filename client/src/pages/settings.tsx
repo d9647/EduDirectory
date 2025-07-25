@@ -313,18 +313,34 @@ export default function Settings() {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4 text-center">
-                  <div className="bg-blue-50 p-3 rounded-lg">
-                    <div className="text-lg font-semibold text-blue-600">
-                      {contributionStats.reviewsCount}
-                    </div>
-                    <div className="text-xs text-gray-600">Reviews</div>
+                {/* Total Summary */}
+                <div className="bg-gradient-to-r from-blue-50 to-green-50 p-4 rounded-lg text-center">
+                  <div className="text-2xl font-bold text-gray-800">
+                    {contributionStats.listingsCount + contributionStats.reviewsCount}
                   </div>
-                  <div className="bg-green-50 p-3 rounded-lg">
-                    <div className="text-lg font-semibold text-green-600">
-                      {contributionStats.listingsCount}
+                  <div className="text-sm text-gray-600">Total Contributions</div>
+                </div>
+
+                {/* Detailed Breakdown */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <span className="text-sm font-medium text-gray-700">Listings Submitted</span>
                     </div>
-                    <div className="text-xs text-gray-600">Listings</div>
+                    <span className="text-lg font-semibold text-green-600">
+                      {contributionStats.listingsCount}
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span className="text-sm font-medium text-gray-700">Reviews Written</span>
+                    </div>
+                    <span className="text-lg font-semibold text-blue-600">
+                      {contributionStats.reviewsCount}
+                    </span>
                   </div>
                 </div>
 
