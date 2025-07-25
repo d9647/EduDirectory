@@ -403,10 +403,31 @@ export class DatabaseStorage implements IStorage {
       .from(reviews)
       .where(eq(reviews.userId, userId));
 
-    // Note: Current listing tables don't have userId field to track who submitted them
-    // For now, we'll return 0 for listings count since there's no way to attribute listings to users
-    // This would need to be added to the schema if we want to track user submissions
-    const listingsCount = 0;
+    // Count listings by user across all listing types
+    const tutoringCount = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(tutoringProviders)
+      .where(eq(tutoringProviders.userId, userId));
+
+    const campsCount = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(summerCamps)
+      .where(eq(summerCamps.userId, userId));
+
+    const internshipsCount = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(internships)
+      .where(eq(internships.userId, userId));
+
+    const jobsCount = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(jobs)
+      .where(eq(jobs.userId, userId));
+
+    const listingsCount = (tutoringCount[0]?.count || 0) + 
+                         (campsCount[0]?.count || 0) + 
+                         (internshipsCount[0]?.count || 0) + 
+                         (jobsCount[0]?.count || 0);
 
     const reviewsCount = reviewsResult[0]?.count || 0;
 

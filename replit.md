@@ -168,6 +168,8 @@ Preferred UI design style: Clean, minimal layouts without redundant headers.
 - Updated contributor information with proper names: Admin User (nickname: "Happy Fish")
 - Updated 40 total listings: 9 tutoring providers, 16 summer camps, 6 internships, 9 jobs
 - All listings now show complete contributor details: user_id = '39065410', nickname = 'Happy Fish', first_name = 'Admin', last_name = 'User'
+- Updated getUserContributionStats method to properly count listings by user across all categories (tutoring, camps, internships, jobs)
+- Admin User contribution stats now correctly show 40 listings total (9+16+6+9) and 0 reviews
 - Enhanced database queries include contributor fields (userId, contributorNickname, contributorFirstName, contributorLastName)
 - System balances transparency (showing contributors in detail views) with clean table layouts (no contributor columns in main tables)
 
