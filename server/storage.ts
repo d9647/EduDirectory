@@ -424,10 +424,10 @@ export class DatabaseStorage implements IStorage {
       .from(jobs)
       .where(eq(jobs.userId, userId));
 
-    const listingsCount = (tutoringCount[0]?.count || 0) + 
-                         (campsCount[0]?.count || 0) + 
-                         (internshipsCount[0]?.count || 0) + 
-                         (jobsCount[0]?.count || 0);
+    const listingsCount = Number(tutoringCount[0]?.count || 0) + 
+                         Number(campsCount[0]?.count || 0) + 
+                         Number(internshipsCount[0]?.count || 0) + 
+                         Number(jobsCount[0]?.count || 0);
 
     const reviewsCount = reviewsResult[0]?.count || 0;
 
