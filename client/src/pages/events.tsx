@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, MapPin, Clock, Users2, DollarSign, Search } from "lucide-react";
+import { Calendar, MapPin, Clock, Users2, Search } from "lucide-react";
 import Header from "@/components/layout/header";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { EventsTable } from "@/components/listings/events-table";
@@ -58,16 +58,14 @@ const targetAudiences = [
   "High School", "College", "Young Adults", "All Ages"
 ];
 
-const costRanges = [
-  "Free", "$1-10", "$11-25", "$26-50", "$51-100", "$100+"
-];
+
 
 export default function Events() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedAudiences, setSelectedAudiences] = useState<string[]>([]);
-  const [selectedCosts, setSelectedCosts] = useState<string[]>([]);
+
   const [zipcode, setZipcode] = useState("");
   const [distance, setDistance] = useState<number | undefined>(undefined);
   const [registrationFilter, setRegistrationFilter] = useState<string>("all");
@@ -85,7 +83,7 @@ export default function Events() {
     if (searchTerm) params.set("search", searchTerm);
     if (selectedCategories.length > 0) params.set("categories", selectedCategories.join(","));
     if (selectedAudiences.length > 0) params.set("targetAudience", selectedAudiences.join(","));
-    if (selectedCosts.length > 0) params.set("cost", selectedCosts.join(","));
+
     if (zipcode) params.set("zipcode", zipcode);
     if (distance) params.set("distance", distance.toString());
     if (selectedDate) {
@@ -124,7 +122,7 @@ export default function Events() {
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, selectedCategories, selectedAudiences, selectedCosts, selectedDate, zipcode, distance, registrationFilter]);
+  }, [searchTerm, selectedCategories, selectedAudiences, selectedDate, zipcode, distance, registrationFilter]);
 
   const handleCategoryToggle = (category: string) => {
     setSelectedCategories(prev => 
@@ -142,19 +140,13 @@ export default function Events() {
     );
   };
 
-  const handleCostToggle = (cost: string) => {
-    setSelectedCosts(prev => 
-      prev.includes(cost) 
-        ? prev.filter(c => c !== cost)
-        : [...prev, cost]
-    );
-  };
+
 
   const clearAllFilters = () => {
     setSearchTerm("");
     setSelectedCategories([]);
     setSelectedAudiences([]);
-    setSelectedCosts([]);
+
     setSelectedDate(undefined);
     setZipcode("");
     setDistance(undefined);
@@ -338,31 +330,7 @@ export default function Events() {
               </CardContent>
             </Card>
 
-            {/* Cost Filter */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center text-lg">
-                  <DollarSign className="h-5 w-5 mr-2" />
-                  Cost
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {costRanges.map((cost) => (
-                    <div key={cost} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={cost}
-                        checked={selectedCosts.includes(cost)}
-                        onCheckedChange={() => handleCostToggle(cost)}
-                      />
-                      <Label htmlFor={cost} className="text-sm">
-                        {cost}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+
 
             {/* Registration Filter */}
             <Card>

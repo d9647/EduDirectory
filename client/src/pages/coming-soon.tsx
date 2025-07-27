@@ -92,6 +92,9 @@ export default function ComingSoon() {
             <Link href="/jobs">
               <Button variant="outline">Explore Jobs</Button>
             </Link>
+            <Link href="/events">
+              <Button variant="outline">Discover Events</Button>
+            </Link>
           </div>
         </div>
       </div>
