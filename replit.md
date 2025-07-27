@@ -94,6 +94,12 @@ Preferred UI design style: Clean, minimal layouts without redundant headers.
 - Welcome message with quick start functionality when no timeline is selected
 - Comprehensive college preparation guidance covering all high school years and summer periods
 
+**Admin-Only Guides Access (Latest Update - July 25, 2025)**
+- Restricted Guides page access to admin users only per user request
+- Updated header navigation to hide Guides tab from regular users
+- Added conditional routing protection in App.tsx to prevent non-admin access
+- Regular users can no longer see or access the Guides page functionality
+
 **Mobile Responsive Admin Dashboard (Latest Update - January 21, 2025)**
 - Implemented comprehensive mobile-first responsive design for admin dashboard pages
 - Updated main layout with responsive spacing, typography, and grid layouts for mobile screens

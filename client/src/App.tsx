@@ -25,7 +25,7 @@ import Footer from "@/components/layout/footer";
 import { useEffect } from "react";
 
 function Router() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, isAdmin } = useAuth();
 
   // Show loading state while checking authentication
   if (isLoading) {
@@ -59,7 +59,7 @@ function Router() {
               <Route path="/internships" component={Internships} />
               <Route path="/jobs" component={Jobs} />
               <Route path="/events" component={Events} />
-              <Route path="/guides" component={Guides} />
+              {isAdmin && <Route path="/guides" component={Guides} />}
               <Route path="/submit-listing" component={BusinessSubmission} />
               <Route path="/bookmarks" component={Bookmarks} />
               <Route path="/settings" component={Settings} />

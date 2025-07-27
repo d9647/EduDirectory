@@ -11,14 +11,18 @@ export default function Header() {
   const { user, isAuthenticated, isAdmin } = useAuth();
   const [location] = useLocation();
 
-  const navItems = [
+  const baseNavItems = [
     { href: "/tutoring-providers", label: "Tutors" },
     { href: "/summer-camps", label: "Camps" },
     { href: "/internships", label: "Internships" },
     { href: "/jobs", label: "Jobs" },
     { href: "/events", label: "Events" },
-    { href: "/guides", label: "Guides" },
   ];
+
+  // Only show Guides to admin users
+  const navItems = isAdmin 
+    ? [...baseNavItems, { href: "/guides", label: "Guides" }]
+    : baseNavItems;
 
   const isActiveRoute = (href: string) => location === href;
 
