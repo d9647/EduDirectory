@@ -99,6 +99,8 @@ Preferred UI design style: Clean, minimal layouts without redundant headers.
 - Updated header navigation to hide Guides tab from regular users
 - Added conditional routing protection in App.tsx to prevent non-admin access
 - Regular users can no longer see or access the Guides page functionality
+- Created Coming Soon page for regular users when they click the "Explore Guides" link on home page
+- Admin users get direct access to actual Guides page, regular users see Coming Soon page
 
 **Mobile Responsive Admin Dashboard (Latest Update - January 21, 2025)**
 - Implemented comprehensive mobile-first responsive design for admin dashboard pages

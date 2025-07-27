@@ -8,7 +8,7 @@ import { Link } from "wouter";
 import { getDisplayName } from "@shared/utils";
 
 export default function Home() {
-  const { user } = useAuth() as { user: User | undefined };
+  const { user, isAdmin } = useAuth() as { user: User | undefined; isAdmin: boolean };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -102,7 +102,7 @@ export default function Home() {
             </Card>
           </Link>
 
-          <Link href="/guides">
+          <Link href={isAdmin ? "/guides" : "/coming-soon"}>
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardHeader className="text-center">
                 <BookOpen className="h-12 w-12 text-primary mx-auto mb-2" />
