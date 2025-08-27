@@ -40,6 +40,7 @@ function Router() {
     );
   }
 
+  // {isAdmin && <Route path="/guides" component={Guides} />}
   return (
     <Switch>
       <Route path="/terms-of-use" component={TermsOfUse} />
@@ -60,7 +61,7 @@ function Router() {
               <Route path="/internships" component={Internships} />
               <Route path="/jobs" component={Jobs} />
               <Route path="/events" component={Events} />
-              {isAdmin && <Route path="/guides" component={Guides} />}
+              <Route path="/guides" component={Guides} />
               <Route path="/coming-soon" component={ComingSoon} />
               <Route path="/submit-listing" component={BusinessSubmission} />
               <Route path="/bookmarks" component={Bookmarks} />
@@ -86,19 +87,19 @@ function App() {
     // Prevent keyboard shortcuts for copy/cut/select all
     const handleKeyDown = (e: KeyboardEvent) => {
       if (
-        (e.ctrlKey || e.metaKey) && 
-        (e.key === 'c' || e.key === 'x' || e.key === 'a' || e.key === 'u')
+        (e.ctrlKey || e.metaKey) &&
+        (e.key === "c" || e.key === "x" || e.key === "a" || e.key === "u")
       ) {
         e.preventDefault();
       }
     };
 
-    document.addEventListener('contextmenu', handleContextMenu);
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("contextmenu", handleContextMenu);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("contextmenu", handleContextMenu);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
