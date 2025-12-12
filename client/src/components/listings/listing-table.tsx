@@ -82,6 +82,7 @@ export default function ListingTable({
                      listingType === "camps" ? "camp" :
                      listingType === "internships" ? "internship" :
                      listingType === "jobs" ? "job" :
+                     listingType === "services" ? "service" :
                      listingType,
         listingId,
       });
@@ -89,7 +90,7 @@ export default function ListingTable({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/${listingType === "tutoring" ? "tutoring-providers" : listingType === "camps" ? "summer-camps" : listingType}`] });
-      queryClient.invalidateQueries({ queryKey: [`/api/thumbs-up/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType}`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/thumbs-up/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType === "services" ? "service" : listingType}`] });
       toast({
         title: "Success",
         description: "Thumbs up toggled successfully",
@@ -123,6 +124,7 @@ export default function ListingTable({
                      listingType === "camps" ? "camp" :
                      listingType === "internships" ? "internship" :
                      listingType === "jobs" ? "job" :
+                     listingType === "services" ? "service" :
                      listingType,
         listingId,
       });
@@ -130,7 +132,7 @@ export default function ListingTable({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/${listingType === "tutoring" ? "tutoring-providers" : listingType === "camps" ? "summer-camps" : listingType}`] });
-      queryClient.invalidateQueries({ queryKey: [`/api/bookmarks/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType}`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/bookmarks/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType === "services" ? "service" : listingType}`] });
       queryClient.invalidateQueries({ queryKey: ["/api/bookmarks"] });
       toast({
         title: "Success",
@@ -181,7 +183,7 @@ export default function ListingTable({
 
   // Get user interactions for a listing
   const { data: userInteractions } = useQuery({
-    queryKey: [`/api/thumbs-up/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType}`, selectedListing?.id, "user"],
+    queryKey: [`/api/thumbs-up/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType === "services" ? "service" : listingType}`, selectedListing?.id, "user"],
     enabled: isAuthenticated && !!selectedListing,
     retry: false,
   });
@@ -189,13 +191,13 @@ export default function ListingTable({
   // Row Actions Component with individual state tracking
   const RowActions = ({ listing }: { listing: any }) => {
     const { data: bookmarkData } = useQuery({
-      queryKey: [`/api/bookmarks/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType}`, listing.id, "user"],
+      queryKey: [`/api/bookmarks/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType === "services" ? "service" : listingType}`, listing.id, "user"],
       enabled: isAuthenticated,
       retry: false,
     });
 
     const { data: thumbsUpData } = useQuery({
-      queryKey: [`/api/thumbs-up/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType}`, listing.id, "user"],
+      queryKey: [`/api/thumbs-up/${listingType === "tutoring" ? "tutoring" : listingType === "camps" ? "camp" : listingType === "internships" ? "internship" : listingType === "jobs" ? "job" : listingType === "services" ? "service" : listingType}`, listing.id, "user"],
       enabled: isAuthenticated,
       retry: false,
     });

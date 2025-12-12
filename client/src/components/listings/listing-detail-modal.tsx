@@ -268,9 +268,12 @@ export default function ListingDetailModal({
                   {listing.name || listing.title}
                 </DialogTitle>
                 <DialogDescription className="text-sm sm:text-base text-gray-600">
-                  {listing.type || listing.companyName} • {listingType === "tutoring" ? "Tutoring" : 
+                  {listingType === "services" 
+                    ? (listing.type === "individual" ? "Individual / Private" : listing.type === "company" ? "Company / Agency" : listing.type || "Provider")
+                    : (listing.type || listing.companyName)} • {listingType === "tutoring" ? "Tutoring" : 
                    listingType === "camps" ? "Summer Camp" :
-                   listingType === "internships" ? "Internship" : "Job"}
+                   listingType === "internships" ? "Internship" : 
+                   listingType === "services" ? "Service" : "Job"}
                 </DialogDescription>
                 <div className="flex items-center mt-1 space-x-4">
                   <div className="flex items-center">
@@ -609,10 +612,10 @@ export default function ListingDetailModal({
                 </>
               )}
 
-              {/* Tags section for camps */}
-              {listingType === "camps" && listing.tags && listing.tags.length > 0 && (
+              {/* Tags section for camps and services */}
+              {(listingType === "camps" || listingType === "services") && listing.tags && listing.tags.length > 0 && (
                 <div className="mb-4">
-                  <h5 className="text-sm font-medium text-gray-700 mb-2">Program Tags</h5>
+                  <h5 className="text-sm font-medium text-gray-700 mb-2">{listingType === "services" ? "Service Tags" : "Program Tags"}</h5>
                   <div className="flex flex-wrap gap-2">
                     {listing.tags.map((tag: string, index: number) => (
                       <Badge key={index} variant="outline" className="text-xs">
