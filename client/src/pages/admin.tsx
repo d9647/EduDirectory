@@ -106,6 +106,7 @@ export default function Admin() {
     'summer-camps': '',
     'internships': '',
     'jobs': '',
+    'services': '',
     'events': ''
   });
 
@@ -115,6 +116,7 @@ export default function Admin() {
     'summer-camps': [],
     'internships': [],
     'jobs': [],
+    'services': [],
     'events': []
   });
 
@@ -148,6 +150,7 @@ export default function Admin() {
     'summer-camps': false,
     'internships': false,
     'jobs': false,
+    'services': false,
     'events': false
   });
 
@@ -1185,6 +1188,83 @@ export default function Admin() {
                 </CardContent>
               </Card>
               
+              {/* Search-based Live Services */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Live Services</CardTitle>
+                  <CardDescription>
+                    Search for approved services to edit
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        placeholder="Search services by name, description, or location..."
+                        value={searchQueries['services']}
+                        onChange={(e) => debounceSearch('services', e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+                    {searchLoading['services'] && (
+                      <div className="text-center py-4">Searching...</div>
+                    )}
+                    {searchResults['services'].length > 0 && (
+                      <div className="space-y-2">
+                        {searchResults['services'].map((service: any) => (
+                          <div key={service.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg gap-2 w-full max-w-full" style={{ overflowX: 'auto' }}>
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <h3 className="font-medium">{service.name}</h3>
+                                {!service.isActive && (
+                                  <Badge variant="secondary">Deactivated</Badge>
+                                )}
+                              </div>
+                              <p className="text-sm text-gray-600">{service.type} • {service.city}, {service.state}</p>
+                              <p className="text-sm text-gray-500 mt-1">{service.description?.substring(0, 100)}...</p>
+                            </div>
+                            <div className="flex gap-2">
+                              <AdminEditModal type="service" listing={service} />
+                              {service.isActive ? (
+                                <Button
+                                  onClick={() => deactivateMutation.mutate({ type: "service", id: service.id })}
+                                  disabled={deactivateMutation.isPending}
+                                  variant="outline"
+                                  size="sm"
+                                >
+                                  <EyeOff className="h-4 w-4 mr-2" />
+                                  Deactivate
+                                </Button>
+                              ) : (
+                                <Button
+                                  onClick={() => activateMutation.mutate({ type: "service", id: service.id })}
+                                  disabled={activateMutation.isPending}
+                                  variant="outline"
+                                  size="sm"
+                                >
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  Activate
+                                </Button>
+                              )}
+                              <Button
+                                onClick={() => deleteMutation.mutate({ type: "service", id: service.id })}
+                                disabled={deleteMutation.isPending}
+                                variant="destructive"
+                                size="sm"
+                              >
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
               {/* Search-based Live Events */}
               <Card>
                 <CardHeader>

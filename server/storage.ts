@@ -2217,6 +2217,22 @@ export class DatabaseStorage implements IStorage {
           ))
           .limit(20);
 
+      case 'services':
+        return await db
+          .select()
+          .from(services)
+          .where(and(
+            eq(services.isApproved, true),
+            or(
+              ilike(services.name, searchTerm),
+              ilike(services.description, searchTerm),
+              ilike(services.type, searchTerm),
+              ilike(services.city, searchTerm),
+              ilike(services.state, searchTerm)
+            )
+          ))
+          .limit(20);
+
       default:
         return [];
     }
@@ -2254,6 +2270,12 @@ export class DatabaseStorage implements IStorage {
           .set({ isActive: false, updatedAt: new Date() })
           .where(eq(events.id, id));
         break;
+      case 'service':
+        await db
+          .update(services)
+          .set({ isActive: false, updatedAt: new Date() })
+          .where(eq(services.id, id));
+        break;
     }
   }
 
@@ -2288,6 +2310,12 @@ export class DatabaseStorage implements IStorage {
           .update(events)
           .set({ isActive: true, updatedAt: new Date() })
           .where(eq(events.id, id));
+        break;
+      case 'service':
+        await db
+          .update(services)
+          .set({ isActive: true, updatedAt: new Date() })
+          .where(eq(services.id, id));
         break;
     }
   }
