@@ -3,12 +3,12 @@ import type { User } from "@shared/schema";
 import Header from "@/components/layout/header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { GraduationCap, Briefcase, MapPin, Users, Calendar, BookOpen } from "lucide-react";
+import { GraduationCap, Briefcase, MapPin, Users, Calendar, Heart } from "lucide-react";
 import { Link } from "wouter";
 import { getDisplayName } from "@shared/utils";
 
 export default function Home() {
-  const { user, isAdmin } = useAuth() as { user: User | undefined; isAdmin: boolean };
+  const { user } = useAuth() as { user: User | undefined };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -102,17 +102,17 @@ export default function Home() {
             </Card>
           </Link>
 
-          <Link href={isAdmin ? "/guides" : "/coming-soon"}>
+          <Link href="/services">
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardHeader className="text-center">
-                <BookOpen className="h-12 w-12 text-primary mx-auto mb-2" />
-                <CardTitle>Planning Guides</CardTitle>
+                <Heart className="h-12 w-12 text-primary mx-auto mb-2" />
+                <CardTitle>Service Providers</CardTitle>
                 <CardDescription>
-                  Navigate your high school journey with planning resources
+                  Find babysitters, nannies, and other trusted service providers
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button className="w-full">Explore Guides</Button>
+                <Button className="w-full">Browse Services</Button>
               </CardContent>
             </Card>
           </Link>
