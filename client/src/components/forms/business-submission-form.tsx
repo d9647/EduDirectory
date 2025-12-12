@@ -612,37 +612,39 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
                 />
               </div>
 
-              {/* Delivery Mode */}
-              <div className="space-y-2">
-                <Label>Delivery Mode *</Label>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  {DELIVERY_MODE_OPTIONS.map((mode) => (
-                    <div key={mode.value} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`delivery-${mode.value}`}
-                        checked={selectedDeliveryModes.includes(mode.value)}
-                        onCheckedChange={() => toggleDeliveryMode(mode.value)}
-                      />
-                      <Label htmlFor={`delivery-${mode.value}`} className="text-sm cursor-pointer">
-                        {mode.label}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-                {selectedDeliveryModes.length > 0 && (
-                  <div className="flex flex-wrap gap-1 mt-2">
-                    {selectedDeliveryModes.map((mode) => (
-                      <Badge key={mode} variant="secondary" className="text-xs">
-                        {mode}
-                        <X 
-                          className="h-3 w-3 ml-1 cursor-pointer" 
-                          onClick={() => removeDeliveryMode(mode)} 
+              {/* Delivery Mode - hidden for services */}
+              {type !== "services" && (
+                <div className="space-y-2">
+                  <Label>Delivery Mode *</Label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {DELIVERY_MODE_OPTIONS.map((mode) => (
+                      <div key={mode.value} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`delivery-${mode.value}`}
+                          checked={selectedDeliveryModes.includes(mode.value)}
+                          onCheckedChange={() => toggleDeliveryMode(mode.value)}
                         />
-                      </Badge>
+                        <Label htmlFor={`delivery-${mode.value}`} className="text-sm cursor-pointer">
+                          {mode.label}
+                        </Label>
+                      </div>
                     ))}
                   </div>
-                )}
-              </div>
+                  {selectedDeliveryModes.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {selectedDeliveryModes.map((mode) => (
+                        <Badge key={mode} variant="secondary" className="text-xs">
+                          {mode}
+                          <X 
+                            className="h-3 w-3 ml-1 cursor-pointer" 
+                            onClick={() => removeDeliveryMode(mode)} 
+                          />
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
 
 
             </div>

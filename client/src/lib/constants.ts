@@ -445,6 +445,7 @@ export const SERVICE_TAGS = [
   { value: "Petsitter - Cat", label: "Petsitter - Cat" },
   { value: "CPR certified", label: "CPR certified" },
   { value: "Multilingual", label: "Multilingual" },
+  { value: "Housekeeping", label: "Housekeeping" },
 ];
 
 // Service Business Types

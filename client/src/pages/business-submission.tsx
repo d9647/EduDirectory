@@ -42,43 +42,13 @@ export default function BusinessSubmission() {
               onValueChange={setActiveTab}
               className="w-full"
             >
-              <TabsList className="flex flex-wrap w-full h-auto p-1 gap-1 sm:grid sm:grid-cols-5 sm:h-10">
-                <TabsTrigger
-                  value="tutoring"
-                  className="flex-1 min-w-[120px] sm:min-w-0"
-                >
-                  Tutoring
-                </TabsTrigger>
-                <TabsTrigger
-                  value="services"
-                  className="flex-1 min-w-[120px] sm:min-w-0"
-                >
-                  Services
-                </TabsTrigger>
-                <TabsTrigger
-                  value="camp"
-                  className="flex-1 min-w-[120px] sm:min-w-0"
-                >
-                  Camps
-                </TabsTrigger>
-                <TabsTrigger
-                  value="internship"
-                  className="flex-1 min-w-[120px] sm:min-w-0"
-                >
-                  Internship
-                </TabsTrigger>
-                <TabsTrigger
-                  value="job"
-                  className="flex-1 min-w-[120px] sm:min-w-0"
-                >
-                  Jobs
-                </TabsTrigger>
-                <TabsTrigger
-                  value="event"
-                  className="flex-1 min-w-[120px] sm:min-w-0"
-                >
-                  Event
-                </TabsTrigger>
+              <TabsList className="grid w-full grid-cols-6 h-10">
+                <TabsTrigger value="tutoring">Tutoring</TabsTrigger>
+                <TabsTrigger value="services">Services</TabsTrigger>
+                <TabsTrigger value="camp">Camps</TabsTrigger>
+                <TabsTrigger value="internship">Internship</TabsTrigger>
+                <TabsTrigger value="job">Jobs</TabsTrigger>
+                <TabsTrigger value="event">Event</TabsTrigger>
               </TabsList>
 
               <TabsContent value="tutoring" className="mt-6">
