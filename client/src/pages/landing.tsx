@@ -62,12 +62,12 @@ export default function Landing() {
               <main className="mt-6 sm:mt-10 mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
                 <div className="text-center lg:text-left">
                   <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight font-extrabold text-gray-900">
-                    <span className="block xl:inline">Your complete</span>{' '}
-                    <span className="block text-primary xl:inline">educational journey</span>
+                    <span className="block xl:inline">Raising kids</span>{' '}
+                    <span className="block text-primary xl:inline">together</span>
                   </h1>
                   <p className="mt-3 text-sm xs:text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:text-xl lg:mx-0">
-                    Discover opportunities, connect with your community, and plan your path to success. 
-                    From tutoring and events to career guidance - everything you need in one place.
+                    Connect with trusted babysitters, caregivers, tutors, and enrichment programs. 
+                    From infants to high schoolers - find the resources your family needs, shared by parents like you.
                   </p>
                   <div className="mt-5 sm:mt-8 flex flex-col xs:flex-row gap-3 xs:gap-3 sm:justify-center lg:justify-start">
                     <div className="rounded-md shadow">
@@ -105,12 +105,12 @@ export default function Landing() {
       <div className="py-8 sm:py-12 bg-gray-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="text-center lg:text-center">
-            <h2 className="text-sm sm:text-base text-primary font-semibold tracking-wide uppercase">Features</h2>
+            <h2 className="text-sm sm:text-base text-primary font-semibold tracking-wide uppercase">What We Offer</h2>
             <p className="mt-2 text-xl xs:text-2xl sm:text-3xl lg:text-4xl leading-tight font-extrabold tracking-tight text-gray-900">
-              Your all-in-one educational resource hub
+              Everything parents need in one place
             </p>
             <p className="mt-4 max-w-2xl text-base xs:text-lg sm:text-xl text-gray-500 mx-auto">
-              From finding tutors to planning your high school journey, discover community events, and career opportunities - all in one platform.
+              Find trusted caregivers, discover learning programs, connect with other families, and access resources for every stage of your child's journey.
             </p>
           </div>
 
@@ -151,7 +151,7 @@ export default function Landing() {
                   <MapPin className="h-8 w-8 text-primary" />
                   <CardTitle>Internships & Jobs</CardTitle>
                   <CardDescription>
-                    Explore internships and career opportunities to gain real-world experience and build your future.
+                    Help your teens explore internships and career opportunities to gain real-world experience.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -171,7 +171,7 @@ export default function Landing() {
                   <Star className="h-8 w-8 text-primary" />
                   <CardTitle>Reviews & Ratings</CardTitle>
                   <CardDescription>
-                    Make informed decisions with community reviews, ratings, and recommendations from other students.
+                    Make informed decisions with community reviews, ratings, and recommendations from other parents.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -184,11 +184,11 @@ export default function Landing() {
       <div className="bg-primary">
         <div className="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-extrabold text-white sm:text-4xl">
-            <span className="block">Ready to begin your journey?</span>
-            <span className="block">Join thousands of students succeeding together.</span>
+            <span className="block">Join our parent community</span>
+            <span className="block">Share and discover trusted resources.</span>
           </h2>
           <p className="mt-4 text-lg leading-6 text-primary-100">
-            Create your account and unlock access to opportunities, events, guidance, and your local educational community.
+            Create your free account and connect with local families, caregivers, tutors, and enrichment programs.
           </p>
           <Button 
             onClick={() => window.location.href = "/api/login"}

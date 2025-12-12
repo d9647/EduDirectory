@@ -21,7 +21,7 @@ export default function Home() {
             Welcome back, {getDisplayName(user)}!
           </h1>
           <p className="text-gray-600">
-            Discover educational opportunities and connect with service providers in your area.
+            Find trusted caregivers, tutors, and resources for your family - shared by parents like you.
           </p>
         </div>
 
@@ -124,9 +124,9 @@ export default function Home() {
         <div className="bg-primary rounded-lg p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-semibold mb-2">Are you a service provider?</h2>
+              <h2 className="text-xl font-semibold mb-2">Know a great resource?</h2>
               <p className="text-primary-100">
-                List your tutoring services, camps, internships, or job opportunities on our platform.
+                Share your trusted babysitters, tutors, camps, or other services to help other parents.
               </p>
             </div>
             <Link href="/submit-listing">
