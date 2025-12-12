@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { apiRequest } from "@/lib/queryClient";
@@ -52,6 +55,9 @@ export default function ListingDetailModal({
   const queryClient = useQueryClient();
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<ReviewData | null>(null);
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportDescription, setReportDescription] = useState("");
 
   const listingTypeMap: Record<string, string> = {
     tutoring: "tutoring",
@@ -222,11 +228,22 @@ export default function ListingDetailModal({
       window.location.href = "/api/login";
       return;
     }
+    setReportDialogOpen(true);
+  };
 
-    const reason = prompt("Please provide a reason for reporting this listing:");
-    if (reason) {
-      reportMutation.mutate({ reason, description: "" });
+  const submitReport = () => {
+    if (!reportReason) {
+      toast({
+        title: "Please select a reason",
+        description: "You must select a reason for your report",
+        variant: "destructive",
+      });
+      return;
     }
+    reportMutation.mutate({ reason: reportReason, description: reportDescription });
+    setReportDialogOpen(false);
+    setReportReason("");
+    setReportDescription("");
   };
 
   const calculateAverageRating = (reviews: ReviewData[] | undefined) => {
@@ -840,6 +857,75 @@ export default function ListingDetailModal({
           queryClient.invalidateQueries({ queryKey: ["/api/reviews", apiListingType, listing.id] });
         }}
       />
+
+      {/* Report Dialog */}
+      <Dialog open={reportDialogOpen} onOpenChange={setReportDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Flag className="h-5 w-5 text-destructive" />
+              Report Listing
+            </DialogTitle>
+            <DialogDescription>
+              Help us keep the community safe by reporting inappropriate or inaccurate listings.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="report-reason">Reason for report</Label>
+              <Select value={reportReason} onValueChange={setReportReason}>
+                <SelectTrigger id="report-reason" data-testid="select-report-reason">
+                  <SelectValue placeholder="Select a reason..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="inaccurate">Inaccurate information</SelectItem>
+                  <SelectItem value="spam">Spam or advertisement</SelectItem>
+                  <SelectItem value="inappropriate">Inappropriate content</SelectItem>
+                  <SelectItem value="scam">Potential scam</SelectItem>
+                  <SelectItem value="closed">Business is closed</SelectItem>
+                  <SelectItem value="duplicate">Duplicate listing</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="report-description">Additional details (optional)</Label>
+              <Textarea
+                id="report-description"
+                data-testid="input-report-description"
+                placeholder="Please provide any additional information that might help us review this report..."
+                value={reportDescription}
+                onChange={(e) => setReportDescription(e.target.value)}
+                rows={3}
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setReportDialogOpen(false);
+                setReportReason("");
+                setReportDescription("");
+              }}
+              data-testid="button-cancel-report"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={submitReport}
+              disabled={reportMutation.isPending}
+              className="bg-destructive hover:bg-destructive/90"
+              data-testid="button-submit-report"
+            >
+              {reportMutation.isPending ? "Submitting..." : "Submit Report"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
