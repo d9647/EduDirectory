@@ -1874,6 +1874,9 @@ export class DatabaseStorage implements IStorage {
             case "job":
               listing = await this.getJob(bookmark.listingId);
               break;
+            case "service":
+              listing = await this.getService(bookmark.listingId);
+              break;
           }
         } catch (error) {
           console.error(`Error fetching listing ${bookmark.listingType}:${bookmark.listingId}:`, error);

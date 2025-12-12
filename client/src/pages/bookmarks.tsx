@@ -119,6 +119,8 @@ export default function Bookmarks() {
     switch (type) {
       case "tutoring":
         return "Tutoring Provider";
+      case "services":
+        return "Services Provider";
       case "camps":
         return "Summer Camp";
       case "internships":
@@ -134,6 +136,8 @@ export default function Bookmarks() {
     switch (type) {
       case "tutoring":
         return "bg-blue-100 text-blue-800";
+      case "services":
+          return "bg-yellow-100 text-yellow-800";
       case "camps":
         return "bg-green-100 text-green-800";
       case "internships":
