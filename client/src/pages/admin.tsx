@@ -532,7 +532,8 @@ export default function Admin() {
                   {(pendingApprovals.tutoringProviders?.length || 0) +
                    (pendingApprovals.summerCamps?.length || 0) +
                    (pendingApprovals.internships?.length || 0) +
-                   (pendingApprovals.jobs?.length || 0)}
+                   (pendingApprovals.jobs?.length || 0) +
+                   (pendingApprovals.services?.length || 0)}
                 </Badge>
               )}
             </TabsTrigger>
@@ -761,6 +762,53 @@ export default function Admin() {
                 </Card>
               )}
 
+              {/* Services */}
+              {pendingApprovals?.services?.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Services</CardTitle>
+                    <CardDescription>
+                      {pendingApprovals.services.length} pending approval(s)
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3 sm:space-y-4">
+                      {pendingApprovals.services.map((service: any) => (
+                        <div key={service.id} className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 p-3 sm:p-4 border rounded-lg">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-medium text-sm sm:text-base truncate">{service.name}</h3>
+                            <p className="text-xs sm:text-sm text-gray-600">{service.type === 'individual' ? 'Individual' : 'Company'} • {service.city}, {service.state}</p>
+                            <p className="text-xs sm:text-sm text-gray-500 mt-1 line-clamp-2">{service.description}</p>
+                          </div>
+                          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                            <AdminEditModal type="service" listing={service} />
+                            <Button
+                              onClick={() => approveMutation.mutate({ type: "service", id: service.id })}
+                              disabled={approveMutation.isPending}
+                              size="sm"
+                              className="w-full sm:w-auto"
+                            >
+                              <CheckCircle className="h-4 w-4 mr-2" />
+                              Approve
+                            </Button>
+                            <Button
+                              onClick={() => deleteMutation.mutate({ type: "service", id: service.id })}
+                              disabled={deleteMutation.isPending}
+                              variant="outline"
+                              size="sm"
+                              className="w-full sm:w-auto"
+                            >
+                              <XCircle className="h-4 w-4 mr-2" />
+                              Delete
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
               {/* Events */}
               {pendingApprovals?.events?.length > 0 && (
                 <Card>
@@ -813,6 +861,7 @@ export default function Admin() {
                 (pendingApprovals.summerCamps?.length || 0) +
                 (pendingApprovals.internships?.length || 0) +
                 (pendingApprovals.jobs?.length || 0) +
+                (pendingApprovals.services?.length || 0) +
                 (pendingApprovals.events?.length || 0)
               ) === 0) && (
                 <Card>
