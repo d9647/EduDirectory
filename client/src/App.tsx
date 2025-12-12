@@ -11,6 +11,7 @@ import TutoringProviders from "@/pages/tutoring-providers";
 import SummerCamps from "@/pages/summer-camps";
 import Internships from "@/pages/internships";
 import Jobs from "@/pages/jobs";
+import Services from "@/pages/services";
 import Events from "@/pages/events";
 import Guides from "@/pages/guides";
 import BusinessSubmission from "@/pages/business-submission";
@@ -57,6 +58,7 @@ function Router() {
             <Switch>
               <Route path="/" component={Home} />
               <Route path="/tutoring-providers" component={TutoringProviders} />
+              <Route path="/services" component={Services} />
               <Route path="/summer-camps" component={SummerCamps} />
               <Route path="/internships" component={Internships} />
               <Route path="/jobs" component={Jobs} />

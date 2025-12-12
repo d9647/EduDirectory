@@ -21,7 +21,7 @@ interface ListingTableProps {
   data: ListingData | undefined;
   isLoading: boolean;
   error: Error | null;
-  listingType: "tutoring" | "camps" | "internships" | "jobs";
+  listingType: "tutoring" | "camps" | "internships" | "jobs" | "services";
   title: string;
   columns: TableColumn[];
   filters: FilterState;
@@ -65,6 +65,8 @@ export default function ListingTable({
         return data.internships || [];
       case "jobs":
         return data.jobs || [];
+      case "services":
+        return data.services || [];
       default:
         return [];
     }

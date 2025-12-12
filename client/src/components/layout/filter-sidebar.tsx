@@ -16,7 +16,7 @@ interface FilterSidebarProps {
   filters: FilterState;
   setFilters: (filters: FilterState) => void;
   filterOptions: FilterOptions;
-  listingType: "tutoring" | "camps" | "internships" | "jobs";
+  listingType: "tutoring" | "camps" | "internships" | "jobs" | "services";
 }
 
 export default function FilterSidebar({

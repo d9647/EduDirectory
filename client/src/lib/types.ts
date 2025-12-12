@@ -47,6 +47,7 @@ export interface ListingData {
   camps?: any[];
   internships?: any[];
   jobs?: any[];
+  services?: any[];
   total: number;
 }
 

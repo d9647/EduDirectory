@@ -13,6 +13,7 @@ export default function Header() {
 
   const baseNavItems = [
     { href: "/tutoring-providers", label: "Tutors" },
+    { href: "/services", label: "Services" },
     { href: "/summer-camps", label: "Camps" },
     { href: "/internships", label: "Internships" },
     { href: "/jobs", label: "Jobs" },
