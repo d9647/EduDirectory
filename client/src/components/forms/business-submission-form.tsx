@@ -19,6 +19,7 @@ import {
   insertSummerCampSchema,
   insertInternshipSchema,
   insertJobSchema,
+  insertServiceSchema,
 } from "@shared/schema";
 import {
   TUTORING_CATEGORIES,
@@ -37,12 +38,14 @@ import {
   SALARY_TYPE_OPTIONS,
   SCHEDULE_OPTIONS,
   US_STATES,
+  SERVICE_CATEGORIES,
+  SERVICE_TAGS,
 } from "@/lib/constants";
 import { Calendar, X, CheckCircle } from "lucide-react";
 import { z } from "zod";
 
 interface BusinessSubmissionFormProps {
-  type: "tutoring" | "camp" | "internship" | "job";
+  type: "tutoring" | "camp" | "internship" | "job" | "services";
 }
 
 export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormProps) {
@@ -70,6 +73,8 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
         return insertInternshipSchema;
       case "job":
         return insertJobSchema;
+      case "services":
+        return insertServiceSchema;
       default:
         return insertTutoringProviderSchema;
     }
@@ -133,6 +138,7 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
         camp: "/api/summer-camps",
         internship: "/api/internships",
         job: "/api/jobs",
+        services: "/api/services",
       }[type];
 
       // Prepare data with array fields and clean up empty date fields
@@ -372,6 +378,14 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
       });
       return;
     }
+    if (type === "services" && selectedCategories.length === 0) {
+      toast({
+        title: "Error",
+        description: "Please select at least one category",
+        variant: "destructive",
+      });
+      return;
+    }
 
     submitMutation.mutate(data);
   };
@@ -403,9 +417,10 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
           {type === "camp" && "Summer Camp Details"}
           {type === "internship" && "Internship Details"}
           {type === "job" && "Job Opportunity Details"}
+          {type === "services" && "Service Provider Details"}
         </CardTitle>
         <CardDescription>
-          Fill out the form below to list your {type === "tutoring" ? "tutoring service" : type} on our platform.
+          Fill out the form below to list your {type === "tutoring" ? "tutoring service" : type === "services" ? "service" : type} on our platform.
           All submissions require admin approval before going live.
         </CardDescription>
       </CardHeader>
@@ -420,12 +435,13 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
-                  name={type === "tutoring" ? "name" : type === "camp" ? "name" : "companyName" as any}
+                  name={(type === "tutoring" || type === "camp" || type === "services") ? "name" : "companyName" as any}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
                         {type === "tutoring" ? "Provider Name" : 
-                         type === "camp" ? "Camp Name" : "Company Name"} *
+                         type === "camp" ? "Camp Name" : 
+                         type === "services" ? "Service Name" : "Company Name"} *
                       </FormLabel>
                       <FormControl>
                         <Input {...field} />
@@ -469,6 +485,30 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
                           <SelectContent>
                             <SelectItem value="private_tutor">Private Tutor</SelectItem>
                             <SelectItem value="business">Business/Agency</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
+                {type === "services" && (
+                  <FormField
+                    control={form.control}
+                    name="type" as any
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Provider Type *</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select type" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="individual">Individual / Private</SelectItem>
+                            <SelectItem value="company">Company / Agency</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -705,18 +745,20 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
               <h3 className="text-lg font-medium text-gray-900">
                 {type === "tutoring" ? "Categories & Subjects" :
                  type === "camp" ? "Categories" :
+                 type === "services" ? "Categories & Tags" :
                  type === "internship" ? "Categories" : "Categories"}
               </h3>
 
               {/* Categories */}
-              {(type === "tutoring" || type === "camp" || type === "job") && (
+              {(type === "tutoring" || type === "camp" || type === "job" || type === "services") && (
                 <div>
                   <Label className="text-sm font-medium text-gray-700 mb-3 block">
-                    {type === "tutoring" ? "Subject Categories" : "Categories"} *
+                    {type === "tutoring" ? "Subject Categories" : type === "services" ? "Service Categories" : "Categories"} *
                   </Label>
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
                     {(type === "tutoring" ? TUTORING_CATEGORIES : 
-                      type === "camp" ? CAMP_CATEGORIES : JOB_CATEGORIES).map((category) => (
+                      type === "camp" ? CAMP_CATEGORIES : 
+                      type === "services" ? SERVICE_CATEGORIES : JOB_CATEGORIES).map((category) => (
                       <div key={category.value} className="flex items-center space-x-2">
                         <Checkbox
                           id={category.value}
@@ -815,6 +857,51 @@ export default function BusinessSubmissionForm({ type }: BusinessSubmissionFormP
                           <button
                             type="button"
                             onClick={() => removeSubject(subject)}
+                            className="ml-1 hover:text-red-600"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Tags (Services) */}
+              {type === "services" && (
+                <div>
+                  <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                    Service Tags
+                  </Label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
+                    {SERVICE_TAGS.map((tag) => (
+                      <div key={tag.value} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`tag-${tag.value}`}
+                          checked={selectedTags.includes(tag.value)}
+                          onCheckedChange={() => {
+                            setSelectedTags(prev => 
+                              prev.includes(tag.value) 
+                                ? prev.filter(t => t !== tag.value)
+                                : [...prev, tag.value]
+                            );
+                          }}
+                        />
+                        <Label htmlFor={`tag-${tag.value}`} className="text-sm">
+                          {tag.label}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                  {selectedTags.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedTags.map((tag) => (
+                        <Badge key={tag} variant="secondary">
+                          {tag}
+                          <button
+                            type="button"
+                            onClick={() => setSelectedTags(prev => prev.filter(t => t !== tag))}
                             className="ml-1 hover:text-red-600"
                           >
                             <X className="h-3 w-3" />
