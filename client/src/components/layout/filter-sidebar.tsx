@@ -282,11 +282,11 @@ export default function FilterSidebar({
                 </div>
               )}
 
-              {/* Tags Filter (Camps only) */}
-              {listingType === "camps" && filterOptions.tags && (
+              {/* Tags Filter (Camps and Services) */}
+              {(listingType === "camps" || listingType === "services") && filterOptions.tags && (
                 <div>
                   <Label className="text-sm font-medium text-gray-900 mb-3 block">
-                    Program Tags
+                    {listingType === "services" ? "Service Tags" : "Program Tags"}
                   </Label>
                   <div className="space-y-2 max-h-40 overflow-y-auto">
                     {filterOptions.tags.map((tag) => (
