@@ -41,41 +41,59 @@ function Router() {
     );
   }
 
-  // {isAdmin && <Route path="/guides" component={Guides} />}
+  // Public routes available to all users (both authenticated and unauthenticated)
   return (
     <Switch>
       <Route path="/terms-of-use" component={TermsOfUse} />
       <Route path="/privacy-policy" component={PrivacyPolicy} />
       <Route path="/learn-more" component={LearnMore} />
-      {!isAuthenticated ? (
-        <Switch>
-          <Route path="/" component={Landing} />
-          <Route component={NotFound} />
-        </Switch>
-      ) : (
-        <div className="min-h-screen flex flex-col">
-          <div className="flex-1">
-            <Switch>
-              <Route path="/" component={Home} />
-              <Route path="/tutoring-providers" component={TutoringProviders} />
-              <Route path="/services" component={Services} />
-              <Route path="/summer-camps" component={SummerCamps} />
-              <Route path="/internships" component={Internships} />
-              <Route path="/jobs" component={Jobs} />
-              <Route path="/events" component={Events} />
-              <Route path="/guides" component={Guides} />
-              <Route path="/coming-soon" component={ComingSoon} />
-              <Route path="/submit-listing" component={BusinessSubmission} />
-              <Route path="/bookmarks" component={Bookmarks} />
-              <Route path="/settings" component={Settings} />
-              <Route path="/admin" component={Admin} />
-              <Route component={NotFound} />
-            </Switch>
-          </div>
-          <Footer />
+      <Route path="/landing" component={Landing} />
+      <div className="min-h-screen flex flex-col">
+        <div className="flex-1">
+          <Switch>
+            {/* Public browsing pages - available to everyone */}
+            <Route path="/" component={isAuthenticated ? Home : Landing} />
+            <Route path="/tutoring-providers" component={TutoringProviders} />
+            <Route path="/services" component={Services} />
+            <Route path="/summer-camps" component={SummerCamps} />
+            <Route path="/internships" component={Internships} />
+            <Route path="/jobs" component={Jobs} />
+            <Route path="/events" component={Events} />
+            <Route path="/guides" component={Guides} />
+            <Route path="/coming-soon" component={ComingSoon} />
+            {/* Protected pages - redirect to login if not authenticated */}
+            <Route path="/submit-listing">
+              {isAuthenticated ? <BusinessSubmission /> : <RedirectToLogin />}
+            </Route>
+            <Route path="/bookmarks">
+              {isAuthenticated ? <Bookmarks /> : <RedirectToLogin />}
+            </Route>
+            <Route path="/settings">
+              {isAuthenticated ? <Settings /> : <RedirectToLogin />}
+            </Route>
+            <Route path="/admin">
+              {isAuthenticated ? <Admin /> : <RedirectToLogin />}
+            </Route>
+            <Route component={NotFound} />
+          </Switch>
         </div>
-      )}
+        <Footer />
+      </div>
     </Switch>
+  );
+}
+
+function RedirectToLogin() {
+  useEffect(() => {
+    window.location.href = "/api/login";
+  }, []);
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+        <p className="mt-2 text-gray-600">Redirecting to login...</p>
+      </div>
+    </div>
   );
 }
 

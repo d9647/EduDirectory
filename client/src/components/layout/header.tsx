@@ -94,7 +94,7 @@ export default function Header() {
               </Link>
             </Button>
 
-            {isAuthenticated && user && (
+            {isAuthenticated && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center space-x-2 hover:bg-gray-100 rounded-md p-2 transition-colors">
                   <Avatar className="h-8 w-8">
@@ -130,6 +130,16 @@ export default function Header() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+            ) : (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="text-xs sm:text-sm"
+                onClick={() => window.location.href = "/api/login"}
+                data-testid="button-sign-in"
+              >
+                Sign In
+              </Button>
             )}
           </div>
         </div>
