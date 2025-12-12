@@ -13,12 +13,12 @@ export default function LearnMore() {
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            Your Complete Educational Journey Starts Here
+            It Takes a Village to Raise a Child
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
-            We've built more than a directory—we've created a comprehensive educational ecosystem. From finding the perfect tutor 
-            to planning your high school journey, discovering community events, and connecting with career opportunities. 
-            Everything you need to succeed, all in one trusted platform where students, families, and educators thrive together.
+            We've built more than a directory—we've created a community where parents help parents. From finding trusted babysitters 
+            and caregivers to discovering tutors, camps, and enrichment programs for every age. Share what works for your family, 
+            discover resources others love, and raise your kids together with your village.
           </p>
         </div>
 
@@ -33,8 +33,8 @@ export default function LearnMore() {
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base">
-                  Explore tutoring services, summer camps, internships, jobs, community events, and educational guides—all 
-                  curated and reviewed by real families and educators who've experienced them first-hand.
+                  Find babysitters, nannies, tutors, camps, and enrichment programs—all recommended and reviewed by 
+                  real parents in your community who've used them with their own kids.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -46,8 +46,8 @@ export default function LearnMore() {
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base">
-                  Share events, submit opportunities, leave reviews, and contribute to our planning guides. 
-                  Every contribution helps build a stronger educational community for everyone.
+                  Know a great babysitter or tutor? Share them with other parents. Leave reviews, post events, 
+                  and help build a trusted network of resources for families like yours.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -59,7 +59,8 @@ export default function LearnMore() {
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-base">
-                  Reach out to providers directly, and get your questions answered-send a quick inquiry to any listing and receive reply straight to your inbox.
+                  Reach out to caregivers and providers directly. Send inquiries, ask questions, and get 
+                  responses straight to your inbox.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -68,8 +69,20 @@ export default function LearnMore() {
 
         {/* Platform Features */}
         <div className="mb-16">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-8">Complete Educational Ecosystem</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-8">Resources for Every Stage</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="text-center">
+              <CardHeader>
+                <Heart className="h-10 w-10 text-primary mx-auto mb-2" />
+                <CardTitle className="text-lg">Caregivers & Babysitters</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>
+                  Find trusted babysitters, nannies, and caregivers recommended by parents in your community.
+                </CardDescription>
+              </CardContent>
+            </Card>
+
             <Card className="text-center">
               <CardHeader>
                 <Users className="h-10 w-10 text-primary mx-auto mb-2" />
@@ -77,7 +90,7 @@ export default function LearnMore() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Find qualified tutors across all subjects with verified reviews and ratings from the community.
+                  Connect with qualified tutors for all ages and subjects, from toddler enrichment to high school prep.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -89,7 +102,7 @@ export default function LearnMore() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Discover summer camps, after-school programs, and enrichment opportunities with detailed information.
+                  Discover summer camps, after-school programs, and enrichment activities for kids of all ages.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -97,11 +110,11 @@ export default function LearnMore() {
             <Card className="text-center">
               <CardHeader>
                 <MapPin className="h-10 w-10 text-primary mx-auto mb-2" />
-                <CardTitle className="text-lg">Career Opportunities</CardTitle>
+                <CardTitle className="text-lg">Teen Opportunities</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Explore internships and job opportunities designed for students and young professionals.
+                  Help your teens find internships and job opportunities to build skills and experience.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -109,23 +122,11 @@ export default function LearnMore() {
             <Card className="text-center">
               <CardHeader>
                 <Calendar className="h-10 w-10 text-primary mx-auto mb-2" />
-                <CardTitle className="text-lg">Community Events</CardTitle>
+                <CardTitle className="text-lg">Family Events</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Stay connected with local educational events, workshops, competitions, and networking opportunities.
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="text-center">
-              <CardHeader>
-                <BookOpen className="h-10 w-10 text-primary mx-auto mb-2" />
-                <CardTitle className="text-lg">Planning Guides</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription>
-                  Navigate your high school journey with comprehensive timeline guides and milestone resources.
+                  Discover local family-friendly events, workshops, and activities happening in your community.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -133,11 +134,11 @@ export default function LearnMore() {
             <Card className="text-center">
               <CardHeader>
                 <Star className="h-10 w-10 text-primary mx-auto mb-2" />
-                <CardTitle className="text-lg">Reviews & Community</CardTitle>
+                <CardTitle className="text-lg">Parent Reviews</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Make informed decisions with honest reviews, ratings, and recommendations from real families.
+                  Make informed decisions with honest reviews and recommendations from other parents.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -149,17 +150,17 @@ export default function LearnMore() {
           <Card>
             <CardHeader>
               <Users className="h-8 w-8 text-primary mb-2" />
-              <CardTitle className="text-xl">For Parents & Students</CardTitle>
+              <CardTitle className="text-xl">For Parents</CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3">
                 <li className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Find opportunities that match your schedule, budget, and passions.</span>
+                  <span>Find caregivers, tutors, and programs that fit your family's needs and budget.</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Read honest feedback from neighbors, not sponsored ads.</span>
+                  <span>Read honest feedback from other parents in your community.</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
@@ -178,15 +179,15 @@ export default function LearnMore() {
               <ul className="space-y-3">
                 <li className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>List your service for free and reach motivated families.</span>
+                  <span>List your service for free and connect with local families.</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Highlight scholarships, early‑bird discounts, or volunteer openings.</span>
+                  <span>Build trust through parent reviews and recommendations.</span>
                 </li>
                 <li className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Grow your impact with transparent reviews and real‑time listing analytics that show how many families you’re reaching.</span>
+                  <span>Grow your reach within your local parent community.</span>
                 </li>
               </ul>
             </CardContent>
@@ -201,20 +202,19 @@ export default function LearnMore() {
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-lg text-gray-600 leading-relaxed">
-              We keep the lights on through responsible sponsorships—never pay‑to‑play listings. 
-              Your trust is our currency, so listings stay merit‑based, reviews stay transparent, 
-              and data stays private.
+              This is a community built on trust. Listings are based on parent recommendations, 
+              reviews are honest and transparent, and your family's privacy is always protected.
             </p>
           </CardContent>
         </Card>
 
         {/* Join Us Section */}
         <div className="text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Join Us</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6">Join Our Village</h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Ready to discover your next learning adventure or share a resource that changed your child's life? 
-            Click "Get Started" to create a free account, and help turn our shared village knowledge into 
-            brighter futures for every learner.
+            Ready to find trusted resources or share what's worked for your family? 
+            Create a free account and become part of a community of parents helping each other 
+            raise amazing kids.
           </p>
           <Button 
             onClick={() => window.location.href = "/api/login"}
