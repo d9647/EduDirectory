@@ -119,13 +119,13 @@ export default function Bookmarks() {
     switch (type) {
       case "tutoring":
         return "Tutoring Provider";
-      case "services":
-        return "Services Provider";
-      case "camps":
+      case "service":
+        return "Service Provider";
+      case "camp":
         return "Summer Camp";
-      case "internships":
+      case "internship":
         return "Internship";
-      case "jobs":
+      case "job":
         return "Job";
       default:
         return type;
@@ -136,13 +136,13 @@ export default function Bookmarks() {
     switch (type) {
       case "tutoring":
         return "bg-blue-100 text-blue-800";
-      case "services":
-          return "bg-yellow-100 text-yellow-800";
-      case "camps":
+      case "service":
+        return "bg-yellow-100 text-yellow-800";
+      case "camp":
         return "bg-green-100 text-green-800";
-      case "internships":
+      case "internship":
         return "bg-purple-100 text-purple-800";
-      case "jobs":
+      case "job":
         return "bg-orange-100 text-orange-800";
       default:
         return "bg-gray-100 text-gray-800";
@@ -393,7 +393,17 @@ export default function Bookmarks() {
       {selectedListing && (
         <ListingDetailModal
           listing={selectedListing}
-          listingType={selectedListing.listingType as "tutoring" | "camps" | "internships" | "jobs"}
+          listingType={(() => {
+            // Convert singular bookmark types to plural modal types
+            const typeMap: Record<string, "tutoring" | "camps" | "internships" | "jobs" | "services"> = {
+              tutoring: "tutoring",
+              service: "services",
+              camp: "camps",
+              internship: "internships",
+              job: "jobs",
+            };
+            return typeMap[selectedListing.listingType] || "tutoring";
+          })()}
           isOpen={detailModalOpen}
           onClose={() => {
             setDetailModalOpen(false);
