@@ -601,33 +601,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getTutoringProvider(id: number): Promise<TutoringProvider | undefined> {
-    const [provider] = await db.select({
-      id: tutoringProviders.id,
-      name: tutoringProviders.name,
-      type: tutoringProviders.type,
-      categories: tutoringProviders.categories,
-      subjects: tutoringProviders.subjects,
-      description: tutoringProviders.description,
-      address: tutoringProviders.address,
-      city: tutoringProviders.city,
-      state: tutoringProviders.state,
-      zipcode: tutoringProviders.zipcode,
-      phone: tutoringProviders.phone,
-      email: tutoringProviders.email,
-      website: tutoringProviders.website,
-      photoUrl: tutoringProviders.photoUrl,
-      costRange: tutoringProviders.costRange,
-      deliveryMode: tutoringProviders.deliveryMode,
-      userId: tutoringProviders.userId,
-      isApproved: tutoringProviders.isApproved,
-      approvedAt: tutoringProviders.approvedAt,
-      createdAt: tutoringProviders.createdAt,
-      updatedAt: tutoringProviders.updatedAt,
-      viewCount: tutoringProviders.viewCount,
-      thumbsUpCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM thumbs_up WHERE listing_type = 'tutoring' AND listing_id = tutoring_providers.id), 0) AS INTEGER)`,
-      averageRating: sql<number>`CAST(COALESCE((SELECT AVG(rating::NUMERIC) FROM reviews WHERE listing_type = 'tutoring' AND listing_id = tutoring_providers.id), 0) AS NUMERIC(3,1))`,
-      reviewCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM reviews WHERE listing_type = 'tutoring' AND listing_id = tutoring_providers.id), 0) AS INTEGER)`
-    }).from(tutoringProviders).where(eq(tutoringProviders.id, id));
+    const [provider] = await db.select().from(tutoringProviders).where(eq(tutoringProviders.id, id));
     return provider;
   }
 
@@ -846,39 +820,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getSummerCamp(id: number): Promise<SummerCamp | undefined> {
-    const [camp] = await db.select({
-      id: summerCamps.id,
-      name: summerCamps.name,
-      categories: summerCamps.categories,
-      tags: summerCamps.tags,
-      selectivityLevel: summerCamps.selectivityLevel,
-      description: summerCamps.description,
-      address: summerCamps.address,
-      city: summerCamps.city,
-      state: summerCamps.state,
-      zipcode: summerCamps.zipcode,
-      phone: summerCamps.phone,
-      email: summerCamps.email,
-      website: summerCamps.website,
-      photoUrl: summerCamps.photoUrl,
-      dates: summerCamps.dates,
-      length: summerCamps.length,
-      tuition: summerCamps.tuition,
-      hasScholarship: summerCamps.hasScholarship,
-      minimumAge: summerCamps.minimumAge,
-      applicationOpen: summerCamps.applicationOpen,
-      applicationDeadline: summerCamps.applicationDeadline,
-      prerequisites: summerCamps.prerequisites,
-      userId: summerCamps.userId,
-      isApproved: summerCamps.isApproved,
-      approvedAt: summerCamps.approvedAt,
-      createdAt: summerCamps.createdAt,
-      updatedAt: summerCamps.updatedAt,
-      viewCount: summerCamps.viewCount,
-      thumbsUpCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM thumbs_up WHERE listing_type = 'camp' AND listing_id = summer_camps.id), 0) AS INTEGER)`,
-      averageRating: sql<number>`CAST(COALESCE((SELECT AVG(rating::NUMERIC) FROM reviews WHERE listing_type = 'camp' AND listing_id = summer_camps.id), 0) AS NUMERIC(3,1))`,
-      reviewCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM reviews WHERE listing_type = 'camp' AND listing_id = summer_camps.id), 0) AS INTEGER)`
-    }).from(summerCamps).where(eq(summerCamps.id, id));
+    const [camp] = await db.select().from(summerCamps).where(eq(summerCamps.id, id));
     return camp;
   }
 
@@ -1068,39 +1010,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getInternship(id: number): Promise<Internship | undefined> {
-    const [internship] = await db.select({
-      id: internships.id,
-      title: internships.title,
-      companyName: internships.companyName,
-      types: internships.types,
-      selectivityLevel: internships.selectivityLevel,
-      description: internships.description,
-      address: internships.address,
-      city: internships.city,
-      state: internships.state,
-      zipcode: internships.zipcode,
-      isRemote: internships.isRemote,
-      phone: internships.phone,
-      email: internships.email,
-      website: internships.website,
-      photoUrl: internships.photoUrl,
-      compensation: internships.compensation,
-      internshipDates: internships.internshipDates,
-      hasMentorship: internships.hasMentorship,
-      applicationOpen: internships.applicationOpen,
-      applicationDeadline: internships.applicationDeadline,
-      prerequisites: internships.prerequisites,
-      eligibility: internships.eligibility,
-      userId: internships.userId,
-      isApproved: internships.isApproved,
-      approvedAt: internships.approvedAt,
-      createdAt: internships.createdAt,
-      updatedAt: internships.updatedAt,
-      viewCount: internships.viewCount,
-      thumbsUpCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM thumbs_up WHERE listing_type = 'internship' AND listing_id = internships.id), 0) AS INTEGER)`,
-      averageRating: sql<number>`CAST(COALESCE((SELECT AVG(rating::NUMERIC) FROM reviews WHERE listing_type = 'internship' AND listing_id = internships.id), 0) AS NUMERIC(3,1))`,
-      reviewCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM reviews WHERE listing_type = 'internship' AND listing_id = internships.id), 0) AS INTEGER)`
-    }).from(internships).where(eq(internships.id, id));
+    const [internship] = await db.select().from(internships).where(eq(internships.id, id));
     return internship;
   }
 
@@ -1294,44 +1204,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getJob(id: number): Promise<Job | undefined> {
-    const [job] = await db.select({
-      id: jobs.id,
-      title: jobs.title,
-      companyName: jobs.companyName,
-      categories: jobs.categories,
-      description: jobs.description,
-      address: jobs.address,
-      city: jobs.city,
-      state: jobs.state,
-      zipcode: jobs.zipcode,
-      isRemote: jobs.isRemote,
-      phone: jobs.phone,
-      email: jobs.email,
-      website: jobs.website,
-      photoUrl: jobs.photoUrl,
-      salaryRange: jobs.salaryRange,
-      salaryType: jobs.salaryType,
-      schedule: jobs.schedule,
-      minimumAge: jobs.minimumAge,
-      hasTraining: jobs.hasTraining,
-      hasAdvancement: jobs.hasAdvancement,
-      requiresTransportation: jobs.requiresTransportation,
-      requiresResume: jobs.requiresResume,
-      isOngoing: jobs.isOngoing,
-      openingDate: jobs.openingDate,
-      closingDate: jobs.closingDate,
-      prerequisites: jobs.prerequisites,
-      eligibility: jobs.eligibility,
-      userId: jobs.userId,
-      isApproved: jobs.isApproved,
-      approvedAt: jobs.approvedAt,
-      createdAt: jobs.createdAt,
-      updatedAt: jobs.updatedAt,
-      viewCount: jobs.viewCount,
-      thumbsUpCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM thumbs_up WHERE listing_type = 'job' AND listing_id = jobs.id), 0) AS INTEGER)`,
-      averageRating: sql<number>`CAST(COALESCE((SELECT AVG(rating::NUMERIC) FROM reviews WHERE listing_type = 'job' AND listing_id = jobs.id), 0) AS NUMERIC(3,1))`,
-      reviewCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM reviews WHERE listing_type = 'job' AND listing_id = jobs.id), 0) AS INTEGER)`
-    }).from(jobs).where(eq(jobs.id, id));
+    const [job] = await db.select().from(jobs).where(eq(jobs.id, id));
     return job;
   }
 
@@ -1507,33 +1380,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getService(id: number): Promise<Service | undefined> {
-    const [service] = await db.select({
-      id: services.id,
-      name: services.name,
-      type: services.type,
-      categories: services.categories,
-      tags: services.tags,
-      description: services.description,
-      address: services.address,
-      city: services.city,
-      state: services.state,
-      zipcode: services.zipcode,
-      phone: services.phone,
-      email: services.email,
-      website: services.website,
-      photoUrl: services.photoUrl,
-      costRange: services.costRange,
-      deliveryMode: services.deliveryMode,
-      userId: services.userId,
-      isApproved: services.isApproved,
-      approvedAt: services.approvedAt,
-      createdAt: services.createdAt,
-      updatedAt: services.updatedAt,
-      viewCount: services.viewCount,
-      thumbsUpCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM thumbs_up WHERE listing_type = 'service' AND listing_id = services.id), 0) AS INTEGER)`,
-      averageRating: sql<number>`CAST(COALESCE((SELECT AVG(rating::NUMERIC) FROM reviews WHERE listing_type = 'service' AND listing_id = services.id), 0) AS NUMERIC(3,1))`,
-      reviewCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM reviews WHERE listing_type = 'service' AND listing_id = services.id), 0) AS INTEGER)`
-    }).from(services).where(eq(services.id, id));
+    const [service] = await db.select().from(services).where(eq(services.id, id));
     return service;
   }
 
@@ -2011,7 +1858,7 @@ export class DatabaseStorage implements IStorage {
     // Fetch the actual listing data for each bookmark
     const bookmarksWithListings = await Promise.all(
       userBookmarks.map(async (bookmark) => {
-        let listing = null;
+        let listing: any = null;
 
         try {
           switch (bookmark.listingType) {
@@ -2030,6 +1877,12 @@ export class DatabaseStorage implements IStorage {
             case "service":
               listing = await this.getService(bookmark.listingId);
               break;
+          }
+          
+          // Add thumbsUpCount to listing if found
+          if (listing) {
+            const thumbsUpCount = await this.getThumbsUpCount(bookmark.listingType, bookmark.listingId);
+            listing = { ...listing, thumbsUpCount };
           }
         } catch (error) {
           console.error(`Error fetching listing ${bookmark.listingType}:${bookmark.listingId}:`, error);
