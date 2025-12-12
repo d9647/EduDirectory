@@ -205,6 +205,37 @@ export const jobs = pgTable("jobs", {
   photoUrl: varchar("photo_url")
 });
 
+// Services (Childcare, Home Support, etc.)
+export const services = pgTable("services", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id"), // Reference to the user who submitted this listing
+  name: varchar("name", { length: 255 }).notNull(),
+  type: varchar("type", { length: 50 }).notNull(), // "individual" or "company"
+  description: text("description"),
+  website: varchar("website"),
+  phone: varchar("phone"),
+  email: varchar("email"),
+  address: text("address"),
+  city: varchar("city"),
+  state: varchar("state"),
+  zipcode: varchar("zipcode"),
+  categories: text("categories").array(), // One-time Sitter, Nanny & Au Pair, etc.
+  tags: text("tags").array(), // Babysitter, Nanny, CPR certified, etc.
+  deliveryMode: text("delivery_mode").array(), // In-person, Remote, Hybrid
+  // Contributor information (denormalized for performance)
+  contributorNickname: varchar("contributor_nickname"),
+  contributorFirstName: varchar("contributor_first_name"),
+  contributorLastName: varchar("contributor_last_name"),
+  photoUrl: varchar("photo_url"),
+  viewCount: integer("view_count").default(0),
+  isApproved: boolean("is_approved").default(false),
+  isActive: boolean("is_active").default(true),
+  submittedAt: timestamp("submitted_at").defaultNow(),
+  approvedAt: timestamp("approved_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
 // Reviews
 export const reviews = pgTable("reviews", {
   id: serial("id").primaryKey(),
@@ -372,6 +403,15 @@ export const insertJobSchema = createInsertSchema(jobs).omit({
   updatedAt: true,
 });
 
+export const insertServiceSchema = createInsertSchema(services).omit({
+  id: true,
+  isApproved: true,
+  submittedAt: true,
+  approvedAt: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const insertEventSchema = createInsertSchema(events).omit({
   id: true,
   isApproved: true,
@@ -423,6 +463,7 @@ export type TutoringProvider = typeof tutoringProviders.$inferSelect;
 export type SummerCamp = typeof summerCamps.$inferSelect;
 export type Internship = typeof internships.$inferSelect;
 export type Job = typeof jobs.$inferSelect;
+export type Service = typeof services.$inferSelect;
 export type Event = typeof events.$inferSelect;
 export type Review = typeof reviews.$inferSelect;
 export type ThumbsUp = typeof thumbsUp.$inferSelect;
@@ -434,6 +475,7 @@ export type InsertTutoringProvider = z.infer<typeof insertTutoringProviderSchema
 export type InsertSummerCamp = z.infer<typeof insertSummerCampSchema>;
 export type InsertInternship = z.infer<typeof insertInternshipSchema>;
 export type InsertJob = z.infer<typeof insertJobSchema>;
+export type InsertService = z.infer<typeof insertServiceSchema>;
 export type InsertEvent = z.infer<typeof insertEventSchema>;
 export type InsertReview = z.infer<typeof insertReviewSchema>;
 export type InsertReport = z.infer<typeof insertReportSchema>;
