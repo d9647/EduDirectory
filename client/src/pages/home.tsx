@@ -27,6 +27,21 @@ export default function Home() {
 
         {/* Quick Navigation Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <Link href="/services">
+            <Card className="cursor-pointer hover:shadow-md transition-shadow">
+              <CardHeader className="text-center">
+                <Heart className="h-12 w-12 text-primary mx-auto mb-2" />
+                <CardTitle>Service Providers</CardTitle>
+                <CardDescription>
+                  Find babysitters, nannies, and other trusted service providers
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button className="w-full">Browse Services</Button>
+              </CardContent>
+            </Card>
+          </Link>
+          
           <Link href="/tutoring-providers">
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardHeader className="text-center">
@@ -102,20 +117,7 @@ export default function Home() {
             </Card>
           </Link>
 
-          <Link href="/services">
-            <Card className="cursor-pointer hover:shadow-md transition-shadow">
-              <CardHeader className="text-center">
-                <Heart className="h-12 w-12 text-primary mx-auto mb-2" />
-                <CardTitle>Service Providers</CardTitle>
-                <CardDescription>
-                  Find babysitters, nannies, and other trusted service providers
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button className="w-full">Browse Services</Button>
-              </CardContent>
-            </Card>
-          </Link>
+
         </div>
 
         {/* Business Submission CTA */}

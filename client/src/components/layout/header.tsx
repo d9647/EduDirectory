@@ -18,14 +18,12 @@ export default function Header() {
     { href: "/internships", label: "Internships" },
     { href: "/jobs", label: "Jobs" },
     { href: "/events", label: "Events" },
-    { href: "/guides", label: "Guides" },
   ];
 
-  const navItems = baseNavItems;
   // Only show Guides to admin users
-  // const navItems = isAdmin 
-  //  ? [...baseNavItems, { href: "/guides", label: "Guides" }]
-  //  : baseNavItems;
+  const navItems = isAdmin 
+    ? [...baseNavItems, { href: "/guides", label: "Guides" }]
+    : baseNavItems;
 
   const isActiveRoute = (href: string) => location === href;
 
