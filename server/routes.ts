@@ -677,7 +677,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'camp': 'summer_camps',
         'internship': 'internships',
         'job': 'jobs',
-        'event': 'events'
+        'event': 'events',
+        'service': 'services'
       };
       const tableName = typeToTable[listingType as string];
       if (!tableName) return res.status(400).json({ error: 'Invalid listing type' });

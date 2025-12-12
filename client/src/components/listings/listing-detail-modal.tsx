@@ -36,7 +36,7 @@ import { formatDescription, formatArrayField, formatSalary, formatDate, formatBo
 
 interface ListingDetailModalProps {
   listing: any;
-  listingType: "tutoring" | "camps" | "internships" | "jobs";
+  listingType: "tutoring" | "camps" | "internships" | "jobs" | "services";
   isOpen: boolean;
   onClose: () => void;
 }
@@ -53,11 +53,12 @@ export default function ListingDetailModal({
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<ReviewData | null>(null);
 
-  const listingTypeMap = {
+  const listingTypeMap: Record<string, string> = {
     tutoring: "tutoring",
     camps: "camp",
     internships: "internship",
     jobs: "job",
+    services: "service",
   };
 
   const apiListingType = listingTypeMap[listingType];
