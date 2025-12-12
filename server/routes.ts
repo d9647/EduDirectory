@@ -833,6 +833,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         case 'event':
           await storage.approveEvent(listingId);
           break;
+        case 'service':
+          await storage.approveService(listingId);
+          break;
         default:
           return res.status(400).json({ message: "Invalid listing type" });
       }
@@ -987,6 +990,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
           break;
         case 'event':
           updatedListing = await storage.updateEvent(listingId, updateData);
+          break;
+        case 'service':
+          updatedListing = await storage.updateService(listingId, updateData);
           break;
         default:
           return res.status(400).json({ message: "Invalid listing type" });
