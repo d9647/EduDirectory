@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { GraduationCap, Users, MapPin, Star, Calendar, BookOpen } from "lucide-react";
+import { GraduationCap, Users, MapPin, Star, Calendar, Heart } from "lucide-react";
 import Footer from "@/components/layout/footer";
 import { useState } from "react";
 
@@ -118,6 +118,16 @@ export default function Landing() {
             <div className="grid grid-cols-1 gap-6 xs:grid-cols-2 lg:grid-cols-3 sm:gap-8 lg:gap-10">
               <Card>
                 <CardHeader>
+                  <Heart className="h-8 w-8 text-primary" />
+                  <CardTitle>Service Providers</CardTitle>
+                  <CardDescription>
+                    Find trusted babysitters, nannies, caregivers, and other service providers in your area.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+
+              <Card>
+                <CardHeader>
                   <Users className="h-8 w-8 text-primary" />
                   <CardTitle>Tutoring & Learning</CardTitle>
                   <CardDescription>
@@ -152,16 +162,6 @@ export default function Landing() {
                   <CardTitle>Community Events</CardTitle>
                   <CardDescription>
                     Stay connected with local educational events, workshops, competitions, and networking opportunities.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <BookOpen className="h-8 w-8 text-primary" />
-                  <CardTitle>Planning Guides</CardTitle>
-                  <CardDescription>
-                    Navigate your high school journey with comprehensive planning resources and milestone guidance.
                   </CardDescription>
                 </CardHeader>
               </Card>
