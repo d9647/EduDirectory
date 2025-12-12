@@ -4,6 +4,7 @@ import {
   summerCamps,
   internships,
   jobs,
+  services,
   events,
   reviews,
   thumbsUp,
@@ -20,6 +21,8 @@ import {
   type InsertInternship,
   type Job,
   type InsertJob,
+  type Service,
+  type InsertService,
   type Event,
   type InsertEvent,
   type Review,
@@ -131,6 +134,25 @@ export interface IStorage {
   approveJob(id: number): Promise<void>;
   deleteJob(id: number): Promise<void>;
 
+  // Services
+  getServices(filters?: {
+    search?: string;
+    categories?: string[];
+    tags?: string[];
+    type?: string;
+    city?: string;
+    state?: string;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+    limit?: number;
+    offset?: number;
+  }): Promise<{ services: Service[]; total: number }>;
+  getService(id: number): Promise<Service | undefined>;
+  createService(service: InsertService): Promise<Service>;
+  updateService(id: number, service: Partial<InsertService>): Promise<Service>;
+  approveService(id: number): Promise<void>;
+  deleteService(id: number): Promise<void>;
+
   // Events
   getEvents(filters?: {
     search?: string;
@@ -186,6 +208,7 @@ export interface IStorage {
     summerCamps: SummerCamp[];
     internships: Internship[];
     jobs: Job[];
+    services: Service[];
     events: Event[];
   }>;
   getLiveListings(): Promise<{
@@ -193,6 +216,7 @@ export interface IStorage {
     summerCamps: SummerCamp[];
     internships: Internship[];
     jobs: Job[];
+    services: Service[];
     events: Event[];
   }>;
   searchListings(type: string, query: string): Promise<any[]>;
@@ -1211,6 +1235,182 @@ export class DatabaseStorage implements IStorage {
       .where(eq(jobs.id, id));
   }
 
+  // Services
+  async getServices(filters: {
+    search?: string;
+    categories?: string[];
+    tags?: string[];
+    type?: string;
+    city?: string;
+    state?: string;
+    sortBy?: string;
+    sortOrder?: "asc" | "desc";
+    limit?: number;
+    offset?: number;
+  } = {}): Promise<{ services: Service[]; total: number }> {
+    const conditions = [];
+
+    // Only show approved and active services
+    conditions.push(eq(services.isApproved, true));
+    conditions.push(eq(services.isActive, true));
+
+    // Search filters
+    if (filters.search) {
+      conditions.push(
+        or(
+          ilike(services.name, `%${filters.search}%`),
+          ilike(services.description, `%${filters.search}%`),
+          ilike(services.city, `%${filters.search}%`)
+        )
+      );
+    }
+
+    // Category filters
+    if (filters.categories && filters.categories.length > 0) {
+      conditions.push(
+        or(
+          ...filters.categories.map((category) =>
+            sql`${services.categories} && ARRAY[${category}]::text[]`
+          )
+        )
+      );
+    }
+
+    // Tag filters
+    if (filters.tags && filters.tags.length > 0) {
+      conditions.push(
+        or(
+          ...filters.tags.map((tag) =>
+            sql`${services.tags} && ARRAY[${tag}]::text[]`
+          )
+        )
+      );
+    }
+
+    // Type filter (individual/company)
+    if (filters.type) {
+      conditions.push(eq(services.type, filters.type));
+    }
+
+    // Location filters
+    if (filters.city) {
+      conditions.push(ilike(services.city, `%${filters.city}%`));
+    }
+    if (filters.state) {
+      conditions.push(eq(services.state, filters.state));
+    }
+
+    // Build where clause
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+    // Sorting
+    let orderBy;
+    const sortOrder = filters.sortOrder === "asc" ? asc : desc;
+    switch (filters.sortBy) {
+      case "name":
+        orderBy = sortOrder(services.name);
+        break;
+      case "viewCount":
+        orderBy = sortOrder(services.viewCount);
+        break;
+      case "thumbsUp":
+        orderBy = sortOrder(sql`COALESCE((SELECT COUNT(*) FROM thumbs_up WHERE listing_type = 'service' AND listing_id = services.id), 0)`);
+        break;
+      case "rating":
+        orderBy = sortOrder(sql`COALESCE((SELECT AVG(rating) FROM reviews WHERE listing_type = 'service' AND listing_id = services.id), 0)`);
+        break;
+      default:
+        orderBy = desc(services.createdAt);
+    }
+
+    // Execute main query with computed fields
+    const mainQuery = db.select({
+      id: services.id,
+      name: services.name,
+      type: services.type,
+      description: services.description,
+      website: services.website,
+      phone: services.phone,
+      email: services.email,
+      address: services.address,
+      city: services.city,
+      state: services.state,
+      zipcode: services.zipcode,
+      categories: services.categories,
+      tags: services.tags,
+      deliveryMode: services.deliveryMode,
+      photoUrl: services.photoUrl,
+      userId: services.userId,
+      contributorNickname: services.contributorNickname,
+      contributorFirstName: services.contributorFirstName,
+      contributorLastName: services.contributorLastName,
+      isApproved: services.isApproved,
+      isActive: services.isActive,
+      submittedAt: services.submittedAt,
+      approvedAt: services.approvedAt,
+      createdAt: services.createdAt,
+      updatedAt: services.updatedAt,
+      viewCount: services.viewCount,
+      thumbsUpCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM thumbs_up WHERE listing_type = 'service' AND listing_id = services.id), 0) AS INTEGER)`,
+      averageRating: sql<number>`CAST(COALESCE((SELECT AVG(rating::NUMERIC) FROM reviews WHERE listing_type = 'service' AND listing_id = services.id), 0) AS NUMERIC(3,1))`,
+      reviewCount: sql<number>`CAST(COALESCE((SELECT COUNT(*) FROM reviews WHERE listing_type = 'service' AND listing_id = services.id), 0) AS INTEGER)`
+    }).from(services);
+
+    const servicesQuery = whereClause 
+      ? mainQuery.where(whereClause)
+      : mainQuery;
+
+    const servicesList = await servicesQuery
+      .orderBy(orderBy)
+      .limit(filters.limit || 5)
+      .offset(filters.offset || 0);
+
+    // Execute count query
+    const countQuery = db.select({ count: count() }).from(services);
+    const totalQuery = whereClause 
+      ? countQuery.where(whereClause)
+      : countQuery;
+
+    const totalResult = await totalQuery;
+
+    return {
+      services: servicesList,
+      total: totalResult[0]?.count || 0
+    };
+  }
+
+  async getService(id: number): Promise<Service | undefined> {
+    const [service] = await db.select().from(services).where(eq(services.id, id));
+    return service;
+  }
+
+  async createService(service: InsertService): Promise<Service> {
+    const [newService] = await db.insert(services).values(service).returning();
+    return newService;
+  }
+
+  async updateService(id: number, service: Partial<InsertService>): Promise<Service> {
+    const [updatedService] = await db
+      .update(services)
+      .set(service)
+      .where(eq(services.id, id))
+      .returning();
+    return updatedService;
+  }
+
+  async approveService(id: number): Promise<void> {
+    await db
+      .update(services)
+      .set({ isApproved: true, approvedAt: new Date() })
+      .where(eq(services.id, id));
+  }
+
+  async deleteService(id: number): Promise<void> {
+    await db
+      .delete(services)
+      .where(eq(services.id, id));
+  }
+
   // Events
   async getEvents(filters: {
     search?: string;
@@ -1862,6 +2062,7 @@ export class DatabaseStorage implements IStorage {
     summerCamps: SummerCamp[];
     internships: Internship[];
     jobs: Job[];
+    services: Service[];
     events: Event[];
   }> {
     const [
@@ -1869,12 +2070,14 @@ export class DatabaseStorage implements IStorage {
       pendingSummerCamps,
       pendingInternships,
       pendingJobs,
+      pendingServices,
       pendingEvents,
     ] = await Promise.all([
       db.select().from(tutoringProviders).where(eq(tutoringProviders.isApproved, false)),
       db.select().from(summerCamps).where(eq(summerCamps.isApproved, false)),
       db.select().from(internships).where(eq(internships.isApproved, false)),
       db.select().from(jobs).where(eq(jobs.isApproved, false)),
+      db.select().from(services).where(eq(services.isApproved, false)),
       db.select().from(events).where(eq(events.isApproved, false)),
     ]);
 
@@ -1883,6 +2086,7 @@ export class DatabaseStorage implements IStorage {
       summerCamps: pendingSummerCamps,
       internships: pendingInternships,
       jobs: pendingJobs,
+      services: pendingServices,
       events: pendingEvents,
     };
   }
@@ -1892,6 +2096,7 @@ export class DatabaseStorage implements IStorage {
     summerCamps: SummerCamp[];
     internships: Internship[];
     jobs: Job[];
+    services: Service[];
     events: Event[];
   }> {
     const [
@@ -1899,12 +2104,14 @@ export class DatabaseStorage implements IStorage {
       liveSummerCamps,
       liveInternships,
       liveJobs,
+      liveServices,
       liveEvents,
     ] = await Promise.all([
       db.select().from(tutoringProviders).where(eq(tutoringProviders.isApproved, true)).limit(50),
       db.select().from(summerCamps).where(eq(summerCamps.isApproved, true)).limit(50),
       db.select().from(internships).where(eq(internships.isApproved, true)).limit(50),
       db.select().from(jobs).where(eq(jobs.isApproved, true)).limit(50),
+      db.select().from(services).where(eq(services.isApproved, true)).limit(50),
       db.select().from(events).where(eq(events.isApproved, true)).limit(50),
     ]);
 
@@ -1913,6 +2120,7 @@ export class DatabaseStorage implements IStorage {
       summerCamps: liveSummerCamps,
       internships: liveInternships,
       jobs: liveJobs,
+      services: liveServices,
       events: liveEvents,
     };
   }

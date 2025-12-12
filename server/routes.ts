@@ -9,6 +9,7 @@ import {
   insertSummerCampSchema,
   insertInternshipSchema,
   insertJobSchema,
+  insertServiceSchema,
   insertEventSchema,
   insertReviewSchema,
   insertReportSchema,
@@ -385,6 +386,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid data", errors: error.errors });
       }
       res.status(500).json({ message: "Failed to create job" });
+    }
+  });
+
+  // Services
+  app.get('/api/services', async (req, res) => {
+    try {
+      const filters = {
+        search: req.query.search as string,
+        categories: req.query.categories ? (req.query.categories as string).split(',') : undefined,
+        tags: req.query.tags ? (req.query.tags as string).split(',') : undefined,
+        type: req.query.type as string,
+        city: req.query.city as string,
+        state: req.query.state as string,
+        sortBy: req.query.sortBy as string,
+        sortOrder: (req.query.sortOrder as "asc" | "desc") || "desc",
+        limit: req.query.limit ? parseInt(req.query.limit as string) : 5,
+        offset: req.query.offset ? parseInt(req.query.offset as string) : 0,
+      };
+
+      const result = await storage.getServices(filters);
+      res.json(result);
+    } catch (error: any) {
+      console.error("Error fetching services:", error);
+      res.status(500).json({ message: "Failed to fetch services" });
+    }
+  });
+
+  app.get('/api/services/:id', async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const service = await storage.getService(id);
+      if (!service) {
+        return res.status(404).json({ message: "Service not found" });
+      }
+      res.json(service);
+    } catch (error: any) {
+      console.error("Error fetching service:", error);
+      res.status(500).json({ message: "Failed to fetch service" });
+    }
+  });
+
+  app.post('/api/services', async (req, res) => {
+    try {
+      const validatedData = insertServiceSchema.parse(req.body);
+      const service = await storage.createService(validatedData);
+      res.status(201).json(service);
+    } catch (error: any) {
+      console.error("Error creating service:", error);
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid data", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create service" });
     }
   });
 

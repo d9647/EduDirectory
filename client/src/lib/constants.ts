@@ -420,3 +420,36 @@ export const TARGET_AUDIENCE_OPTIONS = [
   { value: "Young Adults", label: "Young Adults" },
   { value: "All Students", label: "All Students" },
 ];
+
+// Service Categories
+export const SERVICE_CATEGORIES = [
+  { value: "One-time Sitter", label: "One-time Sitter" },
+  { value: "Nanny & Au Pair", label: "Nanny & Au Pair" },
+  { value: "After-School Care", label: "After-School Care" },
+  { value: "Transportation", label: "Transportation" },
+  { value: "Special Needs Care", label: "Special Needs Care" },
+  { value: "Family Support", label: "Family Support" },
+  { value: "Home Support", label: "Home Support" },
+];
+
+// Service Tags
+export const SERVICE_TAGS = [
+  { value: "Babysitter", label: "Babysitter" },
+  { value: "Nanny", label: "Nanny" },
+  { value: "Infant (0-1)", label: "Infant (0-1)" },
+  { value: "Toddler (1-3)", label: "Toddler (1-3)" },
+  { value: "Preschool", label: "Preschool" },
+  { value: "Elementary", label: "Elementary" },
+  { value: "Teen", label: "Teen" },
+  { value: "Petsitter - Dog", label: "Petsitter - Dog" },
+  { value: "Petsitter - Cat", label: "Petsitter - Cat" },
+  { value: "CPR certified", label: "CPR certified" },
+  { value: "Multilingual", label: "Multilingual" },
+];
+
+// Service Business Types
+export const SERVICE_BUSINESS_TYPES = [
+  { value: "", label: "All Providers" },
+  { value: "individual", label: "Individual / Private" },
+  { value: "company", label: "Company / Agency" },
+];
