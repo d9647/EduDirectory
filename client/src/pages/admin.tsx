@@ -1369,7 +1369,8 @@ export default function Admin() {
                             )}
                           </div>
                           <p className="text-sm text-gray-600">
-                            {report.reportType}: {report.itemType} #{report.itemId}
+                            <span className="font-medium">{report.itemName || `${report.itemType} #${report.itemId}`}</span>
+                            <span className="text-gray-400 ml-2">({report.itemType})</span>
                           </p>
                           <p className="text-sm text-gray-500 mt-1">{report.description}</p>
                         </div>

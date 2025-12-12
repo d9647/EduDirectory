@@ -852,7 +852,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // TODO: Add admin role check
       const reports = await storage.getReports();
-      res.json(reports);
+      
+      // Fetch item names for each report
+      const reportsWithNames = await Promise.all(reports.map(async (report) => {
+        let itemName = `Unknown (ID: ${report.itemId})`;
+        try {
+          if (report.itemType === 'tutoring') {
+            const provider = await storage.getTutoringProvider(report.itemId);
+            itemName = provider?.name || itemName;
+          } else if (report.itemType === 'camp') {
+            const camp = await storage.getSummerCamp(report.itemId);
+            itemName = camp?.name || itemName;
+          } else if (report.itemType === 'internship') {
+            const internship = await storage.getInternship(report.itemId);
+            itemName = internship?.title || itemName;
+          } else if (report.itemType === 'job') {
+            const job = await storage.getJob(report.itemId);
+            itemName = job?.title || itemName;
+          } else if (report.itemType === 'service') {
+            const service = await storage.getService(report.itemId);
+            itemName = service?.name || itemName;
+          }
+        } catch (e) {
+          // Item may have been deleted
+        }
+        return { ...report, itemName };
+      }));
+      
+      res.json(reportsWithNames);
     } catch (error: any) {
       console.error("Error fetching reports:", error);
       res.status(500).json({ message: "Failed to fetch reports" });
