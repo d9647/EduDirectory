@@ -42,6 +42,40 @@ function Router() {
   }
 
   // Public routes available to all users (both authenticated and unauthenticated)
+  // Landing page has its own footer, so render it outside the footer wrapper
+  if (!isAuthenticated) {
+    return (
+      <Switch>
+        <Route path="/terms-of-use" component={TermsOfUse} />
+        <Route path="/privacy-policy" component={PrivacyPolicy} />
+        <Route path="/learn-more" component={LearnMore} />
+        <Route path="/landing" component={Landing} />
+        <Route path="/" component={Landing} />
+        <div className="min-h-screen flex flex-col">
+          <div className="flex-1">
+            <Switch>
+              {/* Public browsing pages - available to everyone */}
+              <Route path="/tutoring-providers" component={TutoringProviders} />
+              <Route path="/services" component={Services} />
+              <Route path="/summer-camps" component={SummerCamps} />
+              <Route path="/internships" component={Internships} />
+              <Route path="/jobs" component={Jobs} />
+              <Route path="/events" component={Events} />
+              <Route path="/guides" component={Guides} />
+              <Route path="/coming-soon" component={ComingSoon} />
+              <Route path="/submit-listing" component={RedirectToLogin} />
+              <Route path="/bookmarks" component={RedirectToLogin} />
+              <Route path="/settings" component={RedirectToLogin} />
+              <Route path="/admin" component={RedirectToLogin} />
+              <Route component={NotFound} />
+            </Switch>
+          </div>
+          <Footer />
+        </div>
+      </Switch>
+    );
+  }
+
   return (
     <Switch>
       <Route path="/terms-of-use" component={TermsOfUse} />
@@ -51,8 +85,8 @@ function Router() {
       <div className="min-h-screen flex flex-col">
         <div className="flex-1">
           <Switch>
-            {/* Public browsing pages - available to everyone */}
-            <Route path="/" component={isAuthenticated ? Home : Landing} />
+            {/* Authenticated user pages */}
+            <Route path="/" component={Home} />
             <Route path="/tutoring-providers" component={TutoringProviders} />
             <Route path="/services" component={Services} />
             <Route path="/summer-camps" component={SummerCamps} />
@@ -61,19 +95,11 @@ function Router() {
             <Route path="/events" component={Events} />
             <Route path="/guides" component={Guides} />
             <Route path="/coming-soon" component={ComingSoon} />
-            {/* Protected pages - redirect to login if not authenticated */}
-            <Route path="/submit-listing">
-              {isAuthenticated ? <BusinessSubmission /> : <RedirectToLogin />}
-            </Route>
-            <Route path="/bookmarks">
-              {isAuthenticated ? <Bookmarks /> : <RedirectToLogin />}
-            </Route>
-            <Route path="/settings">
-              {isAuthenticated ? <Settings /> : <RedirectToLogin />}
-            </Route>
-            <Route path="/admin">
-              {isAuthenticated ? <Admin /> : <RedirectToLogin />}
-            </Route>
+            {/* Protected pages - user is already authenticated */}
+            <Route path="/submit-listing" component={BusinessSubmission} />
+            <Route path="/bookmarks" component={Bookmarks} />
+            <Route path="/settings" component={Settings} />
+            <Route path="/admin" component={Admin} />
             <Route component={NotFound} />
           </Switch>
         </div>
