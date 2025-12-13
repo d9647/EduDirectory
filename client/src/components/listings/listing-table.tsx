@@ -159,16 +159,21 @@ export default function ListingTable({
     },
   });
 
-  // View tracking mutation
+  // View tracking mutation - uses fetch instead of apiRequest to allow anonymous users
   const viewTrackingMutation = useMutation({
     mutationFn: async ({ listingId }: { listingId: number }) => {
-      const response = await apiRequest("POST", "/api/views/track", {
-        listingType: listingType === "tutoring" ? "tutoring" : 
-                     listingType === "camps" ? "camp" :
-                     listingType === "internships" ? "internship" :
-                     listingType === "jobs" ? "job" :
-                     listingType,
-        listingId,
+      const response = await fetch('/api/views/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          listingType: listingType === "tutoring" ? "tutoring" : 
+                       listingType === "camps" ? "camp" :
+                       listingType === "internships" ? "internship" :
+                       listingType === "jobs" ? "job" :
+                       listingType,
+          listingId,
+        }),
+        credentials: 'include'
       });
       return response.json();
     },
@@ -279,10 +284,8 @@ export default function ListingTable({
   const handleViewDetails = (listing: any) => {
     setSelectedListing(listing);
     setDetailModalOpen(true);
-    // Track view when user opens detail modal
-    if (isAuthenticated) {
-      viewTrackingMutation.mutate({ listingId: listing.id });
-    }
+    // Track view when user opens detail modal (works for all users including anonymous)
+    viewTrackingMutation.mutate({ listingId: listing.id });
   };
 
   const handleShare = (listing: any) => {
