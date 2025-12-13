@@ -2056,6 +2056,15 @@ export class DatabaseStorage implements IStorage {
             })
             .where(eq(events.id, listingId));
           break;
+        case 'services':
+          await db
+            .update(services)
+            .set({ 
+              viewCount: sql`${services.viewCount} + 1`,
+              updatedAt: new Date()
+            })
+            .where(eq(services.id, listingId));
+          break;
         default:
           console.log(`[DEBUG] Unknown table name: ${tableName}`);
           return { wasTracked: false };
