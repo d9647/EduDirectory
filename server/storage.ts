@@ -200,7 +200,7 @@ export interface IStorage {
   resolveReport(id: number): Promise<void>;
 
   // View Tracking
-  trackView(tableName: string, listingId: number, userId: string, clientIp: string): Promise<{ wasTracked: boolean }>;
+  trackView(tableName: string, listingId: number, userId: string | null, clientIp: string): Promise<{ wasTracked: boolean }>;
 
   // Admin
   getPendingApprovals(): Promise<{
@@ -1940,11 +1940,14 @@ export class DatabaseStorage implements IStorage {
   }
 
   // View Tracking Implementation
-  async trackView(tableName: string, listingId: number, userId: string, clientIp: string): Promise<{ wasTracked: boolean }> {
+  async trackView(tableName: string, listingId: number, userId: string | null, clientIp: string): Promise<{ wasTracked: boolean }> {
     const RATE_LIMIT_MINUTES = 5; // Prevent rapid view increments for 5 minutes
     
+    // Use IP address as identifier for anonymous users
+    const trackingId = userId || `anon_${clientIp}`;
+    
     try {
-      console.log(`[DEBUG] Tracking view for table ${tableName}, listing ID ${listingId}, by user ${userId}`);
+      console.log(`[DEBUG] Tracking view for table ${tableName}, listing ID ${listingId}, by ${userId ? 'user' : 'anonymous'} ${trackingId}`);
       
       // Convert table name back to listing type for the tracking table
       const listingTypeMapping = {
@@ -1952,7 +1955,8 @@ export class DatabaseStorage implements IStorage {
         'summer_camps': 'camp',
         'internships': 'internship',
         'jobs': 'job',
-        'events': 'event'
+        'events': 'event',
+        'services': 'service'
       };
       
       const listingType = listingTypeMapping[tableName as keyof typeof listingTypeMapping];
@@ -1966,13 +1970,13 @@ export class DatabaseStorage implements IStorage {
       rateThreshold.setMinutes(rateThreshold.getMinutes() - RATE_LIMIT_MINUTES);
       console.log(`[DEBUG] Rate limit threshold: ${rateThreshold.toISOString()}`);
       
-      // Check if user viewed this listing recently using simple date comparison
+      // Check if user/IP viewed this listing recently using simple date comparison
       const recentView = await db
         .select()
         .from(viewTracking)
         .where(
           and(
-            eq(viewTracking.userId, userId),
+            eq(viewTracking.userId, trackingId),
             eq(viewTracking.listingType, listingType),
             eq(viewTracking.listingId, listingId),
             sql`${viewTracking.lastViewedAt} > ${rateThreshold}`
@@ -1983,7 +1987,7 @@ export class DatabaseStorage implements IStorage {
       console.log(`[DEBUG] Recent view check: found ${recentView.length} recent views`);
       if (recentView.length > 0) {
         console.log(`[DEBUG] Recent view found at: ${recentView[0].lastViewedAt}`);
-        // User viewed this recently, don't increment view count
+        // User/IP viewed this recently, don't increment view count
         return { wasTracked: false };
       }
 
@@ -1992,7 +1996,7 @@ export class DatabaseStorage implements IStorage {
       await db
         .insert(viewTracking)
         .values({
-          userId,
+          userId: trackingId,
           listingType,
           listingId,
           lastViewedAt: new Date(),
