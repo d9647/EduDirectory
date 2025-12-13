@@ -177,6 +177,35 @@ export default function FilterSidebar({
                 </div>
               )}
 
+              {/* Provider Type Filter (Services only) */}
+              {listingType === "services" && filterOptions.types && (
+                <div>
+                  <Label className="text-sm font-medium text-gray-900 mb-3 block">
+                    Provider Type
+                  </Label>
+                  <RadioGroup
+                    value={filters.type || ""}
+                    onValueChange={(value) => updateFilter("type", value)}
+                    data-testid="filter-provider-type"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="" id="provider-all" data-testid="radio-provider-all" />
+                      <Label htmlFor="provider-all" className="text-sm text-gray-700">
+                        All Providers
+                      </Label>
+                    </div>
+                    {filterOptions.types.map((type) => (
+                      <div key={type.value} className="flex items-center space-x-2">
+                        <RadioGroupItem value={type.value} id={`provider-${type.value}`} data-testid={`radio-provider-${type.value}`} />
+                        <Label htmlFor={`provider-${type.value}`} className="text-sm text-gray-700">
+                          {type.label}
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+              )}
+
               {/* Categories Filter */}
               {filterOptions.categories && (
                 <div>
