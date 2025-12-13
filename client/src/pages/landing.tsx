@@ -72,7 +72,7 @@ export default function Landing() {
                   <div className="mt-5 sm:mt-8 flex flex-col xs:flex-row gap-3 xs:gap-3 sm:justify-center lg:justify-start">
                     <div className="rounded-md shadow">
                       <Button 
-                        onClick={() => window.location.href = "/tutoring-providers"}
+                        onClick={() => window.location.href = "/home"}
                         size="lg"
                         className="w-full flex items-center justify-center px-6 sm:px-8 py-3 text-sm sm:text-base font-medium bg-primary hover:bg-primary/90"
                       >

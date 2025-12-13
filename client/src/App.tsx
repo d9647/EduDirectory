@@ -55,6 +55,7 @@ function Router() {
           <div className="flex-1">
             <Switch>
               {/* Public browsing pages - available to everyone */}
+              <Route path="/home" component={Home} />
               <Route path="/tutoring-providers" component={TutoringProviders} />
               <Route path="/services" component={Services} />
               <Route path="/summer-camps" component={SummerCamps} />
