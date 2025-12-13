@@ -18,7 +18,7 @@ export default function Home() {
         {/* Welcome Section */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Welcome back, {getDisplayName(user)}!
+            {user ? `Welcome back, ${getDisplayName(user)}!` : "Welcome to Education Yellow Pages!"}
           </h1>
           <p className="text-gray-600">
             Find trusted caregivers, tutors, and resources for your family - shared by parents like you.
