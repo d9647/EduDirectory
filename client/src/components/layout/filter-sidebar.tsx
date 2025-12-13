@@ -188,16 +188,10 @@ export default function FilterSidebar({
                     onValueChange={(value) => updateFilter("type", value)}
                     data-testid="filter-provider-type"
                   >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="" id="provider-all" data-testid="radio-provider-all" />
-                      <Label htmlFor="provider-all" className="text-sm text-gray-700">
-                        All Providers
-                      </Label>
-                    </div>
                     {filterOptions.types.map((type) => (
-                      <div key={type.value} className="flex items-center space-x-2">
-                        <RadioGroupItem value={type.value} id={`provider-${type.value}`} data-testid={`radio-provider-${type.value}`} />
-                        <Label htmlFor={`provider-${type.value}`} className="text-sm text-gray-700">
+                      <div key={type.value || "all"} className="flex items-center space-x-2">
+                        <RadioGroupItem value={type.value} id={`provider-${type.value || "all"}`} data-testid={`radio-provider-${type.value || "all"}`} />
+                        <Label htmlFor={`provider-${type.value || "all"}`} className="text-sm text-gray-700">
                           {type.label}
                         </Label>
                       </div>
