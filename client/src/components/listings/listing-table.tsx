@@ -170,6 +170,7 @@ export default function ListingTable({
                        listingType === "camps" ? "camp" :
                        listingType === "internships" ? "internship" :
                        listingType === "jobs" ? "job" :
+                       listingType === "services" ? "service" :
                        listingType,
           listingId,
         }),
