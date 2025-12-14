@@ -599,10 +599,10 @@ export default function ListingTable({
               size="sm"
               onClick={(e) => {
                 e.stopPropagation();
-                setSelectedListing(listing);
-                setDetailModalOpen(true);
+                handleViewDetails(listing);
               }}
               className="text-xs px-2 py-1 h-6"
+              data-testid={`button-view-${listing.id}`}
             >
               View
             </Button>
