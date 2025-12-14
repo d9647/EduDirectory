@@ -311,24 +311,6 @@ export default function ListingDetailModal({
                     <Monitor className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                     {listing.viewCount || 0} views
                   </div>
-                  {(listing.contributorNickname || listing.contributorFirstName || listing.contributorLastName) && (
-                    <div className="flex items-center text-xs sm:text-sm text-gray-600">
-                      <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                      by <UserDisplayName 
-                        user={{
-                          id: listing.userId,
-                          nickname: listing.contributorNickname,
-                          firstName: listing.contributorFirstName,
-                          lastName: listing.contributorLastName,
-                          email: null,
-                          createdAt: null
-                        }} 
-                        contributionStats={contributorStats}
-                        showBadge={true}
-                        className="font-medium text-primary ml-1"
-                      />
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
